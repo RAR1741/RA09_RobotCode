@@ -217,7 +217,8 @@ PurpleMonkeys_partialImage/Debug/Objects/PurpleMonkeys/Robot.o:  \
   C:/WindRiver/vxworks-6.3/target/h/copyright_wrs.h \
   C:/WindRiver/vxworks-6.3/target/h/sys/taskDefs.h \
   C:/WindRiver/vxworks-6.3/target/h/WPILib/Victor.h \
-  C:/WindRiver/vxworks-6.3/target/h/WPILib/WPIStatus.h
+  C:/WindRiver/vxworks-6.3/target/h/WPILib/WPIStatus.h \
+  C:/WindRiver/vxworks-6.3/target/h/WPILib/DigitalOutput.h
 
 C:/WindRiver/vxworks-6.3/target/h/WPILib/WPILib.h:
 
@@ -654,3 +655,5 @@ C:/WindRiver/vxworks-6.3/target/h/sys/taskDefs.h:
 C:/WindRiver/vxworks-6.3/target/h/WPILib/Victor.h:
 
 C:/WindRiver/vxworks-6.3/target/h/WPILib/WPIStatus.h:
+
+C:/WindRiver/vxworks-6.3/target/h/WPILib/DigitalOutput.h:

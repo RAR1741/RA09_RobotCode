@@ -1,4 +1,5 @@
 #include "WPILib.h"
+#include <DigitalOutput.h>
 
 /**
  * This is a demo program showing the use of the RobotBase class.
@@ -8,14 +9,17 @@
  */ 
 class RobotDemo : public SimpleRobot
 {
+	DigitalOutput light;
 	RobotDrive myRobot; // robot drive system
 	Joystick stick; // only joystick
-
+	
 public:
+	
 	RobotDemo(void):
+		light(4,14),
 		myRobot(1, 2),	// these must be initialized in the same order
 		stick(1)		// as they are declared above.
-	{
+	{   
 		GetWatchdog().SetExpiration(100);
 	}
 
@@ -24,10 +28,13 @@ public:
 	 */
 	void Autonomous(void)
 	{
+		
+		light.Set(1);
 		GetWatchdog().SetEnabled(false);
 		myRobot.Drive(0.5, 0.0); 	// drive forwards half speed
 		Wait(10.0); 				//    for 2 seconds
 		myRobot.Drive(0.0, 0.0); 	// stop robot
+		
 	}
 
 	/**
@@ -35,6 +42,7 @@ public:
 	 */
 	void OperatorControl(void)
 	{
+		light.Set(0);
 		GetWatchdog().SetEnabled(true);
 		while (IsOperatorControl())
 		{
