@@ -1,4 +1,9 @@
 #include "WPILib.h"
+#include <nivision.h>
+#include "Logger.h"
+
+using std::cout;
+using std::endl;
 
 /**
  * This is a demo program showing the use of the RobotBase class.
@@ -10,11 +15,14 @@ class PurpleMonkeys : public IterativeRobot
 {
 	RobotDrive myRobot; // robot drive system
 	Joystick stick; // only joystick
-
+	bool printed;
+	Logger logger;
 public:
 	PurpleMonkeys(void):
 		myRobot(1, 2),	// these must be initialized in the same order
-		stick(1)		// as they are declared above.
+		stick(1),		// as they are declared above.
+		printed(false),
+		logger()
 	{
 	}
 
@@ -32,10 +40,12 @@ public:
 	// Disabled state methods
 	void DisabledInit(void)
 	{
+		
 	}
 
 	void DisabledPeriodic(void)
 	{
+		
 	}
 
 	void DisabledContinuous(void)
@@ -45,12 +55,17 @@ public:
 	// Autonomous state methods
 	void AutonomousInit(void)
 	{
+		//myRobot.Drive(0.5, 0.0); 	// drive forwards half speed
+		
 		GetWatchdog().SetEnabled(false);
+		logger.OpenFile("log.log");
+		logger.Debug("Entering teleop mode...");
+		logger.CloseFile();
 	}
 
 	void AutonomousPeriodic(void)
 	{
-		myRobot.Drive(0.5, 0.0); 	// drive forwards half speed
+		
 	}
 
 	void AutonomousContinuous(void)
@@ -66,6 +81,7 @@ public:
 
 	void TeleopPeriodic(void)
 	{
+		
 		GetWatchdog().Feed();
 		myRobot.ArcadeDrive(stick); // drive with arcade style (use right stick)
 	}
