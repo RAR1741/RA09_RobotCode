@@ -1,3 +1,4 @@
+#include "WPILib.h"
 #include "Logger.h"
 
 using std::ios_base;
@@ -5,8 +6,10 @@ using std::ofstream;
 using std::string;
 
 Logger::Logger(void)
-	: out()
+	: out(),
+	dash(DriverStation::GetInstance()->GetDashboardPacker())
 {
+	ToDashboard("Logging system initialized. Beeewooop.");
 }
 
 
@@ -35,6 +38,11 @@ enum Logger::DebuggingLevel Logger::DebugLevel() const
 inline bool Logger::IsOpen(void) const 
 {
 	return out.is_open();	// Hopefully this will be made an inline function
+}
+
+void Logger::ToDashboard(std::string msg)
+{
+	dash.Printf("Log: %s", msg.c_str());
 }
 
 bool Logger::OpenFile(std::string filename)

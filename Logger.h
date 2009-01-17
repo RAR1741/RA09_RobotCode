@@ -5,6 +5,8 @@
 #include <string>
 #include <fstream>
 
+#include "WPILib.h"
+
 
 
 class Logger
@@ -33,8 +35,12 @@ public:
 	
 	DebuggingLevel DebugLevel() const;
 private:
+	
+	void ToDashboard(std::string msg);
 	DebuggingLevel dbgLvl;
 	std::ofstream out;
+	Dashboard &dash;
+	
 };
 
 #endif
