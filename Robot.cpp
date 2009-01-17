@@ -1,6 +1,6 @@
 #include "WPILib.h"
 #include <nivision.h>
-#include <PCVideoServer.h>
+#include "CameraControl.h"
 
 #include "Logger.h"
 
@@ -19,12 +19,14 @@ class PurpleMonkeys : public IterativeRobot {
 	Joystick stick; // only joystick
 	bool printed;
 	Logger logger;
+	CameraControl theCamera;
 public:
 	PurpleMonkeys(void) :
 		myRobot(1, 2), // these must be initialized in the same order
 				stick(1), // as they are declared above.
 				printed(false),
-				logger()
+				logger(),
+				theCamera()
 				{
 		
 	}
