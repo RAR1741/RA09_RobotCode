@@ -1,17 +1,20 @@
 #ifndef DRIVECONTROL__
 #define DRIVECONTROL__
 #include "WPILib.h"
+// #include <cmath.h>
+
 
 class DriveControl
 {
 public:
-	DriveControl();
+	DriveControl(); 	
 	~DriveControl();
-	void Left(float speed);
-	void Right(float speed);
-	
+	void Left(float);
+	void Right(float);
+	void SingleJoystickControl(float,float);
 private:
-	UINT8 RawFromFloat(float speed);
+	PWM leftMotor;
+	PWM rightMotor;
 };
 
 #endif

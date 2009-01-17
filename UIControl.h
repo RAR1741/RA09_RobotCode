@@ -1,12 +1,9 @@
 #ifndef UICONTROL__
 #define UICONTROL__
 #include "WPILib.h"
-
-class UIControl
-{
-	UIControl();
-	~UIControl();
-};
-
+#include "DriveControl.h"
+DriveControl Drive;
+Joystick MyStick(0);
+void SingleJoystickControl(float,float);
 #endif
 

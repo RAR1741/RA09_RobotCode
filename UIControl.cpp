@@ -1,12 +1,10 @@
 #include "UIControl.h"
 
-UIControl::UIControl()
-{
-	
-}
+// SingleJoystickControl(MyStick.GetRawAxis(asdf),MyStick.GetRawAxis(asdf));
+// TYPES
 
-UIControl::~UIControl()
+void SingleJoystickControl(float xAxis,float yAxis)
 {
-	
+	Drive.Left(xAxis+yAxis);
+	Drive.Right(xAxis-yAxis);
 }
-

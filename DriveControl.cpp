@@ -1,23 +1,26 @@
-#include <cmath>
 #include "DriveControl.h"
 
-using ::floor;
-
+DriveControl::DriveControl():
+leftMotor(4,2),
+rightMotor(4,1)
+{}
+DriveControl::~DriveControl()
+{}
 
 void DriveControl::Left( float speed )
 {
-	PWM motor1(4,2);
-	motor1.SetRaw(RawFromFloat(speed));
+	if (speed < -1)
+		speed = -1;
+	if (speed > 1)
+		speed = 1;
+	leftMotor.SetRaw((unsigned char)((speed + 1) * 127));
 }
 
 void DriveControl::Right( float speed )
 {
-	PWM motor2(4,1);
-	
-	motor2.SetRaw(RawFromFloat(speed));
-} 
-
-UINT8 DriveControl::RawFromFloat(float speed)
-{
-	return static_cast<UINT8>(floor(speed * 128.0)) + 127;
+	if (speed < -1)
+		speed = -1;
+	if (speed > 1)
+		speed = 1;
+	rightMotor.SetRaw((unsigned char)((speed + 1) * 127));
 }
