@@ -1,4 +1,7 @@
 #include "WPILib.h"
+#include <nivision.h>
+
+
 
 /**
  * This is a demo program showing the use of the RobotBase class.
@@ -17,6 +20,7 @@ public:
 		stick(1)		// as they are declared above.
 	{
 		GetWatchdog().SetExpiration(100);
+		
 	}
 
 	/**
