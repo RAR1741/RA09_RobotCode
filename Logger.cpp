@@ -1,6 +1,3 @@
-#include <string>
-#include <fstream>
-
 #include "Logger.h"
 
 using std::ios_base;
@@ -15,10 +12,28 @@ Logger::Logger(void)
 
 void Logger::Debug(std::string msg)
 {
-	if (!IsOpen()) return;	// Don't write anything if the file isn't open.
+	if (!IsOpen() || DebugLevel() < Logger::FullDebug  ) return;	// Don't write anything if the file isn't open.
 	out << msg << std::endl;
 }
-inline bool Logger::IsOpen(void) const {
+
+void Logger::Info(std::string msg)
+{
+	if (!IsOpen() || DebugLevel() < Logger::Verbose) return;
+	out << msg << std::endl;
+}
+
+void Logger::SetDebugLevel(DebuggingLevel dbgLvl)
+{
+	this->dbgLvl = dbgLvl;
+}
+
+enum Logger::DebuggingLevel Logger::DebugLevel() const
+{
+	return dbgLvl;
+}
+
+inline bool Logger::IsOpen(void) const 
+{
 	return out.is_open();	// Hopefully this will be made an inline function
 }
 

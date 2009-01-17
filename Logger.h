@@ -1,13 +1,17 @@
 /* Logger.h */
-#ifndef LOGGER_H__
-#define LOGGER_H__
+#ifndef ROBO_LOGGER_H__
+#define ROBO_LOGGER_H__
 
 #include <string>
 #include <fstream>
 
+
+
 class Logger
 {
 public:
+	
+	enum DebuggingLevel { None, Normal, Verbose, FullDebug };	
 	Logger();
 	
 	/** Opens a log file for writing. Will replace a file by the same name. 
@@ -22,7 +26,14 @@ public:
 	bool IsOpen() const;
 	
 	void Debug(std::string msg);
+	
+	void Info(std::string msg);
+	
+	void SetDebugLevel(DebuggingLevel dbgLvl);
+	
+	DebuggingLevel DebugLevel() const;
 private:
+	DebuggingLevel dbgLvl;
 	std::ofstream out;
 };
 
