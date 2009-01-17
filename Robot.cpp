@@ -7,6 +7,7 @@
 using std::cout;
 using std::endl;
 
+
 /**
  * This is a demo program showing the use of the RobotBase class.
  * The SimpleRobot class is the base of a robot application that will automatically call your
@@ -22,7 +23,9 @@ public:
 	PurpleMonkeys(void) :
 		myRobot(1, 2), // these must be initialized in the same order
 				stick(1), // as they are declared above.
-				printed(false), logger() {
+				printed(false),
+				logger()
+				{
 		
 	}
 
@@ -82,6 +85,5 @@ public:
 
 };
 
-START_ROBOT_CLASS(PurpleMonkeys)
-;
+START_ROBOT_CLASS(PurpleMonkeys);
 

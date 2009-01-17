@@ -1,11 +1,14 @@
 #include "CameraControl.h"
 
-CameraControl::CameraControl()
+CameraControl::CameraControl(): 
+m_Cam()
 {
-	m_Cam = new PCVideoServer();
+	m_Cam.Start();
 }
 
 CameraControl::~CameraControl()
 {
-	delete m_Cam;
+	m_Cam.Stop();
 }
+
+

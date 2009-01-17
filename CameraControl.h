@@ -10,7 +10,8 @@ class CameraControl
 public:
 	CameraControl(void);
 	~CameraControl(void);
-private:
-	PCVideoServer * m_Cam;
+	private:
+		PCVideoServer m_Cam;
 };
 #endif
+
