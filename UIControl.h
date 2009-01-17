@@ -7,3 +7,6 @@ class UIControl
 	UIControl();
 	~UIControl();
 };
+
+#endif
+

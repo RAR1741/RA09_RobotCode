@@ -7,8 +7,11 @@ class DriveControl
 public:
 	DriveControl();
 	~DriveControl();
-	void Left();
-	void Right();
+	void Left(float speed);
+	void Right(float speed);
+	
+private:
+	UINT8 RawFromFloat(float speed);
 };
 
 #endif
