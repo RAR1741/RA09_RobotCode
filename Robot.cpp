@@ -33,13 +33,13 @@ class PurpleMonkeys : public IterativeRobot {
 public:
 	PurpleMonkeys(void) :
 		myRobot(1, 2), // these must be initialized in the same order
-				stick(1), // as they are declared above.
-				printed(false),
-				light(4,14),
-	//			logger(),
-				theCamera()
-//				dashboardDataFormat()
-				{
+		stick(1), // as they are declared above.
+		printed(false),
+		light(4,14),
+//		logger(),
+		theCamera()
+//		dashboardDataFormat()
+	{
 		
 		if(StartCameraTask(13,0,k320x240,ROT_0)==-1)
 		{
