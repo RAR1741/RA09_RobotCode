@@ -25,28 +25,29 @@ class PurpleMonkeys : public IterativeRobot {
 	RobotDrive myRobot; // robot drive system
 	Joystick stick; // only joystick
 	Joystick test;
-	// bool printed;
 	DigitalOutput light;
-//	Logger logger;
+ 	// Logger logger;
 	CameraControl theCamera;
 	DashboardDataFormat dashboardDataFormat;
 	Encoder testEncoder;
-	int counter;
 	// Pwm testMotor;
+	int counter;
+	bool printed;
+	
 public:
 	PurpleMonkeys(void) :
 		myRobot(1, 2), // these must be initialized in the same order
 				stick(1), // as they are declared above.
 				test(2),
-				// printed(false), 
 				light(4, 14),
-//				logger(),
+				// logger(),
 				theCamera(),
 				dashboardDataFormat(),
 				testEncoder(1,2,false)	 // A: port 1 B: port2 Reversed: False
 				// testMotor(3)
 				{
 
+		 //printed = false;
 	}
 
 	// StartCompetition loop
@@ -86,9 +87,8 @@ public:
 	// Autonomous state methods
 	void AutonomousInit(void) {
 		myRobot.Drive(0.5, 0.0); // drive forwards half speed
-		counter = 0;
 		GetWatchdog().SetEnabled(false);
-		
+		 counter = 0;
 		 // logger.OpenFile("log.log");
 		 // logger.Debug("Entering teleop mode...");
 		 // logger.CloseFile();
