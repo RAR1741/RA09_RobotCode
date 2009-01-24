@@ -26,7 +26,7 @@ class PurpleMonkeys : public IterativeRobot {
 	RobotDrive myRobot; // robot drive system
 	Joystick stick; // only joystick
 	Joystick test;
-	bool printed;
+	// bool printed;
 	DigitalOutput light;
 	int counter;
 //	Logger logger;
@@ -39,7 +39,8 @@ public:
 		myRobot(1, 2), // these must be initialized in the same order
 				stick(1), // as they are declared above.
 				test(2),
-				printed(false), light(4, 14),
+				// printed(false), 
+				light(4, 14),
 //				logger(),
 				theCamera(),
 				dashboardDataFormat()
