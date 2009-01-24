@@ -10,9 +10,11 @@
 // #include "PCVideoServer.h"
 #include "Logger.h"
 #include <climits>
-
+#include <cmath>
 using std::cout;
 using std::endl;
+using ::floor;
+
 
 /**
  * This is a demo program showing the use of the RobotBase class.
@@ -30,7 +32,7 @@ class PurpleMonkeys : public IterativeRobot {
     CameraControl theCamera;
 	DashboardDataFormat dashboardDataFormat;
 	Encoder testEncoder;
-	// Pwm testMotor;
+	PWM testMotor;
 	int counter;
 	// bool printed;
 	
@@ -44,7 +46,7 @@ public:
 		  		theCamera(),
 				dashboardDataFormat(),
 				testEncoder(1,2,false),	 // A: port 1 B: port2 Reversed: False
-				// testMotor(3)
+				testMotor(3),
 				counter(0)//,
 				//printed(false)
 				{
@@ -108,7 +110,7 @@ public:
 	// Teleop state methods
 	void TeleopInit(void) {
 		// myRobot.Drive(0.0, 0.0); // stop robot
-		myRobot.Drive(0.5, 0.0); // Go Straight Forward!
+		// myRobot.Drive(0.5, 0.0); // Go Straight Forward!
 		GetWatchdog().SetEnabled(true);
 	}
 
@@ -118,7 +120,7 @@ public:
 		UpdateDashboard();
 		myRobot.ArcadeDrive(stick); // drive with arcade style (use right stick)
 		
-		// testMotor.setRaw(test.getAxis(AxisType))
+		testMotor.SetRaw((UINT8)floor(test.GetRawAxis( Joystick::kDefaultYAxis )));
 	}
 
 	void TeleopContinuous(void) {
@@ -131,7 +133,9 @@ public:
 	 
 	 //INT8 lower = count & 0xFF;
 	 // dashboardDataFormat.m_AnalogChannels[0][0] = static_cast<float>(count) / static_cast<float>(INT_MAX); 
-	 dashboardDataFormat.m_AnalogChannels[0][1] = 5.0 - num;
+	 // dashboardDataFormat.m_AnalogChannels[0][1] = 5.0 - num;
+	 dashboardDataFormat.m_AnalogChannels[0][0] = stick.GetY(); 
+	 dashboardDataFormat.m_AnalogChannels[0][1] = test.GetY();
 	 dashboardDataFormat.m_DIOChannels[0]++;
 	 dashboardDataFormat.m_DIOChannelsOutputEnable[0]--;
 	 num += 0.01;
