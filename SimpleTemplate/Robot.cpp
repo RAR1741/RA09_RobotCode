@@ -31,8 +31,8 @@ class PurpleMonkeys : public IterativeRobot {
  	// Logger logger;
     CameraControl theCamera;
 	DashboardDataFormat dashboardDataFormat;
-	Encoder testEncoder;
-	PWM testMotor;
+	// Encoder testEncoder;
+	Victor testMotor;
 	int counter;
 	// bool printed;
 	
@@ -45,8 +45,8 @@ public:
 				// logger(),
 		  		theCamera(),
 				dashboardDataFormat(),
-				testEncoder(1,2,false),	 // A: port 1 B: port2 Reversed: False
-				testMotor(3),
+//				testEncoder(1,3,1,4,false),	 // A: port 1 B: port2 Reversed: False
+				testMotor(4,3),
 				counter(0)//,
 				//printed(false)
 				{
@@ -117,10 +117,13 @@ public:
 	void TeleopPeriodic(void) {
 
 		GetWatchdog().Feed();
-		UpdateDashboard();
+		
 		myRobot.ArcadeDrive(stick); // drive with arcade style (use right stick)
 		
-		testMotor.SetRaw((UINT8)floor(test.GetRawAxis( Joystick::kDefaultYAxis )));
+		// testMotor.SetRaw((UINT8)floor(test.GetRawAxis( Joystick::kDefaultYAxis )));
+		testMotor.Set(test.GetY());
+		
+		UpdateDashboard();
 	}
 
 	void TeleopContinuous(void) {
@@ -129,13 +132,14 @@ public:
 	 void UpdateDashboard(void)
 	 {
 	 static float num = 0.0;
-	 // INT32 count = testEncoder.Get();
+	 //INT32 count = testEncoder.Get();
 	 
 	 //INT8 lower = count & 0xFF;
-	 // dashboardDataFormat.m_AnalogChannels[0][0] = static_cast<float>(count) / static_cast<float>(INT_MAX); 
+	 //dashboardDataFormat.m_AnalogChannels[0][5] = static_cast<float>(count) / static_cast<float>(INT_MAX); 
 	 // dashboardDataFormat.m_AnalogChannels[0][1] = 5.0 - num;
 	 dashboardDataFormat.m_AnalogChannels[0][0] = stick.GetY(); 
 	 dashboardDataFormat.m_AnalogChannels[0][1] = test.GetY();
+	 dashboardDataFormat.m_AnalogChannels[0][4] = testMotor.Get();
 	 dashboardDataFormat.m_DIOChannels[0]++;
 	 dashboardDataFormat.m_DIOChannelsOutputEnable[0]--;
 	 num += 0.01;
