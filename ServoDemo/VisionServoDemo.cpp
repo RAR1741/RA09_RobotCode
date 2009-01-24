@@ -300,7 +300,7 @@ public:
 		//GetWatchdog().Feed();
 		Servo vert(5,4);
 		Servo horz(5,5);
-		Timer timmy();
+		Timer timmy;
 		timmy.Start();
 		vert.Set(.5);
 		horz.Set(.5);
