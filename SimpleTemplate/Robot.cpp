@@ -27,12 +27,12 @@ class PurpleMonkeys : public IterativeRobot {
 	Joystick test;
 	DigitalOutput light;
  	// Logger logger;
-	CameraControl theCamera;
+    CameraControl theCamera;
 	DashboardDataFormat dashboardDataFormat;
 	Encoder testEncoder;
 	// Pwm testMotor;
 	int counter;
-	bool printed;
+	// bool printed;
 	
 public:
 	PurpleMonkeys(void) :
@@ -41,13 +41,15 @@ public:
 				test(2),
 				light(4, 14),
 				// logger(),
-				theCamera(),
+		  		theCamera(),
 				dashboardDataFormat(),
-				testEncoder(1,2,false)	 // A: port 1 B: port2 Reversed: False
+				testEncoder(1,2,false),	 // A: port 1 B: port2 Reversed: False
 				// testMotor(3)
+				counter(0)//,
+				//printed(false)
 				{
 
-		 //printed = false;
+		 
 	}
 
 	// StartCompetition loop
@@ -65,11 +67,7 @@ public:
 		 dprintf("Things screwed up with camera.\n");
 		 }
 		 
-		 theCamera.Stop();
-		 Wait(2.0);
-		 theCamera.Start();
-		 
-		 dprintf("Robot initialized.");
+		   dprintf("Robot initialized.");
 	}
 
 	// Disabled state methods
@@ -88,7 +86,6 @@ public:
 	void AutonomousInit(void) {
 		myRobot.Drive(0.5, 0.0); // drive forwards half speed
 		GetWatchdog().SetEnabled(false);
-		 counter = 0;
 		 // logger.OpenFile("log.log");
 		 // logger.Debug("Entering teleop mode...");
 		 // logger.CloseFile();
