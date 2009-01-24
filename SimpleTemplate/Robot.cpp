@@ -11,7 +11,6 @@
 #include "Logger.h"
 #include <climits>
 
-
 using std::cout;
 using std::endl;
 
@@ -28,11 +27,11 @@ class PurpleMonkeys : public IterativeRobot {
 	Joystick test;
 	// bool printed;
 	DigitalOutput light;
-	int counter;
 //	Logger logger;
 	CameraControl theCamera;
 	DashboardDataFormat dashboardDataFormat;
-	// Encoder testEncoder;
+	Encoder testEncoder;
+	int counter;
 	// Pwm testMotor;
 public:
 	PurpleMonkeys(void) :
@@ -43,8 +42,8 @@ public:
 				light(4, 14),
 //				logger(),
 				theCamera(),
-				dashboardDataFormat()
-				// testEncoder(1,2,false)	// A: port 1 B: port2 Reversed: False
+				dashboardDataFormat(),
+				testEncoder(1,2,false)	 // A: port 1 B: port2 Reversed: False
 				// testMotor(3)
 				{
 
@@ -99,7 +98,7 @@ public:
 
 	void AutonomousPeriodic(void) {
 		UpdateDashboard();
-		//counter = 0;
+		// static int counter = 0;
 		counter++;
 		if (counter>=400)
 			myRobot.Drive(0.0, 0.0);
