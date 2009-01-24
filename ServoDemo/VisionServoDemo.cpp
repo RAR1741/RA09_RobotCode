@@ -20,6 +20,7 @@
 #include "FrcError.h"
 #include "TrackAPI.h" 
 #include "WPILib.h"
+#include "timer.h"
 
 // To locally enable debug printing: set VisionDemo_debugFlag to a 1, to disable set to 0
 int VisionServoDemo_debugFlag = 0;
@@ -299,11 +300,20 @@ public:
 		//GetWatchdog().Feed();
 		Servo vert(5,4);
 		Servo horz(5,5);
+		Timer timmy();
+		timmy.Start();
+		vert.Set(.5);
+		horz.Set(.5);
 
 		while ( IsOperatorControl() )
 		{
-			vert.Set(.5);
-			horz.Set(.5);
+			/*vert.Set(.5);
+			horz.Set(.5);*/
+			if(timmy.Get() == 2)
+			{
+				vert.Set(1);
+				horz.Set(1);
+			}
 			// determine if tank or arcade mode; default with no jumper is for tank drive
 			/*if (ds->GetDigitalIn(ARCADE_MODE) == 0) {	
 				myRobot->TankDrive(leftStick, rightStick);	 // drive with tank style
