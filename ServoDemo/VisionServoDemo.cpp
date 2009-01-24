@@ -74,8 +74,8 @@ public:
 		myRobot = new RobotDrive(1, 2, 0.5);	// robot will use PWM 1-2 for drive motors
 		rightStick = new Joystick(1);			// create the joysticks
 		leftStick = new Joystick(2);
-		horizontalServo = new Servo(3); 		// create horizontal servo
-		verticalServo = new Servo(4);			// create vertical servo
+		horizontalServo = new Servo(4,4); 		// create horizontal servo
+		verticalServo = new Servo(4,5);			// create vertical servo
 		servoDeadband = 0.01;					// move if > this amount 
 		framesPerSecond = 20;					// number of camera frames to get per second
 		sinStart = 0.0;						// control whether to start panning up or down
@@ -298,21 +298,20 @@ public:
 		char funcName[]="OperatorControl";
 		DPRINTF(LOG_DEBUG, "OperatorControl");
 		//GetWatchdog().Feed();
-		Servo vert(5,4);
-		Servo horz(5,5);
 		Timer timmy;
 		timmy.Start();
-		vert.Set(.5);
-		horz.Set(.5);
-
+		verticalServo->Set(.5);
+		horizontalServo->Set(.5);
+		// static bool isSet = false;
 		while ( IsOperatorControl() )
 		{
-			/*vert.Set(.5);
-			horz.Set(.5);*/
-			if(timmy.Get() == 2)
+			verticalServo->Set(.5);
+			horizontalServo->Set(.5);
+			if(timmy.Get() >= 2)//&& !isSet)
 			{
-				vert.Set(1);
-				horz.Set(1);
+				//isSet=true;
+				verticalServo->Set(1);
+				horizontalServo->Set(1);
 			}
 			// determine if tank or arcade mode; default with no jumper is for tank drive
 			/*if (ds->GetDigitalIn(ARCADE_MODE) == 0) {	
