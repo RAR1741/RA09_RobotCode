@@ -21,6 +21,7 @@
 #include "TrackAPI.h" 
 #include "WPILib.h"
 #include "timer.h"
+#include "PCVideoServer.h"
 
 // To locally enable debug printing: set VisionDemo_debugFlag to a 1, to disable set to 0
 int VisionServoDemo_debugFlag = 0;
@@ -43,6 +44,7 @@ class VisionServoDemo : public SimpleRobot
 	DriverStation *ds;				// driver station object
 	Servo *horizontalServo;  		// first servo object
 	Servo *verticalServo;			// second servo object
+	PCVideoServer *pcserv;			// pcvideo server
 	float horizontalDestination;
 	float verticalDestination;
 	float horizontalPosition, verticalPosition;	
@@ -76,6 +78,7 @@ public:
 		leftStick = new Joystick(2);
 		horizontalServo = new Servo(4,4); 		// create horizontal servo
 		verticalServo = new Servo(4,5);			// create vertical servo
+		pcserv = new PCVideoServer();
 		servoDeadband = 0.01;					// move if > this amount 
 		framesPerSecond = 20;					// number of camera frames to get per second
 		sinStart = 0.0;						// control whether to start panning up or down
