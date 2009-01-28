@@ -53,7 +53,7 @@ void DashboardDataFormat::PackAndSend(void)
 
 	// PJF RED ALERT CODE: Add encoder data
 	
-	//dashboardPacker.AddI32(m_testEncoder);
+	dashboardPacker.AddI32(m_testEncoder);
 	
 	// Flush the data to the driver station.
 	dashboardPacker.Finalize();

@@ -1,19 +1,20 @@
-#include "WPILib.h"
-// #include <nivision.h>
-
+//#include "Robot.h"
 #include "CameraControl.h"
+#include "WPILib.h"
 #include "DashboardDataFormat.h"
-// #include "vxWorks.h"
-// #include "AxisCamera.h"
-// #include "BaeUtilities.h"
-// #include "FrcError.h"
-// #include "PCVideoServer.h"
-#include "Logger.h"
+
 #include <climits>
 #include <cmath>
 using std::cout;
 using std::endl;
 using ::floor;
+// #include "vxWorks.h"
+// #include "AxisCamera.h"
+// #include "BaeUtilities.h"
+// #include "FrcError.h"
+// #include "PCVideoServer.h"
+#include "Autonomous.h"
+#include "Logger.h"
 
 
 /**
@@ -31,10 +32,11 @@ class PurpleMonkeys : public IterativeRobot {
  	// Logger logger;
     CameraControl theCamera;
 	DashboardDataFormat dashboardDataFormat;
-	// Encoder testEncoder;
+	Encoder testEncoder;
 	Victor testMotor;
 	int counter;
 	// bool printed;
+	Autonomous Auto;
 	
 public:
 	PurpleMonkeys(void) :
@@ -45,12 +47,13 @@ public:
 				// logger(),
 		  		theCamera(),
 				dashboardDataFormat(),
-//				testEncoder(1,3,1,4,false),	 // A: port 1 B: port2 Reversed: False
+				testEncoder(4,1,4,2,false),
 				testMotor(4,3),
-				counter(0)//,
+				counter(0),
 				//printed(false)
+				Auto()
 				{
-
+		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 		 
 	}
 
@@ -93,6 +96,7 @@ public:
 		 // logger.CloseFile();
 		 
 		light.Pulse(0.5);
+		Auto.Init();
 	}
 
 	void AutonomousPeriodic(void) {
@@ -101,10 +105,12 @@ public:
 		counter++;
 		if (counter>=400)
 			myRobot.Drive(0.0, 0.0);
+		Auto.Periodic();
 	}
 
 	void AutonomousContinuous(void) {
 		// UpdateDashboard();
+		Auto.Continuous();
 	}
 
 	// Teleop state methods
@@ -132,16 +138,18 @@ public:
 	 void UpdateDashboard(void)
 	 {
 	 static float num = 0.0;
-	 //INT32 count = testEncoder.Get();
+//	 INT32 count = testEncoder.Get();
 	 
 	 //INT8 lower = count & 0xFF;
-	 //dashboardDataFormat.m_AnalogChannels[0][5] = static_cast<float>(count) / static_cast<float>(INT_MAX); 
+	 //dashboardDataFormat.m_AnalogChannels[0][4] = static_cast<float>(count); // / static_cast<float>(INT_MAX); 
 	 // dashboardDataFormat.m_AnalogChannels[0][1] = 5.0 - num;
 	 dashboardDataFormat.m_AnalogChannels[0][0] = stick.GetY(); 
 	 dashboardDataFormat.m_AnalogChannels[0][1] = test.GetY();
 	 dashboardDataFormat.m_AnalogChannels[0][4] = testMotor.Get();
 	 dashboardDataFormat.m_DIOChannels[0]++;
 	 dashboardDataFormat.m_DIOChannelsOutputEnable[0]--;
+	 dashboardDataFormat.m_testEncoder = testEncoder.Get();
+	 
 	 num += 0.01;
 	 if (num > 5.0) num = 0.0;
 	 dashboardDataFormat.PackAndSend();

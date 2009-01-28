@@ -26,7 +26,7 @@ public:
 	UINT16 m_DIOChannelsOutputEnable[kDigitalModules];
 	UINT8 m_PWMChannels[kDigitalModules][kPwmChannels];
 	UINT8 m_SolenoidChannels;
-	//INT32 m_testEncoder;
+	INT32 m_testEncoder;
 	void PackAndSend(void);
 private:
 	DISALLOW_COPY_AND_ASSIGN(DashboardDataFormat);
