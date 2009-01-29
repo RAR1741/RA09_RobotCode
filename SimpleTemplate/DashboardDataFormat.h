@@ -27,6 +27,10 @@ public:
 	UINT8 m_PWMChannels[kDigitalModules][kPwmChannels];
 	UINT8 m_SolenoidChannels;
 	INT32 m_testEncoder;
+	UINT32 m_TopLeftBoundRect;
+	UINT32 m_TopRightBoundRect;
+	UINT32 m_BottomLeftBoundRect;
+	UINT32 m_BottomRightBoundRect;
 	void PackAndSend(void);
 private:
 	DISALLOW_COPY_AND_ASSIGN(DashboardDataFormat);
