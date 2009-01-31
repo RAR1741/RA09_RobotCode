@@ -26,8 +26,11 @@ using ::floor;
 
 class PurpleMonkeys : public IterativeRobot {
 	RobotDrive myRobot; // robot drive system
-	Joystick stick; // only joystick
-	Joystick test;
+	//Joystick stick; // only joystick
+	//Joystick test;
+	Joystick leftStick;
+	Joystick rightStick;
+	Joystick turretStick;
 	DigitalOutput light;
  	// Logger logger;
     CameraControl theCamera;
@@ -38,11 +41,19 @@ class PurpleMonkeys : public IterativeRobot {
 	// bool printed;
 	Autonomous Auto;
 	
+	enum							// Driver Station jumpers to control program operation
+	{ ARCADE_MODE = 1,				// Tank/Arcade jumper is on DS Input 1 (Jumper present is arcade)
+	  ENABLE_AUTONOMOUS = 2,		// Autonomous/Teleop jumper is on DS Input 2 (Jumper present is autonomous)
+	} jumpers;	 
+	
 public:
 	PurpleMonkeys(void) :
 		myRobot(1, 2), // these must be initialized in the same order
-				stick(1), // as they are declared above.
-				test(2),
+				//stick(1), // as they are declared above.
+				//test(2),
+				leftStick(1),
+				rightStick(2),
+				turretStick(3),
 				light(4, 14),
 				// logger(),
 		  		theCamera(),
@@ -89,22 +100,22 @@ public:
 
 	// Autonomous state methods
 	void AutonomousInit(void) {
-		myRobot.Drive(0.5, 0.0); // drive forwards half speed
+		//myRobot.Drive(0.5, 0.0); // drive forwards half speed
 		GetWatchdog().SetEnabled(false);
 		 // logger.OpenFile("log.log");
 		 // logger.Debug("Entering teleop mode...");
 		 // logger.CloseFile();
 		 
-		light.Pulse(0.5);
+		//light.Pulse(0.5);
 		Auto.Init();
 	}
 
 	void AutonomousPeriodic(void) {
 		UpdateDashboard();
 		// static int counter = 0;
-		counter++;
-		if (counter>=400)
-			myRobot.Drive(0.0, 0.0);
+		// counter++;
+		// if (counter>=400)
+		//	myRobot.Drive(0.0, 0.0);
 		Auto.Periodic();
 	}
 
@@ -124,11 +135,17 @@ public:
 
 		GetWatchdog().Feed();
 		
-		myRobot.ArcadeDrive(stick); // drive with arcade style (use right stick)
+		//myRobot.ArcadeDrive(stick); // drive with arcade style (use right stick)
 		
 		// testMotor.SetRaw((UINT8)floor(test.GetRawAxis( Joystick::kDefaultYAxis )));
-		testMotor.Set(test.GetY());
+		//testMotor.Set(test.GetY());
 		
+		// determine if tank or arcade mode; default with no jumper is for tank drive
+		if (m_ds->GetDigitalIn(ARCADE_MODE) == 0) {	
+			myRobot.TankDrive(leftStick, rightStick);	 // drive with tank style
+		} else{
+			myRobot.ArcadeDrive(rightStick);	         // drive with arcade style (use right stick)
+		}
 		UpdateDashboard();
 	}
 
@@ -143,9 +160,9 @@ public:
 	 //INT8 lower = count & 0xFF;
 	 //dashboardDataFormat.m_AnalogChannels[0][4] = static_cast<float>(count); // / static_cast<float>(INT_MAX); 
 	 // dashboardDataFormat.m_AnalogChannels[0][1] = 5.0 - num;
-	 dashboardDataFormat.m_AnalogChannels[0][0] = stick.GetY(); 
-	 dashboardDataFormat.m_AnalogChannels[0][1] = test.GetY();
-	 dashboardDataFormat.m_AnalogChannels[0][4] = testMotor.Get();
+	 //dashboardDataFormat.m_AnalogChannels[0][0] = stick.GetY(); 
+	 //dashboardDataFormat.m_AnalogChannels[0][1] = test.GetY();
+	 //dashboardDataFormat.m_AnalogChannels[0][4] = testMotor.Get();
 	 dashboardDataFormat.m_DIOChannels[0]++;
 	 dashboardDataFormat.m_DIOChannelsOutputEnable[0]--;
 	 dashboardDataFormat.m_testEncoder = testEncoder.Get();

@@ -125,7 +125,10 @@ void Autonomous::Continuous() {
 			verticalPosition = RangeToNormalized(servoV, 1);
 		}
 	}
+#endif
 void Autonomous::Periodic() {
+#if !EXCLUDE_AUTO
+	
 	if (FindTwoColors(td1, td2, ABOVE, &par) ) {
 		//PrintReport(&par);
 		foundColor = true;
@@ -210,8 +213,10 @@ void Autonomous::Periodic() {
 	if (loopTime > ElapsedTime(lastTime) ) {
 		Wait(loopTime - ElapsedTime(lastTime) ); // seconds
 	}
+#endif
 }
 
+#if !EXCLUDE_AUTO
 void Autonomous::IdentifyFriendOrFoe() {
 	// TODO: Put some actual C++ code in here
 	search;
