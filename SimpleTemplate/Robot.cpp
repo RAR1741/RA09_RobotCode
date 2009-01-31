@@ -16,6 +16,7 @@ using ::floor;
 #include "Autonomous.h"
 #include "Logger.h"
 
+#include "WPILib.h"
 
 /**
  * This is a demo program showing the use of the RobotBase class.
@@ -140,7 +141,7 @@ public:
 
 	// Teleop state methods
 	void TeleopInit(void) {
-		testEncoder.SetDistancePerPulse(300.0);
+		testEncoder.SetDistancePerTick(300.0);
 		testEncoder.Start();
 		if(testGyro==NULL)
 			testGyro = new Gyro(1,1);
