@@ -92,8 +92,8 @@ public:
 		rightStick = new Joystick(1);			// create the joysticks
 		leftStick = new Joystick(2);
 		// remember to use jumpers on the sidecar for the Servo PWMs
-		horizontalServo = new Servo(4); 		// create horizontal servo on PWM 9
-		verticalServo = new Servo(5);			// create vertical servo on PWM 10
+		horizontalServo = new Servo(4,4); 		// create horizontal servo on PWM 9
+		verticalServo = new Servo(4,5);			// create vertical servo on PWM 10
 		servoDeadband = 0.01;					// move if > this amount 
 		framesPerSecond = 15;					// number of camera frames to get per second
 		cameraRotation = ROT_0;					// input parameter for camera orientation
