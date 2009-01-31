@@ -31,6 +31,7 @@ class PurpleMonkeys : public IterativeRobot {
 	Joystick leftStick;
 	Joystick rightStick;
 	Joystick turretStick;
+	Joystick testMotorStick; // For the Test Motor Encoder
 	DigitalOutput light;
  	// Logger logger;
     CameraControl theCamera;
@@ -40,6 +41,7 @@ class PurpleMonkeys : public IterativeRobot {
 	Servo horizontalServo;
 	Servo verticalServo;
 	int counter;
+	Gyro * testGyro;
 	// bool printed;
 	Autonomous Auto;
 	
@@ -56,6 +58,8 @@ public:
 				leftStick(1),
 				rightStick(2),
 				turretStick(3),
+				testMotorStick(4),
+				
 				light(4, 14),
 				// logger(),
 		  		theCamera(),
@@ -64,12 +68,15 @@ public:
 				testMotor(4,3),
 				horizontalServo(4,4),
 				verticalServo(4,5),
+				
 				counter(0),
+				testGyro(NULL)
 				//printed(false)
-				Auto()
+				
+				//Auto()
 				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
-		 
+		
 	}
 
 	// StartCompetition loop
@@ -77,6 +84,7 @@ public:
 	//{
 	//}
 
+	
 	// One time initialization of the robot
 	void RobotInit(void) {
 		GetWatchdog().SetExpiration(100);
@@ -104,6 +112,8 @@ public:
 
 	// Autonomous state methods
 	void AutonomousInit(void) {
+		testEncoder.Stop();
+		testMotor.Set(0.0);
 		//myRobot.Drive(0.5, 0.0); // drive forwards half speed
 		GetWatchdog().SetEnabled(false);
 		 // logger.OpenFile("log.log");
@@ -111,7 +121,7 @@ public:
 		 // logger.CloseFile();
 		 
 		light.Set(0);
-		Auto.Init();
+		// Auto.Init();
 	}
 
 	void AutonomousPeriodic(void) {
@@ -120,7 +130,7 @@ public:
 		// counter++;
 		// if (counter>=400)
 		//	myRobot.Drive(0.0, 0.0);
-		Auto.Periodic();
+		// Auto.Periodic();
 	}
 
 	void AutonomousContinuous(void) {
@@ -130,6 +140,10 @@ public:
 
 	// Teleop state methods
 	void TeleopInit(void) {
+		testEncoder.SetDistancePerPulse(300.0);
+		testEncoder.Start();
+		if(testGyro==NULL)
+			testGyro = new Gyro(1,1);
 		light.Set(1);
 		// myRobot.Drive(0.0, 0.0); // stop robot
 		// myRobot.Drive(0.5, 0.0); // Go Straight Forward!
@@ -146,11 +160,21 @@ public:
 		//testMotor.Set(test.GetY());
 		// determine if tank or arcade mode; default with no jumper is for tank drive
 		if (m_ds->GetDigitalIn(ARCADE_MODE) == 0) {	
-			//myRobot.TankDrive(leftStick, rightStick);	 // drive with tank style
+			// myRobot.TankDrive(leftStick, rightStick);	 // drive with tank style
 			myRobot.TankDrive( leftStick.GetY(), rightStick.GetY());
 		} else{
 			myRobot.ArcadeDrive(-rightStick.GetY(), rightStick.GetX());	         // drive with arcade style (use right stick)
 		}
+		
+		// Just for testing, comment if you don't want it.
+		testMotor.Set(testMotorStick.GetY()); // Set Test Motor based on Y Axis
+		
+		if(testMotorStick.GetButton(testMotorStick.kTopButton))
+			{
+				testEncoder.Reset();
+				delete testGyro;
+				testGyro = new Gyro(1,1);
+			}
 		
 		horizontalServo.Set((turretStick.GetX()+ 1.0) / 2.0);
 		verticalServo.Set((turretStick.GetY()+ 1.0) / 2.0);
@@ -164,7 +188,7 @@ public:
 	 {
 	 static float num = 0.0;
 //	 INT32 count = testEncoder.Get();
-	 
+	 // INT32 encoder_raw; = testEncoder.Get();
 	 //INT8 lower = count & 0xFF;
 	 //dashboardDataFormat.m_AnalogChannels[0][4] = static_cast<float>(count); // / static_cast<float>(INT_MAX); 
 	 // dashboardDataFormat.m_AnalogChannels[0][1] = 5.0 - num;
@@ -175,10 +199,13 @@ public:
 	 dashboardDataFormat.m_DIOChannelsOutputEnable[0]--;
 	 dashboardDataFormat.m_testEncoder = testEncoder.Get();
 	 
+	 
+	 GetTheDashboard().Printf("Encoder Counts: %d, Distance: %f, Gyro Angle: %f", dashboardDataFormat.m_testEncoder, testEncoder.GetDistance(), testGyro->GetAngle());
 	 num += 0.01;
 	 if (num > 5.0) num = 0.0;
 	 dashboardDataFormat.PackAndSend();
 	 }
+	 
 
 	Dashboard& GetTheDashboard() {
 		return m_ds->GetDashboardPacker();
