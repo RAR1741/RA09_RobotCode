@@ -37,6 +37,8 @@ class PurpleMonkeys : public IterativeRobot {
 	DashboardDataFormat dashboardDataFormat;
 	Encoder testEncoder;
 	Victor testMotor;
+	Servo horizontalServo;
+	Servo verticalServo;
 	int counter;
 	// bool printed;
 	Autonomous Auto;
@@ -60,6 +62,8 @@ public:
 				dashboardDataFormat(),
 				testEncoder(4,1,4,2,false),
 				testMotor(4,3),
+				horizontalServo(4,4),
+				verticalServo(4,5),
 				counter(0),
 				//printed(false)
 				Auto()
@@ -106,7 +110,7 @@ public:
 		 // logger.Debug("Entering teleop mode...");
 		 // logger.CloseFile();
 		 
-		//light.Pulse(0.5);
+		light.Set(0);
 		Auto.Init();
 	}
 
@@ -126,6 +130,7 @@ public:
 
 	// Teleop state methods
 	void TeleopInit(void) {
+		light.Set(1);
 		// myRobot.Drive(0.0, 0.0); // stop robot
 		// myRobot.Drive(0.5, 0.0); // Go Straight Forward!
 		GetWatchdog().SetEnabled(true);
@@ -139,13 +144,16 @@ public:
 		
 		// testMotor.SetRaw((UINT8)floor(test.GetRawAxis( Joystick::kDefaultYAxis )));
 		//testMotor.Set(test.GetY());
-		
 		// determine if tank or arcade mode; default with no jumper is for tank drive
 		if (m_ds->GetDigitalIn(ARCADE_MODE) == 0) {	
-			myRobot.TankDrive(leftStick, rightStick);	 // drive with tank style
+			//myRobot.TankDrive(leftStick, rightStick);	 // drive with tank style
+			myRobot.TankDrive( leftStick.GetY(), rightStick.GetY());
 		} else{
-			myRobot.ArcadeDrive(rightStick);	         // drive with arcade style (use right stick)
+			myRobot.ArcadeDrive(-rightStick.GetY(), rightStick.GetX());	         // drive with arcade style (use right stick)
 		}
+		
+		horizontalServo.Set((turretStick.GetX()+ 1.0) / 2.0);
+		verticalServo.Set((turretStick.GetY()+ 1.0) / 2.0);
 		UpdateDashboard();
 	}
 
