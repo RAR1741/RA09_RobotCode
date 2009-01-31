@@ -1,5 +1,9 @@
-#include "Target.h"
+
 #include "Autonomous.h"
+
+#if !EXCLUDE_AUTO
+#include "Target.h"
+#endif
 
 //Autonomous::Autonomous(PurpleMonkeys * Robot)
 Autonomous::Autonomous() {
@@ -10,7 +14,7 @@ Autonomous::~Autonomous() {
 }
 
 void Autonomous::Init() {
-
+#if !EXCLUDE_AUTO
 	/* image data for tracking - override default parameters if needed */
 	/* recommend making PINK the first color because GREEN is more 
 	 * subsceptible to hue variations due to lighting type so may
@@ -31,7 +35,6 @@ void Autonomous::Init() {
 	td2.saturation.maxValue = 255;
 	td2.luminance.minValue = 92;
 	td2.luminance.maxValue = 255;
-
 	/* set up debug output: 
 	 * DEBUG_OFF, DEBUG_MOSTLY_OFF, DEBUG_SCREEN_ONLY, DEBUG_FILE_ONLY, DEBUG_SCREEN_AND_FILE 
 	 */
@@ -45,13 +48,15 @@ void Autonomous::Init() {
 	}
 	/* allow writing to vxWorks target */
 	Priv_SetWriteFileAllowed(1);
+#endif
 }
 
 void Autonomous::Continuous() {
 
 }
 
-
+#if !EXCLUDE_AUTO
+#error "This project isn't building because this code was not refactored from TwoColorDemo."
 /**
 	 * Set servo positions (0.0 to 1.0) translated from normalized values (-1.0 to 1.0). 
 	 * 
@@ -208,6 +213,9 @@ void Autonomous::Periodic() {
 }
 
 void Autonomous::IdentifyFriendOrFoe() {
+	// TODO: Put some actual C++ code in here
 	search;
 	FindColor()
 }
+
+#endif
