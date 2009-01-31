@@ -66,7 +66,7 @@ class TwoColorDemo : public SimpleRobot
 	float horizontalPosition, verticalPosition;	// current servo positions
 	float servoDeadband;			// percentage servo delta to trigger move
 	int framesPerSecond;			// number of camera frames to get per second
-	int cameraRotation;				// angle that camera is mounted
+	ImageRotation cameraRotation;				// angle that camera is mounted
 	float panControl;				// to slow down pan
 	double sinStart;				// control where to start the sine wave input for pan
 	TrackingThreshold td1, td2;		// color thresholds
@@ -127,7 +127,7 @@ public:
 		SetDebugFlag(DEBUG_SCREEN_ONLY);
 		
 		/* start the CameraTask	 */
-		if (StartCameraTask(framesPerSecond, 0, k320x240, ROT_180) == -1) {
+		if (StartCameraTask(framesPerSecond, 0, k320x240, cameraRotation) == -1) {
 			DPRINTF( LOG_ERROR,"Failed to spawn camera task; exiting. Error code %s", 
 					GetVisionErrorText(GetLastVisionError()) );
 		}
