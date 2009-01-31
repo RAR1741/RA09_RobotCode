@@ -17,6 +17,7 @@ using ::floor;
 #include "Logger.h"
 
 #include "WPILib.h"
+#include "Personality.h"
 
 /**
  * This is a demo program showing the use of the RobotBase class.
@@ -45,6 +46,7 @@ class PurpleMonkeys : public IterativeRobot {
 	Gyro * testGyro;
 	// bool printed;
 	Autonomous Auto;
+	Personality Squeeky;
 	
 	enum							// Driver Station jumpers to control program operation
 	{ ARCADE_MODE = 1,				// Tank/Arcade jumper is on DS Input 1 (Jumper present is arcade)
@@ -71,10 +73,12 @@ public:
 				verticalServo(4,5),
 				
 				counter(0),
-				testGyro(NULL)
+				testGyro(NULL),
+				
 				//printed(false)
 				
 				//Auto()
+				Squeeky()
 				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 		
@@ -105,7 +109,7 @@ public:
 	}
 
 	void DisabledPeriodic(void) {
-
+		Squeeky.RPTCommandProccessor();
 	}
 
 	void DisabledContinuous(void) {
