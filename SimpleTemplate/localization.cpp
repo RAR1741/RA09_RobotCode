@@ -53,6 +53,64 @@ extern	int SteerXAxisJoystick;
 	float Oi = 0.0;         // Relative Orientation Oi - In Radians - Formula 1.6
 	float EncHding = 0.0;   // Heading in degrees calculated from the encoder data - (Oi converted to degrees)
 
+
+
+	struct WayPointInt {
+		int	X;
+		int	Y;
+	};
+
+	struct WayPointReal {
+		float X;
+		float Y;
+	};
+
+	struct WayPointLong {
+		long X;
+		long Y;
+	};
+	
+	struct YawRotationTransformMatrix {
+		float rmA11;  // X value from WayPoint Unit Vector
+		float rmA12;  // Y value from WayPoint Unit Vector
+		float rmA13;  // Zero
+		float rmA21;  // Sign inverted Y value from WayPoint Unit Vector
+		float rmA22;  // X value from WayPoint Unit Vector
+		float rmA23;  // Zero
+		float rmA31;  // Zero
+		float rmA32;  // Zero
+		float rmA33;  // One
+	};
+
+	struct PathMathIO {
+		struct WayPointInt CurrentLocation;  // Current location in the arena - Input for ActiveLocation calculations
+		struct WayPointInt MapSegmentStart;  // Start point of the current map segment - Input for ActiveRouteSegment calculations
+		struct WayPointInt MapSegmentEnd;    // End point of the current map segment - Input for ActiveRouteSegment calculations
+
+	// Start of ActiveRouteSegment variables
+		int HotMapSegment;                   // Path number of the current or live route map path segment, zero based.
+		struct WayPointLong DeltaWayPoint;
+		struct WayPointInt dwpSignMult;
+		struct WayPointLong DeltaSquared;
+		long CenterLineSquared;
+		struct WayPointReal WPUnitVector;   // Unit vector of the current map segment
+		int TargetHeading;                  // Heading angle for the current map segment
+		struct YawRotationTransformMatrix YawTransform;  // The rotation matrix to move from arena cooridinate system to the
+		int SegmentTerminator;              // Value used to decide when to move to the next map segment
+	// End of ActiveRouteSegment variables
+
+	// Start of Active Location variables
+		struct WayPointInt vWI;
+		struct WayPointReal vCLI_real;   // The answer as a real number
+		struct WayPointInt vCLI_int;     // The answer rounded to the nearest integer
+		int SegmentRemaining;            // Travel distance remaining in the HotMapSegment
+	// End of Active Location variables
+
+	};
+
+	
+	PathMathIO PM;
+	
 // End of Global variables
 
 void CalcInches (void)
@@ -97,21 +155,6 @@ void OdometryMath (void)  //  Formula numbers reference page 20 in "Where Am I?"
 }
 
 
-
-struct WayPointInt {
-	int	X;
-	int	Y;
-};
-
-struct WayPointReal {
-	float X;
-	float Y;
-};
-
-struct WayPointLong {
-	long X;
-	long Y;
-};
 
 
 extern int RouteMap[rmMaxPoints][3];
@@ -183,46 +226,7 @@ void OppositeSideRoute(int RouteCommand)
 
 
 
-struct YawRotationTransformMatrix {
-	float rmA11;  // X value from WayPoint Unit Vector
-	float rmA12;  // Y value from WayPoint Unit Vector
-	float rmA13;  // Zero
-	float rmA21;  // Sign inverted Y value from WayPoint Unit Vector
-	float rmA22;  // X value from WayPoint Unit Vector
-	float rmA23;  // Zero
-	float rmA31;  // Zero
-	float rmA32;  // Zero
-	float rmA33;  // One
-};
 
-struct PathMathIO {
-	struct WayPointInt CurrentLocation;  // Current location in the arena - Input for ActiveLocation calculations
-	struct WayPointInt MapSegmentStart;  // Start point of the current map segment - Input for ActiveRouteSegment calculations
-	struct WayPointInt MapSegmentEnd;    // End point of the current map segment - Input for ActiveRouteSegment calculations
-
-// Start of ActiveRouteSegment variables
-	int HotMapSegment;                   // Path number of the current or live route map path segment, zero based.
-	struct WayPointLong DeltaWayPoint;
-	struct WayPointInt dwpSignMult;
-	struct WayPointLong DeltaSquared;
-	long CenterLineSquared;
-	struct WayPointReal WPUnitVector;   // Unit vector of the current map segment
-	int TargetHeading;                  // Heading angle for the current map segment
-	struct YawRotationTransformMatrix YawTransform;  // The rotation matrix to move from arena cooridinate system to the
-	int SegmentTerminator;              // Value used to decide when to move to the next map segment
-// End of ActiveRouteSegment variables
-
-// Start of Active Location variables
-	struct WayPointInt vWI;
-	struct WayPointReal vCLI_real;   // The answer as a real number
-	struct WayPointInt vCLI_int;     // The answer rounded to the nearest integer
-	int SegmentRemaining;            // Travel distance remaining in the HotMapSegment
-// End of Active Location variables
-
-};
-
-PathMathIO PM;
-memset((void*)&PM, 0, sizeof(PM));
 //struct PathMathIO PM = {{96,120},{228,78},{96,36},{0},{0,0},{0,0},{0,0},{0},{0.0,0.0},{0},{0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0},{0},{0,0},{0.0,0.0},{0,0},{0}};
 
 void SetStartPosition ( int spn)
@@ -412,9 +416,11 @@ void LocalizeRobot (void)
 
 void InitializeLocalizationCode (void)
 {
+	
 	//stdout_serial_port=SERIAL_PORT_TWO;  // Set printf statements to go to the SD card on serial port 2
 //	SetStartPosition(1);  // Set start position to first location - for testing - Later will be done by switch settings
 //	SetStartPosition(2);  // Set start position to second location - for testing - Later will be done by switch settings
+	memset((void*)&PM, 0, sizeof(PM));
 	SetStartPosition(3);  // Set start position to third location - for testing - Later will be done by switch settings
 	IntializePathMath();
 //	LogPathMath();
