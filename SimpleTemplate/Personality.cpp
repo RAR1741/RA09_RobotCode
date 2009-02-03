@@ -213,4 +213,4 @@ void Personality::RPTCommandProccessor()
 	     }
 	    break;
 	  }
-}
+};

@@ -1,4 +1,7 @@
 // #include "robot.h"
+#ifndef PURPLE_MONKEYS_CPP__
+#define PURPLE_MONKEYS_CPP__
+
 #include "CameraControl.h"
 #include "WPILib.h"
 #include "DashboardDataFormat.h"
@@ -18,6 +21,7 @@ using ::floor;
 
 #include "WPILib.h"
 #include "Personality.h"
+#include "Turret.h"
 
 /**
  * This is a demo program showing the use of the RobotBase class.
@@ -47,6 +51,8 @@ class PurpleMonkeys : public IterativeRobot {
 	// bool printed;
 	Autonomous Auto;
 	Personality Squeeky;
+	Turret *theTurret;
+	
 	
 	enum							// Driver Station jumpers to control program operation
 	{ ARCADE_MODE = 1,				// Tank/Arcade jumper is on DS Input 1 (Jumper present is arcade)
@@ -79,7 +85,9 @@ public:
 				
 				//Auto()
 				Squeeky()
-				{
+				
+	{
+		theTurret = new Turret();
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 		
 	}
@@ -181,6 +189,13 @@ public:
 				testGyro = new Gyro(1,1);
 			}
 		
+		theTurret->TurretControl();
+		
+		if (theTurret->TargetInSight()) {
+			GetTheDashboard().Printf("OOOH target.");
+		} else {
+			GetTheDashboard().Printf("No target in sight.");
+		}
 		horizontalServo.Set((turretStick.GetX()+ 1.0) / 2.0);
 		verticalServo.Set((turretStick.GetY()+ 1.0) / 2.0);
 		UpdateDashboard();
@@ -205,7 +220,7 @@ public:
 	 dashboardDataFormat.m_testEncoder = testEncoder.Get();
 	 
 	 
-	 GetTheDashboard().Printf("Encoder Counts: %d, Distance: %f, Gyro Angle: %f", dashboardDataFormat.m_testEncoder, testEncoder.GetDistance(), testGyro->GetAngle());
+	 //GetTheDashboard().Printf("Encoder Counts: %d, Distance: %f, Gyro Angle: %f", dashboardDataFormat.m_testEncoder, testEncoder.GetDistance(), testGyro->GetAngle());
 	 num += 0.01;
 	 if (num > 5.0) num = 0.0;
 	 dashboardDataFormat.PackAndSend();
@@ -215,8 +230,12 @@ public:
 	Dashboard& GetTheDashboard() {
 		return m_ds->GetDashboardPacker();
 	}
+	
+	DashboardDataFormat & GetDataFormat() {
+		return dashboardDataFormat;
+	}
 };
 
-START_ROBOT_CLASS(PurpleMonkeys)
-;
+START_ROBOT_CLASS(PurpleMonkeys);
 
+#endif
