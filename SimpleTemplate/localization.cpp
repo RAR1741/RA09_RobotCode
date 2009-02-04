@@ -1,5 +1,8 @@
 
 
+#include "Autonomous.h"
+
+#if !EXCLUDE_AUTO
 /******* Warning: This section is a few bytes from full in the idata memory section. *****
 ******* Adding more variables here will likely cause link errors *****/
 
@@ -433,3 +436,5 @@ int GetPM_Y(void)
 {
 	return PM.vCLI_int.Y;
 }
+
+#endif

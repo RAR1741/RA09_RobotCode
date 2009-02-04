@@ -50,9 +50,9 @@ class PurpleMonkeys : public IterativeRobot {
 	Gyro * testGyro;
 	// bool printed;
 	Autonomous Auto;
-	Personality Squeeky;
-	Turret *theTurret;
-	
+	Personality * Squeeky;
+	Turret TheTurret;
+	AnalogChannel leftCurrent;
 	
 	enum							// Driver Station jumpers to control program operation
 	{ ARCADE_MODE = 1,				// Tank/Arcade jumper is on DS Input 1 (Jumper present is arcade)
@@ -84,10 +84,10 @@ public:
 				//printed(false)
 				
 				//Auto()
-				Squeeky()
-				
-	{
-		theTurret = new Turret();
+				Squeeky(NULL),
+				TheTurret(),
+				leftCurrent(2, 1)
+				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 		
 	}
@@ -113,11 +113,11 @@ public:
 
 	// Disabled state methods
 	void DisabledInit(void) {
-
+		Squeeky = new Personality();
 	}
 
 	void DisabledPeriodic(void) {
-		Squeeky.RPTCommandProccessor();
+		Squeeky->RPTCommandProccessor();
 	}
 
 	void DisabledContinuous(void) {
@@ -136,6 +136,17 @@ public:
 		light.Set(0);
 		// Auto.Init();
 	}
+	
+	// This function is passed a normalized x coordinate value
+	// of a target (e.g. an enemy trailer) acquired from the camera via the Turret class
+	// Patrick wrote. It's supposed to determine how to turn the robot
+	// to get the target approximatly centered, and then drive after it.
+	// Will need to implement it at later date, and probably reorganize the
+	// code into the Autonomous class.
+	void FetchBoy(double x_val)
+	{
+		// Decide How to turn
+	}
 
 	void AutonomousPeriodic(void) {
 		UpdateDashboard();
@@ -144,6 +155,15 @@ public:
 		// if (counter>=400)
 		//	myRobot.Drive(0.0, 0.0);
 		// Auto.Periodic();
+		TheTurret.TurretControl(); // This updates the Target in Sight member variable;
+		if(TheTurret.TargetInSight())
+		{
+			FetchBoy(TheTurret.GetTarget_X());
+		}
+		else
+		{
+			myRobot.Drive(0.0,0.0);
+		}
 	}
 
 	void AutonomousContinuous(void) {
@@ -153,7 +173,7 @@ public:
 
 	// Teleop state methods
 	void TeleopInit(void) {
-		testEncoder.SetDistancePerTick(300.0);
+		testEncoder.SetDistancePerPulse(300.0);
 		testEncoder.Start();
 		if(testGyro==NULL)
 			testGyro = new Gyro(1,1);
@@ -176,7 +196,7 @@ public:
 			// myRobot.TankDrive(leftStick, rightStick);	 // drive with tank style
 			myRobot.TankDrive( leftStick.GetY(), rightStick.GetY());
 		} else{
-			myRobot.ArcadeDrive(-rightStick.GetY(), rightStick.GetX());	         // drive with arcade style (use right stick)
+			myRobot.ArcadeDrive(rightStick.GetY(), - rightStick.GetX());	         // drive with arcade style (use right stick)
 		}
 		
 		// Just for testing, comment if you don't want it.
@@ -189,13 +209,6 @@ public:
 				testGyro = new Gyro(1,1);
 			}
 		
-		theTurret->TurretControl();
-		
-		if (theTurret->TargetInSight()) {
-			GetTheDashboard().Printf("OOOH target.");
-		} else {
-			GetTheDashboard().Printf("No target in sight.");
-		}
 		horizontalServo.Set((turretStick.GetX()+ 1.0) / 2.0);
 		verticalServo.Set((turretStick.GetY()+ 1.0) / 2.0);
 		UpdateDashboard();
@@ -218,9 +231,9 @@ public:
 	 dashboardDataFormat.m_DIOChannels[0]++;
 	 dashboardDataFormat.m_DIOChannelsOutputEnable[0]--;
 	 dashboardDataFormat.m_testEncoder = testEncoder.Get();
+	 dashboardDataFormat.m_LeftMotorVoltage = leftCurrent.GetValue();
 	 
-	 
-	 //GetTheDashboard().Printf("Encoder Counts: %d, Distance: %f, Gyro Angle: %f", dashboardDataFormat.m_testEncoder, testEncoder.GetDistance(), testGyro->GetAngle());
+	 GetTheDashboard().Printf("Encoder Counts: %d, Distance: %f, Gyro Angle: %f, Left Motor Voltage: %d", dashboardDataFormat.m_testEncoder, testEncoder.GetDistance(), testGyro->GetAngle(), dashboardDataFormat.m_LeftMotorVoltage);
 	 num += 0.01;
 	 if (num > 5.0) num = 0.0;
 	 dashboardDataFormat.PackAndSend();
@@ -231,11 +244,18 @@ public:
 		return m_ds->GetDashboardPacker();
 	}
 	
-	DashboardDataFormat & GetDataFormat() {
-		return dashboardDataFormat;
+	void SeekTarget()
+	{
+		/*
+		if ( FindTwoColors(td1, td2, ABOVE, &par) ){
+			found = true;
+		} else {
+			found = false;
+		}
+		*/
 	}
+	
 };
 
 START_ROBOT_CLASS(PurpleMonkeys);
-
 #endif

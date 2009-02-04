@@ -48,3 +48,8 @@ void Turret::TurretControl(void)
 		this->tracking = false;
 	}
 }
+
+double Turret::GetTarget_X()
+{	
+	return par.center_mass_x_normalized;
+}

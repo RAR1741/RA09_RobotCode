@@ -14,7 +14,8 @@ public:
 	void TurretControl();
 	
 	bool TargetInSight() const { return tracking; };
-	
+	double GetTarget_X(); // HaHa Patrick! Added a function to YOUR code! How does THAT make you feel?
+	// Am I a bad person? >:)
 	
 private:
 	//PurpleMonkeys *theRobot;

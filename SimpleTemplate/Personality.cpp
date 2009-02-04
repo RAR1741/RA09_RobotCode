@@ -1,5 +1,9 @@
 
 #include "Personality.h"
+#include "SerialPort.h"
+#include <cstring>
+
+using ::strlen;
 
 Personality::Personality()
 {
@@ -9,17 +13,21 @@ Personality::Personality()
 	// databits = 8
 	// parity = none
 	// stopbits = 1
-	terminal_port = new SerialPort(19200); // Defaults are correct.
+	terminal_port = new SerialPort(19200); //, 8, SerialPort::kParity_None, SerialPort::kStopBits_One); // Defaults are correct.
+	
+	terminal_port->Printf("\r\nSqueeky says hello.");
+	
+	//terminal_port->EnableTermination('\n');
 }
 
 Personality::~Personality()
 {
-	
+	delete terminal_port;
 }
 
 void Personality::DisplayText (const char *TxtAdd)
 {
-	terminal_port->Printf(TxtAdd);
+	terminal_port->Write(TxtAdd, strlen(TxtAdd));
 	/*
   do {Write_Serial_Port_Two(*TxtAdd);}  // Send byte to serial port
   while(*TxtAdd++);                   // Until we reach end of string
@@ -28,6 +36,7 @@ void Personality::DisplayText (const char *TxtAdd)
 
 char Personality::GetKeyPress (void)
 {
+#if 0
 	if (terminal_port->GetBytesReceived() == 0) {
 		return 0;
 	} else {
@@ -35,10 +44,16 @@ char Personality::GetKeyPress (void)
 		
 		// Read the next character from the stream
 		terminal_port->Scanf("%c", &next);
+		//terminal_port->Read(Buffer, 1);
+		
+		//next = Buffer[0];
 		
 		// return that character
 		return next;
 	}
+#else
+	return 0;
+#endif
 	/*
 if(Serial_Port_Two_Byte_Count() == 0) // Test for a character present
   return 0;                           // Return zero if none ready for processing
@@ -213,4 +228,4 @@ void Personality::RPTCommandProccessor()
 	     }
 	    break;
 	  }
-};
+}

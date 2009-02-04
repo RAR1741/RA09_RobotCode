@@ -31,6 +31,7 @@ public:
 	UINT32 m_TopRightBoundRect;
 	UINT32 m_BottomLeftBoundRect;
 	UINT32 m_BottomRightBoundRect;
+	INT16 m_LeftMotorVoltage;
 	void PackAndSend(void);
 private:
 	DISALLOW_COPY_AND_ASSIGN(DashboardDataFormat);

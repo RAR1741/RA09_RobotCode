@@ -1,6 +1,10 @@
 #ifndef LOCALIZATION__H
 #define LOCALIZATION__H
 
+#include "Autonomous.h"
+
+#if !EXCLUDE_AUTO
+
 #define rmX 0  // Use these in the RouteMap array 2nd index position to select the X or Y value
 #define rmY 1
 #define rmS 2  // Use this to address the speed variable for a partictular RouteMap segment
@@ -23,4 +27,5 @@ void SetStartPosition ( int spn);
 
 int GetPM_Y(void);
 
+#endif
 #endif
