@@ -17,6 +17,8 @@
 
 #include "TrackAPI.h"
 
+#define ELIM_VAR_ERRORS 1
+
 /*  Constants */
 /* 
  * If you want to change these settings, test with 
