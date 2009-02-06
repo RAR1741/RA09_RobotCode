@@ -56,6 +56,7 @@ void DashboardDataFormat::PackAndSend(void)
 	dashboardPacker.AddI32(m_testEncoder);
 	
 	dashboardPacker.AddFloat(m_gyroAngle);
+	dashboardPacker.AddFloat(m_gyroTemp);    // Added by HAM 2/6/9
 	
 	dashboardPacker.AddFloat(m_accelX);
 	dashboardPacker.AddFloat(m_accelY);

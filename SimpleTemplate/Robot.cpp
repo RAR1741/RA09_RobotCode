@@ -48,6 +48,7 @@ class PurpleMonkeys : public IterativeRobot {
 	Servo verticalServo;
 	int counter;
 	Gyro * testGyro;
+	Gyro * testTemp;
 	// bool printed;
 	// Autonomous Auto;
 	Personality * Squeeky;
@@ -81,7 +82,7 @@ public:
 				
 				counter(0),
 				testGyro(NULL),
-				
+				testTemp (NULL),
 				//printed(false)
 				
 				//Auto()
@@ -255,6 +256,7 @@ public:
 		 dashboardDataFormat.m_gyroAngle = testGyro->GetAngle();
 		 //dashboardDataFormat.m_gyroAngle = 589.7;
 	 }
+	 dashboardDataFormat.m_gyroTemp = testTemp->GetAngle();   // Added 2/6/2009 HAM
 	 
 	//  dashboardDataFormat.m_accelX = 84.0;
 	 
