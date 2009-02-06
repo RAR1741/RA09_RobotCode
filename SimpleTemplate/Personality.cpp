@@ -2,6 +2,8 @@
 #include "Personality.h"
 #include "SerialPort.h"
 #include <cstring>
+#include <stdio.h>
+#include "vxWorks.h" 
 
 using ::strlen;
 
@@ -19,6 +21,19 @@ Personality::Personality()
 	//terminal_port->Printf("\r\nSqueeky says hello.");
 	
 	//terminal_port->EnableTermination('\n');
+
+// ******** Test code to try to send a string to the main console **********
+//          Added by HAM 2/6/2009	
+
+	FILE *fdSerialPort;                           // File Descriptor for the serial port
+	char TestString[22] = "\r\nSqueeky says hello.";  // Test message to send out serial port
+
+	fdSerialPort = fopen ("/tty/0", "r+");        // Open the serial port for reading and writing
+	fwrite (TestString, sizeof(TestString), 1, fdSerialPort);  // Write the string
+	fclose (fdSerialPort);                        // Close the port
+
+// ******** Test code to try to send a string to the main console **********
+
 }
 
 Personality::~Personality()
