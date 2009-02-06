@@ -32,6 +32,13 @@ Personality::Personality()
 	fwrite (TestString, sizeof(TestString), 1, fdSerialPort);  // Write the string
 	fclose (fdSerialPort);                        // Close the port
 
+	
+//	SerialPort.Write (TestString, sizeof(TestString));
+
+//	int ViStatus;
+//	ViStatus = ViOpen (sesn, rsrcName, accessMode, openTimeout, vi);
+
+
 // ******** Test code to try to send a string to the main console **********
 
 }
