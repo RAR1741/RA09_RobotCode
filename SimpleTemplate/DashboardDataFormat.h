@@ -32,6 +32,10 @@ public:
 	UINT32 m_BottomLeftBoundRect;
 	UINT32 m_BottomRightBoundRect;
 	INT16 m_LeftMotorVoltage;
+	float m_gyroAngle;
+	float m_accelX;
+	float m_accelY;
+	float m_accelZ;
 	void PackAndSend(void);
 private:
 	DISALLOW_COPY_AND_ASSIGN(DashboardDataFormat);

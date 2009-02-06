@@ -49,10 +49,11 @@ class PurpleMonkeys : public IterativeRobot {
 	int counter;
 	Gyro * testGyro;
 	// bool printed;
-	Autonomous Auto;
+	// Autonomous Auto;
 	Personality * Squeeky;
 	Turret TheTurret;
 	AnalogChannel leftCurrent;
+	Accelerometer testAccel_X,testAccel_Y,testAccel_Z;
 	
 	enum							// Driver Station jumpers to control program operation
 	{ ARCADE_MODE = 1,				// Tank/Arcade jumper is on DS Input 1 (Jumper present is arcade)
@@ -86,7 +87,10 @@ public:
 				//Auto()
 				Squeeky(NULL),
 				TheTurret(),
-				leftCurrent(2, 1)
+				leftCurrent(2, 1),
+				testAccel_X(1,3),
+				testAccel_Y(1,4),
+				testAccel_Z(1,5)
 				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 		
@@ -102,7 +106,8 @@ public:
 	void RobotInit(void) {
 		GetWatchdog().SetExpiration(100);
 
-		
+		if(testGyro==NULL)
+			testGyro = new Gyro(1,1);
 		 if(StartCameraTask(13,0,k320x240,ROT_0)==-1)
 		 {
 		 dprintf("Things screwed up with camera.\n");
@@ -114,6 +119,11 @@ public:
 	// Disabled state methods
 	void DisabledInit(void) {
 		Squeeky = new Personality();
+		if(testGyro==NULL)
+			testGyro = new Gyro(1,1);
+		
+		UpdateDashboard();
+		
 	}
 
 	void DisabledPeriodic(void) {
@@ -156,19 +166,23 @@ public:
 		//	myRobot.Drive(0.0, 0.0);
 		// Auto.Periodic();
 		TheTurret.TurretControl(); // This updates the Target in Sight member variable;
+		
 		if(TheTurret.TargetInSight())
 		{
+			GetTheDashboard().Printf("TARGET IN SIGHT!");
 			FetchBoy(TheTurret.GetTarget_X());
 		}
 		else
 		{
+			GetTheDashboard().Printf("WHERE?!");
 			myRobot.Drive(0.0,0.0);
 		}
+		
 	}
 
 	void AutonomousContinuous(void) {
 		// UpdateDashboard();
-		Auto.Continuous();
+		// Auto.Continuous();
 	}
 
 	// Teleop state methods
@@ -209,8 +223,8 @@ public:
 				testGyro = new Gyro(1,1);
 			}
 		
-		horizontalServo.Set((turretStick.GetX()+ 1.0) / 2.0);
-		verticalServo.Set((turretStick.GetY()+ 1.0) / 2.0);
+		// horizontalServo.Set((turretStick.GetX()+ 1.0) / 2.0);
+		// verticalServo.Set((turretStick.GetY()+ 1.0) / 2.0);
 		UpdateDashboard();
 	}
 
@@ -226,12 +240,23 @@ public:
 	 //dashboardDataFormat.m_AnalogChannels[0][4] = static_cast<float>(count); // / static_cast<float>(INT_MAX); 
 	 // dashboardDataFormat.m_AnalogChannels[0][1] = 5.0 - num;
 	 //dashboardDataFormat.m_AnalogChannels[0][0] = stick.GetY(); 
-	 //dashboardDataFormat.m_AnalogChannels[0][1] = test.GetY();
-	 //dashboardDataFormat.m_AnalogChannels[0][4] = testMotor.Get();
+	 // dashboardDataFormat.m_AnalogChannels[0][1] = test.GetY();
+	 dashboardDataFormat.m_AnalogChannels[0][4] = testMotor.Get();
 	 dashboardDataFormat.m_DIOChannels[0]++;
 	 dashboardDataFormat.m_DIOChannelsOutputEnable[0]--;
 	 dashboardDataFormat.m_testEncoder = testEncoder.Get();
 	 dashboardDataFormat.m_LeftMotorVoltage = leftCurrent.GetValue();
+	 dashboardDataFormat.m_accelX = testAccel_X.GetAcceleration();
+	 dashboardDataFormat.m_accelY = testAccel_Y.GetAcceleration();
+	 dashboardDataFormat.m_accelZ = testAccel_Z.GetAcceleration();
+	 if (testGyro == NULL) {
+		 dashboardDataFormat.m_gyroAngle = -42.0001;
+	 } else {
+		 dashboardDataFormat.m_gyroAngle = testGyro->GetAngle();
+		 //dashboardDataFormat.m_gyroAngle = 589.7;
+	 }
+	 
+	//  dashboardDataFormat.m_accelX = 84.0;
 	 
 	 GetTheDashboard().Printf("Encoder Counts: %d, Distance: %f, Gyro Angle: %f, Left Motor Voltage: %d", dashboardDataFormat.m_testEncoder, testEncoder.GetDistance(), testGyro->GetAngle(), dashboardDataFormat.m_LeftMotorVoltage);
 	 num += 0.01;

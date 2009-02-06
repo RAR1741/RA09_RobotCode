@@ -55,6 +55,12 @@ void DashboardDataFormat::PackAndSend(void)
 	
 	dashboardPacker.AddI32(m_testEncoder);
 	
+	dashboardPacker.AddFloat(m_gyroAngle);
+	
+	dashboardPacker.AddFloat(m_accelX);
+	dashboardPacker.AddFloat(m_accelY);
+	dashboardPacker.AddFloat(m_accelZ);
+	
 	// Flush the data to the driver station.
 	dashboardPacker.Finalize();
 }

@@ -13,21 +13,22 @@ Personality::Personality()
 	// databits = 8
 	// parity = none
 	// stopbits = 1
-	terminal_port = new SerialPort(19200); //, 8, SerialPort::kParity_None, SerialPort::kStopBits_One); // Defaults are correct.
+	//terminal_port = new SerialPort(19200); //, 8, SerialPort::kParity_None, SerialPort::kStopBits_One); // Defaults are correct.
+	//terminal_port = new SerialPort(9600); //, 8, SerialPort::kParity_None, SerialPort::kStopBits_One); // Defaults are correct.
 	
-	terminal_port->Printf("\r\nSqueeky says hello.");
+	//terminal_port->Printf("\r\nSqueeky says hello.");
 	
 	//terminal_port->EnableTermination('\n');
 }
 
 Personality::~Personality()
 {
-	delete terminal_port;
+	//delete terminal_port;
 }
 
 void Personality::DisplayText (const char *TxtAdd)
 {
-	terminal_port->Write(TxtAdd, strlen(TxtAdd));
+	//terminal_port->Write(TxtAdd, strlen(TxtAdd));
 	/*
   do {Write_Serial_Port_Two(*TxtAdd);}  // Send byte to serial port
   while(*TxtAdd++);                   // Until we reach end of string
