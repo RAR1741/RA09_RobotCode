@@ -26,14 +26,16 @@ public:
 	UINT16 m_DIOChannelsOutputEnable[kDigitalModules];
 	UINT8 m_PWMChannels[kDigitalModules][kPwmChannels];
 	UINT8 m_SolenoidChannels;
-	INT32 m_testEncoder;
+	INT32 m_LM_QuadEncoder;
+	INT32 m_RM_QuadEncoder;
+	
 	UINT32 m_TopLeftBoundRect;
 	UINT32 m_TopRightBoundRect;
 	UINT32 m_BottomLeftBoundRect;
 	UINT32 m_BottomRightBoundRect;
 	INT16 m_LeftMotorVoltage;
 	float m_gyroAngle;
-	// float m_gyroTemp;    // Added by HAM 2/6/9
+	float m_gyroTemp;    // Added by HAM 2/6/9
 	float m_accelX;
 	float m_accelY;
 	float m_accelZ;

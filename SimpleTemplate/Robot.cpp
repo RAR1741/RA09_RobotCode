@@ -42,7 +42,9 @@ class PurpleMonkeys : public IterativeRobot {
  	// Logger logger;
     CameraControl theCamera;
 	DashboardDataFormat dashboardDataFormat;
-	Encoder testEncoder;
+	// Encoder testEncoder;
+	Encoder LMQuadEncoder;
+	Encoder RMQuadEncoder;
 	Victor testMotor;
 	Servo horizontalServo;
 	Servo verticalServo;
@@ -55,7 +57,7 @@ class PurpleMonkeys : public IterativeRobot {
 	Turret TheTurret;
 	AnalogChannel leftCurrent;
 	Accelerometer testAccel_X,testAccel_Y,testAccel_Z;
-	Jaguar Harvester_Motor;
+	// Jaguar Harvester_Motor;
 	
 	enum							// Driver Station jumpers to control program operation
 	{ ARCADE_MODE = 1,				// Tank/Arcade jumper is on DS Input 1 (Jumper present is arcade)
@@ -76,7 +78,9 @@ public:
 				// logger(),
 		  		theCamera(),
 				dashboardDataFormat(),
-				testEncoder(4,1,4,2,false),
+				LMQuadEncoder(4,1,4,2,false),
+				RMQuadEncoder(4,3,4,4,false),
+				
 				testMotor(4,3),
 				horizontalServo(4,4),
 				verticalServo(4,5),
@@ -92,8 +96,8 @@ public:
 				leftCurrent(2, 1),
 				testAccel_X(1,3),
 				testAccel_Y(1,4),
-				testAccel_Z(1,5),
-				Harvester_Motor(3, 6)
+				testAccel_Z(1,5)
+				// Harvester_Motor(3, 6)
 				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 		
@@ -111,6 +115,8 @@ public:
 
 		if(testGyro==NULL)
 			testGyro = new Gyro(1,1);
+		if(testTemp==NULL)
+			testTemp = new Gyro(1,2);
 		 if(StartCameraTask(13,0,k320x240,ROT_0)==-1)
 		 {
 		 dprintf("Things screwed up with camera.\n");
@@ -138,7 +144,7 @@ public:
 
 	// Autonomous state methods
 	void AutonomousInit(void) {
-		testEncoder.Stop();
+		LMQuadEncoder.Stop();
 		testMotor.Set(0.0);
 		//myRobot.Drive(0.5, 0.0); // drive forwards half speed
 		GetWatchdog().SetEnabled(false);
@@ -191,8 +197,8 @@ public:
 	// Teleop state methods
 	void TeleopInit(void) {
 //		testEncoder.SetDistancePerTick(300.0);
-		testEncoder.SetDistancePerPulse(300.0);
-		testEncoder.Start();
+		LMQuadEncoder.SetDistancePerPulse(300.0);
+		LMQuadEncoder.Start();
 		if(testGyro==NULL)
 			testGyro = new Gyro(1,1);
 		light.Set(1);
@@ -222,7 +228,7 @@ public:
 		
 		if(testMotorStick.GetButton(testMotorStick.kTopButton))
 			{
-				testEncoder.Reset();
+			LMQuadEncoder.Reset();
 				delete testGyro;
 				testGyro = new Gyro(1,1);
 			}
@@ -248,7 +254,8 @@ public:
 	 dashboardDataFormat.m_AnalogChannels[0][4] = testMotor.Get();
 	 dashboardDataFormat.m_DIOChannels[0]++;
 	 dashboardDataFormat.m_DIOChannelsOutputEnable[0]--;
-	 dashboardDataFormat.m_testEncoder = testEncoder.Get();
+	 dashboardDataFormat.m_RM_QuadEncoder = RMQuadEncoder.Get();
+	 dashboardDataFormat.m_LM_QuadEncoder = LMQuadEncoder.Get();
 	 dashboardDataFormat.m_LeftMotorVoltage = leftCurrent.GetValue();
 	 dashboardDataFormat.m_accelX = testAccel_X.GetAcceleration();
 	 dashboardDataFormat.m_accelY = testAccel_Y.GetAcceleration();
@@ -258,12 +265,10 @@ public:
 	 } else {
 		 dashboardDataFormat.m_gyroAngle = testGyro->GetAngle();
 		 //dashboardDataFormat.m_gyroAngle = 589.7;
-	 }
-//	 dashboardDataFormat.m_gyroTemp = testTemp->GetAngle();   // Added 2/6/2009 HAM
-	 
+	 }	 
 	//  dashboardDataFormat.m_accelX = 84.0;
 	 
-	 GetTheDashboard().Printf("Encoder Counts: %d, Distance: %f, Gyro Angle: %f, Left Motor Voltage: %d", dashboardDataFormat.m_testEncoder, testEncoder.GetDistance(), testGyro->GetAngle(), dashboardDataFormat.m_LeftMotorVoltage);
+	 GetTheDashboard().Printf("Encoder Counts: %d, Distance: %f, Gyro Angle: %f, Left Motor Voltage: %d", dashboardDataFormat.m_RM_QuadEncoder, LMQuadEncoder.GetDistance(), testGyro->GetAngle(), dashboardDataFormat.m_LeftMotorVoltage);
 	 num += 0.01;
 	 if (num > 5.0) num = 0.0;
 	 dashboardDataFormat.PackAndSend();

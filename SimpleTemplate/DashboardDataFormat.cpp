@@ -53,10 +53,12 @@ void DashboardDataFormat::PackAndSend(void)
 
 	// PJF RED ALERT CODE: Add encoder data
 	
-	dashboardPacker.AddI32(m_testEncoder);
+	dashboardPacker.AddI32(m_LM_QuadEncoder);
+	dashboardPacker.AddI32(m_RM_QuadEncoder);
+	
 	
 	dashboardPacker.AddFloat(m_gyroAngle);
-//	dashboardPacker.AddFloat(m_gyroTemp);    // Added by HAM 2/6/9
+	dashboardPacker.AddFloat(m_gyroTemp);    // Added by HAM 2/6/9
 	
 	dashboardPacker.AddFloat(m_accelX);
 	dashboardPacker.AddFloat(m_accelY);
