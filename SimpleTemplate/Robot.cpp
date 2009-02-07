@@ -74,8 +74,11 @@ public:
 						false), testMotor(4, 3), horizontalServo(4, 4),
 				verticalServo(4, 5),
 
-				counter(0), testGyro(NULL),
+				counter(0), 
+				testGyro(NULL),
 				testTemp(NULL),
+				
+				
 				//printed(false)
 
 				//Auto()
@@ -97,8 +100,8 @@ public:
 
 		if (testGyro==NULL)
 			testGyro = new Gyro(1,1);
-		if (testTemp==NULL)
-			testTemp = new Gyro(1,2);
+		//if (testTemp==NULL)
+		// 	testTemp = new Gyro(1,2);
 		if (StartCameraTask(13, 0, k320x240, ROT_0)==-1) {
 			dprintf("Things screwed up with camera.\n");
 		}
@@ -206,8 +209,21 @@ public:
 			testEncoder.Reset();
 			delete testGyro;
 			testGyro = new Gyro(1,1);
-			delete testTemp;
-			testTemp = new Gyro(1,1);
+			// delete testTemp;
+			// testTemp = new Gyro(1,2);
+		}
+		
+		if (leftStick.GetButton(leftStick.kTriggerButton)) {
+			GetTheDashboard().Printf("TRIGGA!");
+			if (Squeeky == NULL) {
+				// Uh oh! 
+				testMotor.Set(0.999);
+			} else {
+				Squeeky->SqueekySayHello();
+				testMotor.Set(0.999);
+			}
+		} else {
+			testMotor.Set(0.0);
 		}
 
 		// horizontalServo.Set((turretStick.GetX()+ 1.0) / 2.0);
@@ -241,14 +257,15 @@ public:
 			dashboardDataFormat.m_gyroAngle = testGyro->GetAngle();
 			//dashboardDataFormat.m_gyroAngle = 589.7;
 		}
-		dashboardDataFormat.m_gyroTemp = testTemp->GetAngle(); // Added 2/6/2009 HAM
+	// 	dashboardDataFormat.m_gyroTemp = testTemp->GetAngle(); // Added 2/6/2009 HAM
 
 		//  dashboardDataFormat.m_accelX = 84.0;
-
+		/*
 		GetTheDashboard().Printf(
 				"Encoder Counts: %d, Distance: %f, Gyro Angle: %f, Left Motor Voltage: %d",
 				dashboardDataFormat.m_testEncoder, testEncoder.GetDistance(),
 				testGyro->GetAngle(), dashboardDataFormat.m_LeftMotorVoltage);
+		*/
 		num += 0.01;
 		if (num > 5.0)
 			num = 0.0;

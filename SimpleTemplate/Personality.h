@@ -10,6 +10,9 @@ public:
 	~Personality();
 	
 	void RPTCommandProccessor(void);
+	
+	void SqueekySayHello(void);
+	
 private:
 	SerialPort * terminal_port;
 	char SubMenuSelector;  // This state variable keeps track of sub menu from previous command

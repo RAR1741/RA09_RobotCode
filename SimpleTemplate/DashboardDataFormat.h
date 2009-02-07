@@ -33,7 +33,7 @@ public:
 	UINT32 m_BottomRightBoundRect;
 	INT16 m_LeftMotorVoltage;
 	float m_gyroAngle;
-	float m_gyroTemp;    // Added by HAM 2/6/9
+	// float m_gyroTemp;    // Added by HAM 2/6/9
 	float m_accelX;
 	float m_accelY;
 	float m_accelZ;

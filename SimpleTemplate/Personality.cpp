@@ -22,16 +22,6 @@ Personality::Personality()
 	
 	//terminal_port->EnableTermination('\n');
 
-// ******** Test code to try to send a string to the main console **********
-//          Added by HAM 2/6/2009	
-
-	FILE *fdSerialPort;                           // File Descriptor for the serial port
-	char TestString[22] = "\r\nSqueeky says hello.";  // Test message to send out serial port
-
-	fdSerialPort = fopen ("/tty/0", "r+");        // Open the serial port for reading and writing
-	fwrite (TestString, sizeof(TestString), 1, fdSerialPort);  // Write the string
-	fclose (fdSerialPort);                        // Close the port
-
 	
 //	SerialPort.Write (TestString, sizeof(TestString));
 
@@ -56,7 +46,21 @@ void Personality::DisplayText (const char *TxtAdd)
   while(*TxtAdd++);                   // Until we reach end of string
   */
 }
+void Personality::SqueekySayHello(void)
+{
+	// ******** Test code to try to send a string to the main console **********
+	//          Added by HAM 2/6/2009	
 
+		FILE *fdSerialPort;                           // File Descriptor for the serial port
+		char TestString[22] = "\r\nSqueeky says hello.";  // Test message to send out serial port
+
+		//fdSerialPort = fopen ("/tty/0", "r+");        // Open the serial port for reading and writing
+		fdSerialPort = fopen ("/tyCo/0", "r+");        // Open the serial port for reading and writing
+		// /tyCo/0
+		fwrite (TestString, sizeof(TestString), 1, fdSerialPort);  // Write the string
+		fclose (fdSerialPort);                        // Close the port
+
+}
 char Personality::GetKeyPress (void)
 {
 #if 0
