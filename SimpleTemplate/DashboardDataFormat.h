@@ -28,6 +28,8 @@ public:
 	UINT8 m_SolenoidChannels;
 	INT32 m_LM_QuadEncoder;
 	INT32 m_RM_QuadEncoder;
+	INT32 m_LMWheelEncoder;
+	INT32 m_RMWheelEncoder;
 	
 	UINT32 m_TopLeftBoundRect;
 	UINT32 m_TopRightBoundRect;

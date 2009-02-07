@@ -55,7 +55,8 @@ void DashboardDataFormat::PackAndSend(void)
 	
 	dashboardPacker.AddI32(m_LM_QuadEncoder);
 	dashboardPacker.AddI32(m_RM_QuadEncoder);
-	
+	dashboardPacker.AddI32(m_LMWheelEncoder);
+	dashboardPacker.AddI32(m_RMWheelEncoder);
 	
 	dashboardPacker.AddFloat(m_gyroAngle);
 	dashboardPacker.AddFloat(m_gyroTemp);    // Added by HAM 2/6/9

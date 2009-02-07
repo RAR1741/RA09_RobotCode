@@ -45,6 +45,8 @@ class PurpleMonkeys : public IterativeRobot {
 	// Encoder testEncoder;
 	Encoder LMQuadEncoder;
 	Encoder RMQuadEncoder;
+	Encoder LMWheelEncoder;
+	Encoder RMWheelEncoder;
 	Victor testMotor;
 	Servo horizontalServo;
 	Servo verticalServo;
@@ -80,6 +82,8 @@ public:
 				dashboardDataFormat(),
 				LMQuadEncoder(4,1,4,2,false),
 				RMQuadEncoder(4,3,4,4,false),
+				LMWheelEncoder(4,5,4,6,false),
+				RMWheelEncoder(4,7,4,8,false),
 				
 				testMotor(4,3),
 				horizontalServo(4,4),
@@ -256,10 +260,13 @@ public:
 	 dashboardDataFormat.m_DIOChannelsOutputEnable[0]--;
 	 dashboardDataFormat.m_RM_QuadEncoder = RMQuadEncoder.Get();
 	 dashboardDataFormat.m_LM_QuadEncoder = LMQuadEncoder.Get();
+	 dashboardDataFormat.m_RMWheelEncoder = RMWheelEncoder.Get();
+	 dashboardDataFormat.m_LMWheelEncoder = LMWheelEncoder.Get();
 	 dashboardDataFormat.m_LeftMotorVoltage = leftCurrent.GetValue();
 	 dashboardDataFormat.m_accelX = testAccel_X.GetAcceleration();
 	 dashboardDataFormat.m_accelY = testAccel_Y.GetAcceleration();
 	 dashboardDataFormat.m_accelZ = testAccel_Z.GetAcceleration();
+	 dashboardDataFormat.m_gyroTemp = testTemp->GetAngle();
 	 if (testGyro == NULL) {
 		 dashboardDataFormat.m_gyroAngle = -42.0001;
 	 } else {
