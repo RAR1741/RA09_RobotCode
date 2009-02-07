@@ -190,7 +190,8 @@ public:
 
 	// Teleop state methods
 	void TeleopInit(void) {
-		testEncoder.SetDistancePerTick(300.0);
+//		testEncoder.SetDistancePerTick(300.0);
+		testEncoder.SetDistancePerPulse(300.0);
 		testEncoder.Start();
 		if(testGyro==NULL)
 			testGyro = new Gyro(1,1);
@@ -258,7 +259,7 @@ public:
 		 dashboardDataFormat.m_gyroAngle = testGyro->GetAngle();
 		 //dashboardDataFormat.m_gyroAngle = 589.7;
 	 }
-	 dashboardDataFormat.m_gyroTemp = testTemp->GetAngle();   // Added 2/6/2009 HAM
+//	 dashboardDataFormat.m_gyroTemp = testTemp->GetAngle();   // Added 2/6/2009 HAM
 	 
 	//  dashboardDataFormat.m_accelX = 84.0;
 	 

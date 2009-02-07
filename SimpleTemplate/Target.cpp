@@ -122,7 +122,7 @@ struct HitList {
 */
 bool TempInArea(Image* binaryImage, int particleIndex, Rect rect)
 { 
-	char funcName[]="InArea";
+//	char funcName[]="InArea";
 	double position;
 	
 	imaqMeasureParticle(binaryImage, particleIndex, 0, 
@@ -303,7 +303,7 @@ int FindColorHits(ColorMode mode, const Range* plane1Range, const Range* plane2R
 */
 bool Aligned(int center1, int center2, int dimension1, int dimension2)
 {
-	char funcName[]="Aligned";
+//	char funcName[]="Aligned";
 	float averageWidth = (dimension1 + dimension2) / 2.0;
 	//scale down width
 	averageWidth *= FRC_ALIGNMENT_SCALE;
@@ -326,7 +326,7 @@ bool Aligned(int center1, int center2, int dimension1, int dimension2)
 */
 bool Adjacent(int value1, int value2)
 {
-	char funcName[]="Adjacent";
+//	char funcName[]="Adjacent";
 	if ( abs(value1 - value2) <= FRC_MAX_IMAGE_SEPARATION ) return true;
 	DPRINTF(LOG_DEBUG,"Not Adjacent  %i  %i", value1, value2);
 	return false;
@@ -342,7 +342,7 @@ bool Adjacent(int value1, int value2)
 */
 bool SizesRelative(double area1, double area2)
 {
-	char funcName[]="SizesRelative";
+//	char funcName[]="SizesRelative";
 	if ( (area2 < (area1 * FRC_SIZE_FACTOR)) && (area1 < (area2 * FRC_SIZE_FACTOR)) ) {
 		return true;
 	}
@@ -374,7 +374,7 @@ int FindTwoColors(TrackingThreshold td1, TrackingThreshold td2,
 		SecondColorPosition position, ParticleAnalysisReport *trackReport,
 		int numberHits)
 {
-	char funcName[]="FindTwoColors";
+//	char funcName[]="FindTwoColors";
 	int success;
 	
 	// create list of color hits
@@ -513,7 +513,7 @@ int FindTwoColors(TrackingThreshold td1, TrackingThreshold td2,
  */
 void PrintReport(ImageHits *myReport)
 {
-	char funcName[]="PrintReport";
+//	char funcName[]="PrintReport";
 	//dprintf(LOG_INFO, "ImageHit Report"); 
 	//dprintf(LOG_INFO, "\n    %s%i  \n -------",
 	//		"numberOfHits = ", myReport->numberOfHits); 
