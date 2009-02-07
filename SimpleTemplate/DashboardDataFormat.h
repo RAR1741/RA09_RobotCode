@@ -31,10 +31,11 @@ public:
 	INT32 m_LMWheelEncoder;
 	INT32 m_RMWheelEncoder;
 	
-	UINT32 m_TopLeftBoundRect;
-	UINT32 m_TopRightBoundRect;
-	UINT32 m_BottomLeftBoundRect;
-	UINT32 m_BottomRightBoundRect;
+	UINT32 m_TopBoundRect;
+	UINT32 m_LeftBoundRect;
+	UINT32 m_RightBoundRect;
+	UINT32 m_BottomBoundRect;
+	
 	INT16 m_LeftMotorVoltage;
 	float m_gyroAngle;
 	float m_gyroTemp;    // Added by HAM 2/6/9

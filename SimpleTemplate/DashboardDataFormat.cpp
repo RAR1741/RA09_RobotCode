@@ -50,7 +50,12 @@ void DashboardDataFormat::PackAndSend(void)
 	}
 	// Pack the solenoid module
 	dashboardPacker.AddU8(m_SolenoidChannels);
-
+	
+	// TODO Figure out if U32 and I32 are causing problems together	
+	dashboardPacker.AddU32(m_TopBoundRect);
+	dashboardPacker.AddU32(m_LeftBoundRect);
+	dashboardPacker.AddU32(m_RightBoundRect);
+	dashboardPacker.AddU32(m_BottomBoundRect);
 	// PJF RED ALERT CODE: Add encoder data
 	
 	dashboardPacker.AddI32(m_LM_QuadEncoder);
@@ -65,6 +70,10 @@ void DashboardDataFormat::PackAndSend(void)
 	dashboardPacker.AddFloat(m_accelY);
 	dashboardPacker.AddFloat(m_accelZ);
 	
+	// Add target data
+
+		
+		
 	// Flush the data to the driver station.
 	dashboardPacker.Finalize();
 }

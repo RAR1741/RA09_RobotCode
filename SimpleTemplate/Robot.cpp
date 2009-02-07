@@ -123,9 +123,12 @@ public:
 			testTemp = new Gyro(1,2);
 		 if(StartCameraTask(13,0,k320x240,ROT_0)==-1)
 		 {
-		 dprintf("Things screwed up with camera.\n");
+			 dprintf("Things screwed up with camera.\n");
 		 }
 		 
+		 if(theCamera.StatusIsFatal()){
+			 dprintf("PCVideoServer is mortally wounded.\n");
+		 }
 		   dprintf("Robot initialized.");
 	}
 
@@ -172,7 +175,7 @@ public:
 	}
 
 	void AutonomousPeriodic(void) {
-		UpdateDashboard();
+		
 		// static int counter = 0;
 		// counter++;
 		// if (counter>=400)
@@ -190,7 +193,7 @@ public:
 			GetTheDashboard().Printf("WHERE?!");
 			myRobot.Drive(0.0,0.0);
 		}
-		
+		UpdateDashboard();
 	}
 
 	void AutonomousContinuous(void) {
@@ -255,6 +258,18 @@ public:
 	 // dashboardDataFormat.m_AnalogChannels[0][1] = 5.0 - num;
 	 //dashboardDataFormat.m_AnalogChannels[0][0] = stick.GetY(); 
 	 // dashboardDataFormat.m_AnalogChannels[0][1] = test.GetY();
+	 
+	 if (!TheTurret.TargetInSight()) {
+		 dashboardDataFormat.m_TopBoundRect = 1;
+		 dashboardDataFormat.m_BottomBoundRect = 2;
+		 dashboardDataFormat.m_LeftBoundRect = 1;
+		 dashboardDataFormat.m_RightBoundRect = 2;
+	 } else {
+		 dashboardDataFormat.m_TopBoundRect = TheTurret.TargetData().boundingRect.top;
+	 	dashboardDataFormat.m_LeftBoundRect = TheTurret.TargetData().boundingRect.left;
+	 	dashboardDataFormat.m_BottomBoundRect = TheTurret.TargetData().boundingRect.top + TheTurret.TargetData().boundingRect.height;
+	 	dashboardDataFormat.m_RightBoundRect = TheTurret.TargetData().boundingRect.left + TheTurret.TargetData().boundingRect.width;
+	 }
 	 dashboardDataFormat.m_AnalogChannels[0][4] = testMotor.Get();
 	 dashboardDataFormat.m_DIOChannels[0]++;
 	 dashboardDataFormat.m_DIOChannelsOutputEnable[0]--;
