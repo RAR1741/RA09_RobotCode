@@ -42,6 +42,21 @@ public:
 	float m_accelX;
 	float m_accelY;
 	float m_accelZ;
+	
+	INT32 m_PrimaryMinHue;
+	INT32 m_PrimaryMinSat;
+	INT32 m_PrimaryMinLum;
+	INT32 m_PrimaryMaxHue;
+	INT32 m_PrimaryMaxSat;
+	INT32 m_PrimaryMaxLum;
+	
+	INT32 m_SecondaryMinHue;
+	INT32 m_SecondaryMinSat;
+	INT32 m_SecondaryMinLum;
+	INT32 m_SecondaryMaxHue;
+	INT32 m_SecondaryMaxSat;
+	INT32 m_SecondaryMaxLum;
+	
 	void PackAndSend(void);
 private:
 	DISALLOW_COPY_AND_ASSIGN(DashboardDataFormat);

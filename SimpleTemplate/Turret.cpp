@@ -30,21 +30,22 @@ Turret::Turret() {
 	//td2.luminance.maxValue = 255;
 	td2.luminance.maxValue = 180;
 	
-	/*
-	custom1.hue.minValue = 300;
-	custom1.hue.maxValue = 350;
-	custom1.saturation.minValue = 22;
-	custom1.saturation.maxValue = 43;
-	custom1.luminance.minValue = 90;
-	custom1.luminance.maxValue = 110;
+	sprintf(custom1.name, "PINK");
+	custom1.R.minValue = 240;
+	custom1.R.maxValue = 255;
+	custom1.G.minValue = 79;
+	custom1.G.maxValue = 153;
+	custom1.B.minValue = 128;
+	custom1.B.maxValue = 179;
 	
-	custom2.hue.minValue = 100;
-	custom2.hue.maxValue = 120;
-	custom2.saturation.minValue = 35;
-	custom2.saturation.maxValue = 50;
-	custom2.luminance.minValue = 90;
-	custom2.luminance.maxValue = 100;
-	*/
+	sprintf(custom2.name, "GREEN");
+	custom2.R.minValue = 116;
+	custom2.R.maxValue = 160;
+	custom2.G.minValue = 217;
+	custom2.G.maxValue = 250;
+	custom2.B.minValue = 117;
+	custom2.B.maxValue = 150;
+	
 }
 
 Turret::~Turret()
@@ -54,8 +55,8 @@ Turret::~Turret()
 
 void Turret::TurretControl(void)
 {
-	if ( FindTwoColors(td1, td2, BELOW, &par) ){
-	//if ( FindTwoColors(custom1, custom2, BELOW, &par) ){
+	// if ( FindTwoColors(td1, td2, BELOW, &par) ){
+	if ( FindTwoColorsRGB(custom1, custom2, BELOW, &par) ){
 		// We found a target
 		
 		//theRobot->GetTheDashboard().Printf("Target found-- (%d %d) h: %d w: %d", par.boundingRect.top, par.boundingRect.left,
@@ -73,3 +74,5 @@ double Turret::GetTarget_X()
 {	
 	return par.center_mass_x_normalized;
 }
+
+

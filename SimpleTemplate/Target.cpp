@@ -350,7 +350,146 @@ bool SizesRelative(double area1, double area2)
 	return false;
 }
 
-							  
+
+// 
+#ifndef EXCLUDE_CUSTOM_SEARCH
+int FindTwoColorsRGB(TrackingThresholdRGB td1, TrackingThresholdRGB td2, 
+		SecondColorPosition position, ParticleAnalysisReport *trackReport)
+{ 	return FindTwoColorsRGB(td1, td2, position, trackReport, 3); }
+
+int FindTwoColorsRGB(TrackingThresholdRGB td1, TrackingThresholdRGB td2, 
+		SecondColorPosition position, ParticleAnalysisReport *trackReport,
+		int numberHits)
+{
+//	char funcName[]="FindTwoColors";
+	int success;
+	
+	// create list of color hits
+	ImageHits color1Hits;	// define return object
+	memset(&color1Hits, 0, sizeof(ImageHits));
+
+	// search for the largest particles of the first color
+	// get several particles in case the first one turns out not to be a target
+	success = FindColorHits(IMAQ_RGB, 
+			&td1.R, &td1.G, &td1.B, 
+			&color1Hits, IMAQ_NO_RECT, numberHits);	
+	if (!success) return success;
+	//PrintReport(&color1Hits);
+	//DPRINTF(LOG_DEBUG, ">>>>>>>>>>>>>>> found first color: %s particles: %i", td1.name, color1Hits.numberOfHits);
+
+	ImageHits color2Hits;	// define return object
+	memset(&color2Hits, 0, sizeof(ImageHits));
+	success = FindColorHits(IMAQ_RGB, 
+			&td2.R, &td2.G, &td2.B, 
+			&color2Hits, IMAQ_NO_RECT, numberHits);
+	if (!success) return success;
+	//PrintReport(&color2Hits);
+	//DPRINTF(LOG_DEBUG, ">>>>>>>>>>>>>>> found second color: %s particles: %i\n", td2.name, color2Hits.numberOfHits);
+
+	ParticleAnalysisReport *firstTrackReport;
+	ParticleAnalysisReport *secondTrackReport;
+		
+	// check all 1st color begining with the largest
+	double sizeInImage;
+	for (int i=0; i<color1Hits.numberOfHits; ++i)  {
+		firstTrackReport = &color1Hits.pars[i];
+		sizeInImage = firstTrackReport->particleToImagePercent;
+		if ( sizeInImage < FRC_COLOR_TO_IMAGE_PERCENT) {
+			DPRINTF(LOG_DEBUG,"First target too small: %g", sizeInImage);
+			break;
+		}
+		// check all 2nd color begining with the largest
+		DPRINTF(LOG_DEBUG,"\nBEGIN CHECK");
+		for (int j=0; j<color2Hits.numberOfHits; ++j)  {
+			secondTrackReport = &color2Hits.pars[j];
+			sizeInImage = secondTrackReport->particleToImagePercent;
+			if (secondTrackReport->particleToImagePercent < FRC_COLOR_TO_IMAGE_PERCENT) {
+				DPRINTF(LOG_DEBUG,"Second target too small: %g", sizeInImage);
+				break;
+			}
+			// found both colors. check position.
+			switch (position) {
+			  case ABOVE: //is second color above first color?
+				if (secondTrackReport->center_mass_y < firstTrackReport->center_mass_y) 
+					{	
+						// add in the SizesRelative call if needed -
+						// so far it does not seem necessary
+						if ( Aligned(firstTrackReport->center_mass_x,
+								secondTrackReport->center_mass_x,
+								firstTrackReport->boundingRect.width,	
+								secondTrackReport->boundingRect.width) && 
+							Adjacent( firstTrackReport->boundingRect.top,
+								(secondTrackReport->boundingRect.top + 
+								secondTrackReport->boundingRect.height) ) &&
+							SizesRelative(firstTrackReport->particleArea, 
+								secondTrackReport->particleArea	)  )  
+						{	
+							//return the relevant track report
+							DPRINTF(LOG_DEBUG,"++++++  FOUND +++++");
+							memcpy(trackReport, firstTrackReport, sizeof(ParticleAnalysisReport));
+							return true;
+						}
+					}	
+				break;
+			  case BELOW: //is second color below first color?
+				if (secondTrackReport->center_mass_y > firstTrackReport->center_mass_y) 
+				{	
+					if ( Aligned(firstTrackReport->center_mass_x,
+							secondTrackReport->center_mass_x,
+							firstTrackReport->boundingRect.width,	
+							secondTrackReport->boundingRect.width) &&
+						Adjacent( (firstTrackReport->boundingRect.top + 
+							firstTrackReport->boundingRect.height),							
+							secondTrackReport->boundingRect.top) )  
+					{	
+						memcpy(trackReport, firstTrackReport, sizeof(ParticleAnalysisReport));
+						return true;
+					}
+				}	
+				break;
+			  case RIGHT: //is second color to the right of first color?
+				if (secondTrackReport->center_mass_x > firstTrackReport->center_mass_x) 
+				{	
+					if ( Aligned(firstTrackReport->center_mass_y,
+							secondTrackReport->center_mass_y,
+							firstTrackReport->boundingRect.width,	
+							secondTrackReport->boundingRect.width)&&
+						Adjacent( (firstTrackReport->boundingRect.left + 
+							secondTrackReport->boundingRect.width),
+							secondTrackReport->boundingRect.left ) )  
+					{	
+						memcpy(trackReport, firstTrackReport, sizeof(ParticleAnalysisReport));
+						return true;
+					}
+				}	
+				break;
+			  case LEFT:  //is second color to the left of first color?
+				if (secondTrackReport->center_mass_x < firstTrackReport->center_mass_x) 
+				{	
+					if ( Aligned(firstTrackReport->center_mass_y,
+							secondTrackReport->center_mass_y,
+							firstTrackReport->boundingRect.width,	
+							secondTrackReport->boundingRect.width) &&
+						Adjacent( firstTrackReport->boundingRect.left,
+							(secondTrackReport->boundingRect.left + 
+							secondTrackReport->boundingRect.width) ) )
+					{	
+						memcpy(trackReport, firstTrackReport, sizeof(ParticleAnalysisReport));
+						return true;
+					}
+				}	
+				break;
+			  default:
+				DPRINTF(LOG_ERROR, "invalid position parameter");
+		  }
+		}
+	}
+	DPRINTF(LOG_DEBUG, "%s size %g and %s size %g NOT IN CORRECT POSITION", td1.name, firstTrackReport->particleArea,
+			td2.name, secondTrackReport->particleArea);
+
+	return false;
+}
+#endif
 /**
  * 
  * 

@@ -47,9 +47,13 @@ class PurpleMonkeys : public IterativeRobot {
 	Encoder RMQuadEncoder;
 	Encoder LMWheelEncoder;
 	Encoder RMWheelEncoder;
-	Victor testMotor;
-	Servo horizontalServo;
-	Servo verticalServo;
+	Encoder LaunchEncoder;
+	Encoder ElevatorEncoder;
+	Encoder TurretEncoder;
+	
+	//Victor testMotor;
+	//Servo horizontalServo;
+	//Servo verticalServo;
 	int counter;
 	Gyro * testGyro;
 	Gyro * testTemp;
@@ -58,8 +62,17 @@ class PurpleMonkeys : public IterativeRobot {
 	Personality * Squeeky;
 	Turret TheTurret;
 	AnalogChannel leftCurrent;
+	AnalogChannel rightCurrent;
+	AnalogChannel elevatorCurrent;
+	AnalogChannel launchWheelsCurrent;
+	AnalogChannel turretPositionCurrent;
+	AnalogChannel harvesterCurrent;
+	
 	Accelerometer testAccel_X,testAccel_Y,testAccel_Z;
-	// Jaguar Harvester_Motor;
+	Jaguar Harvester_Motor;
+	Jaguar Launch_Wheels_Motor;
+	Jaguar Turret_Pos_Motor;
+	Jaguar Elevator_Motor;
 	
 	enum							// Driver Station jumpers to control program operation
 	{ ARCADE_MODE = 1,				// Tank/Arcade jumper is on DS Input 1 (Jumper present is arcade)
@@ -68,7 +81,7 @@ class PurpleMonkeys : public IterativeRobot {
 	
 public:
 	PurpleMonkeys(void) :
-		myRobot(1, 2), // these must be initialized in the same order
+		myRobot(4, 5), // these must be initialized in the same order
 				//stick(1), // as they are declared above.
 				//test(2),
 				leftStick(1),
@@ -84,10 +97,13 @@ public:
 				RMQuadEncoder(4,3,4,4,false),
 				LMWheelEncoder(4,5,4,6,false),
 				RMWheelEncoder(4,7,4,8,false),
+				LaunchEncoder(4,9,4,10,false),
+				ElevatorEncoder(4,11,4,12,false),
+				TurretEncoder(4,13,4,14,false),
 				
-				testMotor(4,3),
-				horizontalServo(4,4),
-				verticalServo(4,5),
+				// testMotor(4,3),
+				//horizontalServo(4,4),
+				//verticalServo(4,5),
 				
 				counter(0),
 				testGyro(NULL),
@@ -97,11 +113,20 @@ public:
 				//Auto()
 				Squeeky(NULL),
 				TheTurret(),
-				leftCurrent(2, 1),
+				leftCurrent(2,4),
+				rightCurrent(2,5),
+				elevatorCurrent(2,1),
+				launchWheelsCurrent(2,2),
+				turretPositionCurrent(2,3),
+				harvesterCurrent(2,6),
 				testAccel_X(1,3),
 				testAccel_Y(1,4),
-				testAccel_Z(1,5)
-				// Harvester_Motor(3, 6)
+				testAccel_Z(1,5),
+				Harvester_Motor(4, 6),
+				Launch_Wheels_Motor(4,2),
+				Turret_Pos_Motor(4,3),
+				Elevator_Motor(4,1)
+					
 				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 		
@@ -152,7 +177,7 @@ public:
 	// Autonomous state methods
 	void AutonomousInit(void) {
 		LMQuadEncoder.Stop();
-		testMotor.Set(0.0);
+		//testMotor.Set(0.0);
 		//myRobot.Drive(0.5, 0.0); // drive forwards half speed
 		GetWatchdog().SetEnabled(false);
 		 // logger.OpenFile("log.log");
@@ -231,7 +256,8 @@ public:
 		}
 		
 		// Just for testing, comment if you don't want it.
-		testMotor.Set(testMotorStick.GetY()); // Set Test Motor based on Y Axis
+		//testMotor.Set(testMotorStick.GetY()); // Set Test Motor based on Y Axis
+		
 		
 		if(testMotorStick.GetButton(testMotorStick.kTopButton))
 			{
@@ -239,6 +265,27 @@ public:
 				delete testGyro;
 				testGyro = new Gyro(1,1);
 			}
+		
+		
+		//
+		// 
+		//
+		
+#warning "THIS IS TEST CODE. DON'T SEND THE ROBOT INTO COMPETITION"
+		
+		
+		// Harvester for testing is run off of top button.
+		if (turretStick.GetButton(turretStick.kTopButton)) {
+			this->Harvester_Motor.Set(1.0);
+		} else {
+			this->Harvester_Motor.Set(0.0);
+		}
+		
+		// Map X-Axis of joystick to turret position
+		Turret_Pos_Motor.Set(turretStick.GetX());
+		
+		Launch_Wheels_Motor.Set(turretStick.GetZ());
+	
 		
 		// horizontalServo.Set((turretStick.GetX()+ 1.0) / 2.0);
 		// verticalServo.Set((turretStick.GetY()+ 1.0) / 2.0);
@@ -270,7 +317,7 @@ public:
 	 	dashboardDataFormat.m_BottomBoundRect = TheTurret.TargetData().boundingRect.top + TheTurret.TargetData().boundingRect.height;
 	 	dashboardDataFormat.m_RightBoundRect = TheTurret.TargetData().boundingRect.left + TheTurret.TargetData().boundingRect.width;
 	 }
-	 dashboardDataFormat.m_AnalogChannels[0][4] = testMotor.Get();
+	 //dashboardDataFormat.m_AnalogChannels[0][4] = testMotor.Get();
 	 dashboardDataFormat.m_DIOChannels[0]++;
 	 dashboardDataFormat.m_DIOChannelsOutputEnable[0]--;
 	 dashboardDataFormat.m_RM_QuadEncoder = RMQuadEncoder.Get();

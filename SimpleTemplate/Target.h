@@ -82,6 +82,11 @@ int FindTwoColors(TrackingThreshold td1, TrackingThreshold td2,
 		SecondColorPosition position, ParticleAnalysisReport *trackReport);
 int FindTwoColors(TrackingThreshold td1, TrackingThreshold td2, 
 		SecondColorPosition position, ParticleAnalysisReport *trackReport,int numberHits);
+int FindTwoColorsRGB(TrackingThresholdRGB td1, TrackingThresholdRGB td2, 
+		SecondColorPosition position, ParticleAnalysisReport *trackReport);
+int FindTwoColorsRGB(TrackingThresholdRGB td1, TrackingThresholdRGB td2, 
+		SecondColorPosition position, ParticleAnalysisReport *trackReport,
+		int numberHits);
 void PrintReport(ImageHits* myReport);
 
 #endif

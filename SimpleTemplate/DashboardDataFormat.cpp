@@ -54,8 +54,9 @@ void DashboardDataFormat::PackAndSend(void)
 	// TODO Figure out if U32 and I32 are causing problems together	
 	dashboardPacker.AddU32(m_TopBoundRect);
 	dashboardPacker.AddU32(m_LeftBoundRect);
-	dashboardPacker.AddU32(m_RightBoundRect);
 	dashboardPacker.AddU32(m_BottomBoundRect);
+	dashboardPacker.AddU32(m_RightBoundRect);
+	
 	// PJF RED ALERT CODE: Add encoder data
 	
 	dashboardPacker.AddI32(m_LM_QuadEncoder);
@@ -72,7 +73,21 @@ void DashboardDataFormat::PackAndSend(void)
 	
 	// Add target data
 
-		
+	// Add color target code
+	
+	dashboardPacker.AddI32(m_PrimaryMinHue);
+	dashboardPacker.AddI32(m_PrimaryMinSat);
+	dashboardPacker.AddI32(m_PrimaryMinLum);
+	dashboardPacker.AddI32(m_PrimaryMaxHue);
+	dashboardPacker.AddI32(m_PrimaryMaxSat);
+	dashboardPacker.AddI32(m_PrimaryMaxLum);
+	
+	dashboardPacker.AddI32(m_SecondaryMinHue);
+	dashboardPacker.AddI32(m_SecondaryMinSat);
+	dashboardPacker.AddI32(m_SecondaryMinLum);
+	dashboardPacker.AddI32(m_SecondaryMaxHue);
+	dashboardPacker.AddI32(m_SecondaryMaxSat);
+	dashboardPacker.AddI32(m_SecondaryMaxLum);
 		
 	// Flush the data to the driver station.
 	dashboardPacker.Finalize();
