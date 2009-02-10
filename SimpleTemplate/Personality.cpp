@@ -5,89 +5,51 @@
 #include <stdio.h>
 #include "vxWorks.h" 
 
-using ::strlen;
+//using ::strlen;
+
+//********** Start of Globle Variables **********
+FILE *fdSerialPort;         // File Descriptor for the serial port
+FILE *fdConfigFile;         // Personality variable file
+//********** End of Globle Variables **********
 
 Personality::Personality()
 {
-	TempSelector = 0;
-	SubMenuSelector = 0;
-	// baudrate = 19200
-	// databits = 8
-	// parity = none
-	// stopbits = 1
-	//terminal_port = new SerialPort(19200); //, 8, SerialPort::kParity_None, SerialPort::kStopBits_One); // Defaults are correct.
-	//terminal_port = new SerialPort(9600); //, 8, SerialPort::kParity_None, SerialPort::kStopBits_One); // Defaults are correct.
-	
-	//terminal_port->Printf("\r\nSqueeky says hello.");
-	
-	//terminal_port->EnableTermination('\n');
+	TempSelector = 0;      // Note: these don't really need to be here
+	SubMenuSelector = 0;   // Try deleting them when testing code to validate - HAM
 
-	
-//	SerialPort.Write (TestString, sizeof(TestString));
-
-//	int ViStatus;
-//	ViStatus = ViOpen (sesn, rsrcName, accessMode, openTimeout, vi);
-
-
-// ******** Test code to try to send a string to the main console **********
-
+	fdSerialPort = fopen ("/tyCo/0", "r+");        // Open the serial port for reading and writing
+	fdConfigFile = fopen ("Robality.cfg", "r+");   // Open personality file
 }
 
 Personality::~Personality()
 {
-	//delete terminal_port;
+	fclose (fdConfigFile);   // Close personality file
+	fclose (fdSerialPort);   // Close the port
+}
+
+void Personality::SqueekySayHello(void)
+{
+// ******** Test code to try to send a string to the main console **********
+//          Added by HAM 2/6/2009	
+	char TestString[22] = "\r\nSqueeky says hello.";  // Test message to send out serial port	
+//	fdSerialPort = fopen ("/tyCo/0", "r+");           // Open the serial port for reading and writing
+	fwrite (TestString, sizeof(TestString), 1, fdSerialPort);  // Write the string
+//	fclose (fdSerialPort);                            // Close the port
 }
 
 void Personality::DisplayText (const char *TxtAdd)
 {
-	//terminal_port->Write(TxtAdd, strlen(TxtAdd));
-	/*
-  do {Write_Serial_Port_Two(*TxtAdd);}  // Send byte to serial port
+  do {fputc(*TxtAdd, fdSerialPort);}  // Send byte to serial port
   while(*TxtAdd++);                   // Until we reach end of string
-  */
 }
-void Personality::SqueekySayHello(void)
-{
-	// ******** Test code to try to send a string to the main console **********
-	//          Added by HAM 2/6/2009	
 
-		FILE *fdSerialPort;                           // File Descriptor for the serial port
-		char TestString[22] = "\r\nSqueeky says hello.";  // Test message to send out serial port
-
-		//fdSerialPort = fopen ("/tty/0", "r+");        // Open the serial port for reading and writing
-		fdSerialPort = fopen ("/tyCo/0", "r+");        // Open the serial port for reading and writing
-		// /tyCo/0
-		fwrite (TestString, sizeof(TestString), 1, fdSerialPort);  // Write the string
-		fclose (fdSerialPort);                        // Close the port
-
-}
 char Personality::GetKeyPress (void)
 {
-#if 0
-	if (terminal_port->GetBytesReceived() == 0) {
-		return 0;
-	} else {
-		char next = ' ';
-		
-		// Read the next character from the stream
-		terminal_port->Scanf("%c", &next);
-		//terminal_port->Read(Buffer, 1);
-		
-		//next = Buffer[0];
-		
-		// return that character
-		return next;
-	}
-#else
-	return 0;
-#endif
-	/*
-if(Serial_Port_Two_Byte_Count() == 0) // Test for a character present
-  return 0;                           // Return zero if none ready for processing
-else
-  return Read_Serial_Port_Two();      // If character is ready then return the character
-  */
+	int result = fgetc(fdSerialPort);      // If character is ready then return the character
+	if (result == EOF) return 0;
+	return result;
 }
+
 void Personality::RPTCommandProccessor()
 {
 	char Command = GetKeyPress();  // Try to get a keypress from keyboard
