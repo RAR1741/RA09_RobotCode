@@ -5,17 +5,11 @@
 #include <stdio.h>
 #include "vxWorks.h" 
 
-//using ::strlen;
-
-//********** Start of Globle Variables **********
-FILE *fdSerialPort;         // File Descriptor for the serial port
-FILE *fdConfigFile;         // Personality variable file
-//********** End of Globle Variables **********
 
 Personality::Personality()
 {
-	TempSelector = 0;      // Note: these don't really need to be here
-	SubMenuSelector = 0;   // Try deleting them when testing code to validate - HAM
+//	TempSelector = 0;      // Note: these don't really need to be here
+//	SubMenuSelector = 0;   // Try deleting them when testing code to validate - HAM
 
 	fdSerialPort = fopen ("/tyCo/0", "r+");        // Open the serial port for reading and writing
 	fdConfigFile = fopen ("Robality.cfg", "r+");   // Open personality file
