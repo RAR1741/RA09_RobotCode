@@ -229,7 +229,7 @@ public:
 	// Teleop state methods
 	void TeleopInit(void) {
 //		testEncoder.SetDistancePerTick(300.0);
-		LMQuadEncoder.SetDistancePerPulse(300.0);
+//		LMQuadEncoder.SetDistancePerPulse(300.0);
 		LMQuadEncoder.Start();
 		if(testGyro==NULL)
 			testGyro = new Gyro(1,1);

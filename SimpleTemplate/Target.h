@@ -72,7 +72,15 @@ typedef struct ImageHits_struct {
 	double areas[FRC_MAX_HITS];
 	ParticleAnalysisReport pars[FRC_MAX_HITS];
 } ImageHits;		
-		
+
+#ifndef USING_OLD_ROBO_LIBS
+typedef struct TrackingThresholdRGB_struct {
+	char name[64];
+	Range R;
+	Range G;
+	Range B;
+} TrackingThresholdRGB;
+#endif
 /*  Enumerated Types */
 /** Position of the second color related to the first color */
 enum SecondColorPosition {ABOVE, BELOW, RIGHT, LEFT};
