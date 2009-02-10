@@ -1,7 +1,11 @@
 #include "Turret.h"
 
-Turret::Turret() {
-
+Turret::Turret()
+{
+	Turret_Pos_Motor = new Jaguar(4,3);
+	Clockwise_Limit = new LimitSwitch(6,9);
+	CounterClockwise_Limit = new LimitSwitch(6,10);
+	
 	memset(&par,0,sizeof(par));				// initialize particle analysis report
 	
 	/* image data for tracking - override default parameters if needed */
@@ -55,21 +59,60 @@ Turret::~Turret()
 
 void Turret::TurretControl(void)
 {
+	Auto();
+}
+void Turret::TurretControl(Joystick * turretStick)
+{
+	Manual(turretStick);
+}
+
+
+void Turret::Manual(Joystick *turretStick)
+{
+	// Read Joystick X Axis
+	float x_axis = turretStick->GetX();
+	
+	// Scale value down 2x?
+	x_axis /= 2.0;
+	// Limit x_axis
+	
+	// Set motor to scaled value
+	if (x_axis < 0) {
+		Clockwise_Limit->LimitNegative(x_axis);
+	}
+	else {
+		CounterClockwise_Limit->LimitPositive(x_axis);
+	}
+	
+	
+	Turret_Pos_Motor->Set(x_axis);
+	return; // Guess what? return.
+}
+void Turret::ManualPositionMode(Joystick *turretStick)
+{
+	
+}
+void Turret::Auto(void)
+{
+	Target();
+}
+
+void Turret::Target(void)
+{
 	// if ( FindTwoColors(td1, td2, BELOW, &par) ){
 	if ( FindTwoColorsRGB(custom1, custom2, BELOW, &par) ){
-		// We found a target
-		
-		//theRobot->GetTheDashboard().Printf("Target found-- (%d %d) h: %d w: %d", par.boundingRect.top, par.boundingRect.left,
-//				par.boundingRect.height, par.boundingRect.left);
-		
+			// We found a target
+			
+			//theRobot->GetTheDashboard().Printf("Target found-- (%d %d) h: %d w: %d", par.boundingRect.top, par.boundingRect.left,
+	//				par.boundingRect.height, par.boundingRect.left);
+			
 		this->tracking = true;
 	} else {
-		// We don't have a target
-//		theRobot->GetTheDashboard().Printf("No target in sight.");
+			// We don't have a target
+	//		theRobot->GetTheDashboard().Printf("No target in sight.");
 		this->tracking = false;
 	}
 }
-
 double Turret::GetTarget_X()
 {	
 	return par.center_mass_x_normalized;

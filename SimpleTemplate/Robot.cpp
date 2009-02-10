@@ -87,7 +87,7 @@ class PurpleMonkeys : public IterativeRobot {
 	Accelerometer testAccel_X,testAccel_Y,testAccel_Z;
 	Jaguar Harvester_Motor;
 	Jaguar Launch_Wheels_Motor;
-	Jaguar Turret_Pos_Motor;
+	// Jaguar Turret_Pos_Motor; // Outsourced to Turret.h/cpp by PJF at 20:28 02/09/2009
 	Jaguar Elevator_Motor;
 	Solenoid Gate;
 	
@@ -149,7 +149,7 @@ public:
 				testAccel_Z(1,5),
 				Harvester_Motor(4, 6),
 				Launch_Wheels_Motor(4,2),
-				Turret_Pos_Motor(4,3),
+//				Turret_Pos_Motor(4,3),
 				Elevator_Motor(4,1),
 				Gate(8,1)
 				{
@@ -363,8 +363,8 @@ public:
 		}
 		
 		// Map X-Axis of joystick to turret position
-		Turret_Pos_Motor.Set(turretStick.GetX());
-		
+		//Turret_Pos_Motor.Set(turretStick.GetX());
+		TheTurret.TurretControl(&turretStick);
 		Launch_Wheels_Motor.Set(turretStick.GetZ());
 	
 		
