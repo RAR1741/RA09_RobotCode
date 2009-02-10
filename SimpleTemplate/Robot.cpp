@@ -23,6 +23,22 @@ using ::floor;
 #include "Personality.h"
 #include "Turret.h"
 
+#define HARV_STATE_NOT_FULL 0
+#define HARV_STATE_FULL 1
+
+#define HARV_AUTO_MODE_COLLECT 0
+#define HARV_AUTO_MODE_LOAD 1
+#define HARV_AUTO_MODE_EJECT 2
+#define HARV_AUTO_MODE_IDLE 3
+
+#define ELEVATOR_STATE_FULL 0
+#define ELEVATOR_STATE_EMPTY 1
+
+#define USR_RQ_EJECT 0
+#define USR_RQ_IDLE 1
+
+#define USR_RQ_RUN 0
+#define USR_RQ_STOP 1
 /**
  * This is a demo program showing the use of the RobotBase class.
  * The SimpleRobot class is the base of a robot application that will automatically call your
@@ -73,7 +89,16 @@ class PurpleMonkeys : public IterativeRobot {
 	Jaguar Launch_Wheels_Motor;
 	Jaguar Turret_Pos_Motor;
 	Jaguar Elevator_Motor;
+	Solenoid Gate;
 	
+	unsigned char HarvesterAutoMode;
+	unsigned char HarvesterRunMode;
+	unsigned char ElevatorState;
+	unsigned char HarvesterState;
+	unsigned char HarvesterMotorState;
+	unsigned char GateState;
+	unsigned char UserRequestEjectIdle;
+	unsigned char UserRequestRunStop;
 	enum							// Driver Station jumpers to control program operation
 	{ ARCADE_MODE = 1,				// Tank/Arcade jumper is on DS Input 1 (Jumper present is arcade)
 	  ENABLE_AUTONOMOUS = 2,		// Autonomous/Teleop jumper is on DS Input 2 (Jumper present is autonomous)
@@ -125,8 +150,8 @@ public:
 				Harvester_Motor(4, 6),
 				Launch_Wheels_Motor(4,2),
 				Turret_Pos_Motor(4,3),
-				Elevator_Motor(4,1)
-					
+				Elevator_Motor(4,1),
+				Gate(8,1)
 				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 		
@@ -137,6 +162,48 @@ public:
 	//{
 	//}
 
+	void InitHarvester()
+	{
+		HarvesterState = HARV_STATE_NOT_FULL;
+		HarvesterAutoMode = HARV_AUTO_MODE_COLLECT;
+		
+		if(!Gate.Get()) // Is the gate open?
+			Gate.Set(false); // Yes? Then close it.
+		
+		ElevatorState = ELEVATOR_STATE_FULL;
+		
+		Harvester_Motor.Set(0.0);
+		//Harvester_Motor
+	}
+	
+	int ProcessHarvester(bool RunStopToggle, bool EjectToggle, bool LoadElevator)
+	{
+		if(LoadElevator)
+			HarvesterAutoMode = HARV_AUTO_MODE_LOAD;
+		if(EjectToggle)
+			UserRequestEjectIdle = !UserRequestEjectIdle;
+		if(RunStopToggle)
+			UserRequestRunStop = !UserRequestRunStop;
+		if(1){// Put Manual/Auto if condition here. 
+			// Manual Mode
+			if(UserRequestRunStop==USR_RQ_RUN){
+				Harvester_Motor.Set(.5);
+			}
+			else{
+				if(UserRequestEjectIdle==USR_RQ_EJECT){
+					Harvester_Motor.Set(-.5);
+				}
+				else{
+					Harvester_Motor.Set(0.0);
+					HarvesterAutoMode = HARV_AUTO_MODE_IDLE;
+				}
+			}
+		}
+		else{
+			// Auto mode code should be here.
+		}
+		return 0;
+	}
 	
 	// One time initialization of the robot
 	void RobotInit(void) {
@@ -155,6 +222,8 @@ public:
 			 dprintf("PCVideoServer is mortally wounded.\n");
 		 }
 		   dprintf("Robot initialized.");
+		   
+		  InitHarvester();
 	}
 
 	// Disabled state methods
@@ -266,6 +335,18 @@ public:
 				testGyro = new Gyro(1,1);
 			}
 		
+		bool RunStop,  EjectToggle;
+		if(leftStick.GetButton(leftStick.kTopButton))
+			EjectToggle = true;
+		else
+			EjectToggle = false;
+		
+		if(leftStick.GetButton(leftStick.kTriggerButton))
+			RunStop = true;
+		else
+			RunStop = false;
+		
+		ProcessHarvester(RunStop, EjectToggle, false);
 		
 		//
 		// 
@@ -358,6 +439,9 @@ public:
 		}
 		*/
 	}
+	
+   
+
 	
 };
 
