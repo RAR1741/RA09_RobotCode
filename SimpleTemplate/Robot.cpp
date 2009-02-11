@@ -494,3 +494,69 @@ public:
 
 START_ROBOT_CLASS(PurpleMonkeys);
 #endif
+
+
+//int ToggleSwitch_LED1_State = 0;  // Example state variable for ToggleSwitch
+//LED1_IO = ToggleSwitch(!BUTTON1_IO, &ToggleSwitch_LED1_State);  // Example use
+
+BOOL ToggleSwitch (BOOL Input, int *StateVariable);  // Proto for toggle function testing HAM 2/11/2009
+
+//  ***** ToggleSwitch *****
+/*  Use this function to convert a signal into a toggle function.
+    Call this with an input and the output will toggle on each cycle
+    of the leading edge of the input signal. You must maintain a state
+    variable that will persist during use of this function. It requires
+    and uses the low two bits. Pass this function the input signal
+    variable and an address to an integer to use for the state variable.
+    This function will return the state of the toggled output.
+	By Hugh Meyer February 11, 2009
+*/
+BOOL ToggleSwitch (BOOL Input, int *State)
+{
+  int s = *State;      // Dereference saved state to local variable
+  s = s << 1 | Input;  // Shift it left and add the input bit to it
+
+  switch (s) {         // Use it as a state variable
+
+    case 0:        // Idle State Off
+      *State = 0;  // Set NextState(0) - Spin here til the input goes to 1
+      return 0;    // Input = 0, Output = 0
+
+    case 1:        // Leading Edge Detected - Input transitioned from 0 to 1
+      *State = 1;  // Set NextState(3)
+      return 1;    // Input = 1, Output = 1
+
+    case 2:        // Trailing Edge Detected - Input transitioned from 1 to 0
+      *State = 3;  // Set NextState(6) - Return to Idle Stte On
+      return 1;    // Input = 0, Output = 1
+
+    case 3:        // Waiting for release
+      *State = 1;  // Set NextState(3) - Spin here until input goes to 0
+      return 1;    // Input = 1, Output = 1
+
+    case 4:        // Trailing Edge Detected - Input transitioned from 1 to 0
+      *State = 0;  // Set NextState(0) - Return to Idle State Off
+      return 0;    // Input = 0, Output = 0
+
+    case 5:        // Waiting for release
+      *State = 2;  // Set NextState(4) - Spin here until input goes to 0
+      return 0;    // Input = 1, Output = 0
+
+    case 6:        // Idle State On
+      *State = 3;  // Set NextState(6) - Spin here til the input goes to 1
+      return 1;    // Input = 1, Output = 1
+
+    case 7:        // Leading Edge Detected - Input transitioned from 0 to 1
+      *State = 2;  // Set NextState(5)
+      return 0;    // Input = 1, Output = 0
+
+    default:
+      return 0;
+  }    
+
+}	
+//  ***** End of ToggleSwitch *****
+
+
+
+
