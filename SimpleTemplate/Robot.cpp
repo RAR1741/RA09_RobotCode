@@ -37,8 +37,8 @@ using ::floor;
 #define USR_RQ_EJECT 0
 #define USR_RQ_IDLE 1
 
-#define USR_RQ_RUN 0
-#define USR_RQ_STOP 1
+#define USR_RQ_RUN true
+#define USR_RQ_STOP false
 /**
  * This is a demo program showing the use of the RobotBase class.
  * The SimpleRobot class is the base of a robot application that will automatically call your
@@ -75,7 +75,7 @@ class PurpleMonkeys : public IterativeRobot {
 	Gyro * testTemp;
 	// bool printed;
 	// Autonomous Auto;
-	Personality * Squeeky;
+	//Personality * Squeeky;
 	Turret TheTurret;
 	AnalogChannel leftCurrent;
 	AnalogChannel rightCurrent;
@@ -98,7 +98,10 @@ class PurpleMonkeys : public IterativeRobot {
 	unsigned char HarvesterMotorState;
 	unsigned char GateState;
 	unsigned char UserRequestEjectIdle;
-	unsigned char UserRequestRunStop;
+	bool UserRequestRunStop;
+	bool LastButtonValue;
+	bool LastEjectValue;
+	unsigned char EdgeTrigger;
 	enum							// Driver Station jumpers to control program operation
 	{ ARCADE_MODE = 1,				// Tank/Arcade jumper is on DS Input 1 (Jumper present is arcade)
 	  ENABLE_AUTONOMOUS = 2,		// Autonomous/Teleop jumper is on DS Input 2 (Jumper present is autonomous)
@@ -136,7 +139,7 @@ public:
 				//printed(false)
 				
 				//Auto()
-				Squeeky(NULL),
+				//Squeeky(NULL),
 				TheTurret(),
 				leftCurrent(2,4),
 				rightCurrent(2,5),
@@ -171,27 +174,67 @@ public:
 			Gate.Set(false); // Yes? Then close it.
 		
 		ElevatorState = ELEVATOR_STATE_FULL;
-		
+		EdgeTrigger = 0;
 		Harvester_Motor.Set(0.0);
+		LastButtonValue = false;
+		LastEjectValue = false;
+		UserRequestRunStop = USR_RQ_STOP;
 		//Harvester_Motor
 	}
 	
 	int ProcessHarvester(bool RunStopToggle, bool EjectToggle, bool LoadElevator)
 	{
+		/*
 		if(LoadElevator)
 			HarvesterAutoMode = HARV_AUTO_MODE_LOAD;
 		if(EjectToggle)
 			UserRequestEjectIdle = !UserRequestEjectIdle;
-		if(RunStopToggle)
+		*/
+		/*
+		if (true) { // manual mode
+			if (RunStopToggle && !LastButtonValue) {
+				UserRequestRunStop = !UserRequestRunStop;
+			} else {
+				// Maintain state
+			}
+			if (EjectToggle && !LastEjectValue) {
+				UserRequestEjectIdle = !UserRequestEjectIdle;
+			}
+
+			int direction = (UserRequestEjectIdle ? 1 : -1);
+			if (UserRequestRunStop) {
+				Harvester_Motor.Set(.5 * direction);
+			} else {
+				Harvester_Motor.Set(0.0);
+			}
+		}
+		
+		LastButtonValue = RunStopToggle;
+		LastEjectValue = EjectToggle;
+		
+		*/
+		/*
+		if (RunStopToggle) {
+			Harvester_Motor.Set(.5);
+		} else if (EjectToggle) {
+			Harvester_Motor.Set(-.5);
+		}
+		*/
+		
+		
+		if(RunStopToggle && !LastButtonValue)
+		{
 			UserRequestRunStop = !UserRequestRunStop;
+		}
 		if(1){// Put Manual/Auto if condition here. 
 			// Manual Mode
 			if(UserRequestRunStop==USR_RQ_RUN){
-				Harvester_Motor.Set(.5);
+				Harvester_Motor.Set(-.5);
 			}
 			else{
-				if(UserRequestEjectIdle==USR_RQ_EJECT){
-					Harvester_Motor.Set(-.5);
+				if(EjectToggle==USR_RQ_EJECT){
+					Harvester_Motor.Set(.5);
+					UserRequestEjectIdle = USR_RQ_EJECT;
 				}
 				else{
 					Harvester_Motor.Set(0.0);
@@ -202,6 +245,8 @@ public:
 		else{
 			// Auto mode code should be here.
 		}
+		
+		LastButtonValue = RunStopToggle;
 		return 0;
 	}
 	
@@ -228,7 +273,7 @@ public:
 
 	// Disabled state methods
 	void DisabledInit(void) {
-		Squeeky = new Personality();
+		//Squeeky = new Personality();
 		if(testGyro==NULL)
 			testGyro = new Gyro(1,1);
 		
@@ -237,7 +282,7 @@ public:
 	}
 
 	void DisabledPeriodic(void) {
-		Squeeky->RPTCommandProccessor();
+		//Squeeky->RPTCommandProccessor();
 	}
 
 	void DisabledContinuous(void) {
@@ -336,12 +381,13 @@ public:
 			}
 		
 		bool RunStop,  EjectToggle;
+		
 		if(leftStick.GetButton(leftStick.kTopButton))
 			EjectToggle = true;
 		else
 			EjectToggle = false;
 		
-		if(leftStick.GetButton(leftStick.kTriggerButton))
+		if(rightStick.GetButton(rightStick.kTopButton))
 			RunStop = true;
 		else
 			RunStop = false;
@@ -354,6 +400,7 @@ public:
 		
 #warning "THIS IS TEST CODE. DON'T SEND THE ROBOT INTO COMPETITION"
 		
+		/*
 		
 		// Harvester for testing is run off of top button.
 		if (turretStick.GetButton(turretStick.kTopButton)) {
@@ -361,7 +408,7 @@ public:
 		} else {
 			this->Harvester_Motor.Set(0.0);
 		}
-		
+		*/
 		// Map X-Axis of joystick to turret position
 		//Turret_Pos_Motor.Set(turretStick.GetX());
 		TheTurret.TurretControl(&turretStick);

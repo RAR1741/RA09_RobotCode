@@ -12,12 +12,12 @@ Personality::Personality()
 //	SubMenuSelector = 0;   // Try deleting them when testing code to validate - HAM
 
 	fdSerialPort = fopen ("/tyCo/0", "r+");        // Open the serial port for reading and writing
-	fdConfigFile = fopen ("Robality.cfg", "r+");   // Open personality file
+	//fdConfigFile = fopen ("Robality.cfg", "r+");   // Open personality file
 }
 
 Personality::~Personality()
 {
-	fclose (fdConfigFile);   // Close personality file
+	//fclose (fdConfigFile);   // Close personality file
 	fclose (fdSerialPort);   // Close the port
 }
 

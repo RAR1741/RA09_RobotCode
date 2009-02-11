@@ -3,8 +3,8 @@
 Turret::Turret()
 {
 	Turret_Pos_Motor = new Jaguar(4,3);
-	Clockwise_Limit = new LimitSwitch(6,9);
-	CounterClockwise_Limit = new LimitSwitch(6,10);
+	Clockwise_Limit = new LimitSwitch(6,10);
+	CounterClockwise_Limit = new LimitSwitch(6,9);
 	
 	memset(&par,0,sizeof(par));				// initialize particle analysis report
 	
@@ -73,7 +73,7 @@ void Turret::Manual(Joystick *turretStick)
 	float x_axis = turretStick->GetX();
 	
 	// Scale value down 2x?
-	x_axis /= 2.0;
+	x_axis /= 8.0;
 	// Limit x_axis
 	
 	// Set motor to scaled value
