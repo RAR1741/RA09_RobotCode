@@ -93,16 +93,15 @@ class PurpleMonkeys : public IterativeRobot {
 	Jaguar Elevator_Motor;
 	Solenoid Gate;
 	
-	// State Variables for toggle code (we don't need some, but we may later, so don't delete).
-	unsigned int HarvesterAutoMode;
-	unsigned int HarvesterRunMode;
-	unsigned int ElevatorState;
-	unsigned int HarvesterState;
-	unsigned int HarvesterMotorState;
-	unsigned int GateState;
-	unsigned int UserRequestEjectIdle;
-	unsigned int UserRequestRunStop;
-	unsigned int EdgeTrigger;
+	// State Variables for toggle code.
+	
+	// Harvester State Vars
+	unsigned int UserRequestHarvesterEjectIdle;
+	unsigned int UserRequestHarvesterRunStop;
+	// Elevator state vars
+	unsigned int UserRequestElevatorArmDisarm;
+	unsigned int UserRequestElevatorRunStop;
+	unsigned int UserRequestElevatorFire;
 	enum							// Driver Station jumpers to control program operation
 	{ ARCADE_MODE = 1,				// Tank/Arcade jumper is on DS Input 1 (Jumper present is arcade)
 	  ENABLE_AUTONOMOUS = 2,		// Autonomous/Teleop jumper is on DS Input 2 (Jumper present is autonomous)
@@ -168,27 +167,19 @@ public:
 
 	void InitHarvester()
 	{
-		HarvesterState = HARV_STATE_NOT_FULL;
-		HarvesterAutoMode = HARV_AUTO_MODE_COLLECT;
+		// HarvesterState = HARV_STATE_NOT_FULL;
+		// HarvesterAutoMode = HARV_AUTO_MODE_COLLECT;
 		
 		if(!Gate.Get()) // Is the gate open?
 			Gate.Set(false); // Yes? Then close it.
 		
-		ElevatorState = ELEVATOR_STATE_FULL;
+		// ElevatorState = ELEVATOR_STATE_FULL;
 		// EdgeTrigger;
 		Harvester_Motor.Set(0.0);
 		
 		// Zero all state vars (prevents garbage bit's from getting in the way.)
-		EdgeTrigger =
-		HarvesterAutoMode =
-		HarvesterRunMode =
-		ElevatorState =
-		HarvesterState =
-		HarvesterMotorState =
-		GateState =
-		UserRequestEjectIdle =
-		UserRequestRunStop =
-		EdgeTrigger = 0;
+		UserRequestHarvesterEjectIdle =
+		UserRequestHarvesterRunStop = 0;
 		//Harvester_Motor
 	}
 	
@@ -232,12 +223,12 @@ public:
 		*/
 		
 		
-		BOOL RSToggle = ToggleSwitch(RunStopToggle, &UserRequestRunStop);
+		BOOL RSToggle = ToggleSwitch(RunStopToggle, &UserRequestHarvesterRunStop);
 		BOOL EJToggle;
 		
 		// Only toggle eject if harvester is off.
 		if(RSToggle==false)
-			EJToggle = ToggleSwitch(EjectToggle, &UserRequestEjectIdle);
+			EJToggle = ToggleSwitch(EjectToggle, &UserRequestHarvesterEjectIdle);
 		if(1){// Put Manual/Auto if condition here. 
 			// Manual Mode
 			if(RSToggle){
@@ -260,6 +251,10 @@ public:
 		return 0;
 	}
 	
+	void InitElevator()
+	{
+		
+	}
 	// One time initialization of the robot
 	void RobotInit(void) {
 		GetWatchdog().SetExpiration(100);
