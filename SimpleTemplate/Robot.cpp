@@ -39,7 +39,9 @@ using ::floor;
 
 #define USR_RQ_RUN true
 #define USR_RQ_STOP false
-/**
+
+BOOL ToggleSwitch (BOOL Input, unsigned int *StateVariable);  // Proto for toggle function testing HAM 2/11/2009
+/*
  * This is a demo program showing the use of the RobotBase class.
  * The SimpleRobot class is the base of a robot application that will automatically call your
  * Autonomous and OperatorControl methods at the right time as controlled by the switches on
@@ -91,17 +93,16 @@ class PurpleMonkeys : public IterativeRobot {
 	Jaguar Elevator_Motor;
 	Solenoid Gate;
 	
-	unsigned char HarvesterAutoMode;
-	unsigned char HarvesterRunMode;
-	unsigned char ElevatorState;
-	unsigned char HarvesterState;
-	unsigned char HarvesterMotorState;
-	unsigned char GateState;
-	unsigned char UserRequestEjectIdle;
-	bool UserRequestRunStop;
-	bool LastButtonValue;
-	bool LastEjectValue;
-	unsigned char EdgeTrigger;
+	// State Variables for toggle code (we don't need some, but we may later, so don't delete).
+	unsigned int HarvesterAutoMode;
+	unsigned int HarvesterRunMode;
+	unsigned int ElevatorState;
+	unsigned int HarvesterState;
+	unsigned int HarvesterMotorState;
+	unsigned int GateState;
+	unsigned int UserRequestEjectIdle;
+	unsigned int UserRequestRunStop;
+	unsigned int EdgeTrigger;
 	enum							// Driver Station jumpers to control program operation
 	{ ARCADE_MODE = 1,				// Tank/Arcade jumper is on DS Input 1 (Jumper present is arcade)
 	  ENABLE_AUTONOMOUS = 2,		// Autonomous/Teleop jumper is on DS Input 2 (Jumper present is autonomous)
@@ -174,11 +175,20 @@ public:
 			Gate.Set(false); // Yes? Then close it.
 		
 		ElevatorState = ELEVATOR_STATE_FULL;
-		EdgeTrigger = 0;
+		// EdgeTrigger;
 		Harvester_Motor.Set(0.0);
-		LastButtonValue = false;
-		LastEjectValue = false;
-		UserRequestRunStop = USR_RQ_STOP;
+		
+		// Zero all state vars (prevents garbage bit's from getting in the way.)
+		EdgeTrigger =
+		HarvesterAutoMode =
+		HarvesterRunMode =
+		ElevatorState =
+		HarvesterState =
+		HarvesterMotorState =
+		GateState =
+		UserRequestEjectIdle =
+		UserRequestRunStop =
+		EdgeTrigger = 0;
 		//Harvester_Motor
 	}
 	
@@ -222,18 +232,16 @@ public:
 		*/
 		
 		
-		if(RunStopToggle && !LastButtonValue)
-		{
-			UserRequestRunStop = !UserRequestRunStop;
-		}
+		bool RSToggle = ToggleSwitch(RunStopToggle, &UserRequestRunStop);
+		bool EjectReq = ToggleSwitch(EjectToggle, &UserRequestEjectIdle);
 		if(1){// Put Manual/Auto if condition here. 
 			// Manual Mode
-			if(UserRequestRunStop==USR_RQ_RUN){
-				Harvester_Motor.Set(-.5);
+			if(RSToggle){
+				Harvester_Motor.Set(.5);
 			}
 			else{
-				if(EjectToggle==USR_RQ_EJECT){
-					Harvester_Motor.Set(.5);
+				if(EjectReq){
+					Harvester_Motor.Set(-.5);
 					UserRequestEjectIdle = USR_RQ_EJECT;
 				}
 				else{
@@ -246,7 +254,7 @@ public:
 			// Auto mode code should be here.
 		}
 		
-		LastButtonValue = RunStopToggle;
+		// LastButtonValue = RunStopToggle;
 		return 0;
 	}
 	
@@ -499,7 +507,7 @@ START_ROBOT_CLASS(PurpleMonkeys);
 //int ToggleSwitch_LED1_State = 0;  // Example state variable for ToggleSwitch
 //LED1_IO = ToggleSwitch(!BUTTON1_IO, &ToggleSwitch_LED1_State);  // Example use
 
-BOOL ToggleSwitch (BOOL Input, int *StateVariable);  // Proto for toggle function testing HAM 2/11/2009
+
 
 //  ***** ToggleSwitch *****
 /*  Use this function to convert a signal into a toggle function.
@@ -511,9 +519,13 @@ BOOL ToggleSwitch (BOOL Input, int *StateVariable);  // Proto for toggle functio
     This function will return the state of the toggled output.
 	By Hugh Meyer February 11, 2009
 */
-BOOL ToggleSwitch (BOOL Input, int *State)
+
+// NOTE: IMPORTANT!!!
+// I didn't see why HAM passed it an int pointer at first, but now I know
+// it needs to be that way, to save the state outside the function.
+BOOL ToggleSwitch (BOOL Input, unsigned int *State)
 {
-  int s = *State;      // Dereference saved state to local variable
+  unsigned int s = *State;      // Dereference saved state to local variable
   s = s << 1 | Input;  // Shift it left and add the input bit to it
 
   switch (s) {         // Use it as a state variable
