@@ -22,6 +22,7 @@ using ::floor;
 #include "WPILib.h"
 #include "Personality.h"
 #include "Turret.h"
+#include "Toggle.h"
 
 #define HARV_STATE_NOT_FULL 0
 #define HARV_STATE_FULL 1
@@ -92,12 +93,14 @@ class PurpleMonkeys : public IterativeRobot {
 	// Jaguar Turret_Pos_Motor; // Outsourced to Turret.h/cpp by PJF at 20:28 02/09/2009
 	Jaguar Elevator_Motor;
 	Solenoid Gate;
+	Toggle HarvesterToggle;
+	Toggle EjecterToggle;
 	
 	// State Variables for toggle code.
 	
-	// Harvester State Vars
-	unsigned int UserRequestHarvesterEjectIdle;
-	unsigned int UserRequestHarvesterRunStop;
+	//// Harvester State Vars
+	//unsigned int UserRequestHarvesterEjectIdle;
+	//unsigned int UserRequestHarvesterRunStop;
 	// Elevator state vars
 	unsigned int UserRequestElevatorArmDisarm;
 	unsigned int UserRequestElevatorRunStop;
@@ -154,7 +157,9 @@ public:
 				Launch_Wheels_Motor(4,2),
 //				Turret_Pos_Motor(4,3),
 				Elevator_Motor(4,1),
-				Gate(8,1)
+				Gate(8,1),
+				HarvesterToggle(&rightStick, 2),
+				EjecterToggle(&leftStick, 2)
 				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 		
@@ -177,13 +182,13 @@ public:
 		// EdgeTrigger;
 		Harvester_Motor.Set(0.0);
 		
-		// Zero all state vars (prevents garbage bit's from getting in the way.)
-		UserRequestHarvesterEjectIdle =
-		UserRequestHarvesterRunStop = 0;
+		//// Zero all state vars (prevents garbage bit's from getting in the way.)
+		//UserRequestHarvesterEjectIdle =
+		//UserRequestHarvesterRunStop = 0;
 		//Harvester_Motor
 	}
 	
-	int ProcessHarvester(BOOL RunStopToggle, BOOL EjectToggle, bool LoadElevator)
+	int ProcessHarvester(bool LoadElevator)
 	{
 		/*
 		if(LoadElevator)
@@ -222,20 +227,17 @@ public:
 		}
 		*/
 		
-		
-		BOOL RSToggle = ToggleSwitch(RunStopToggle, &UserRequestHarvesterRunStop);
-		BOOL EJToggle;
-		
-		// Only toggle eject if harvester is off.
-		if(RSToggle==false)
-			EJToggle = ToggleSwitch(EjectToggle, &UserRequestHarvesterEjectIdle);
+		HarvesterToggle.UpdateState();
+		EjecterToggle.UpdateState();
+
 		if(1){// Put Manual/Auto if condition here. 
 			// Manual Mode
-			if(RSToggle){
+			if (HarvesterToggle.GetOutput()){
 				Harvester_Motor.Set(.5);
+				EjecterToggle.Reset();
 			}
 			else{
-				if(EJToggle){
+				if(EjecterToggle.GetOutput()){
 					Harvester_Motor.Set(-.5);
 				}
 				else{
@@ -247,9 +249,76 @@ public:
 			// Auto mode code should be here.
 		}
 		
-		// LastButtonValue = RunStopToggle;
 		return 0;
 	}
+	
+//	int ProcessHarvester(BOOL RunStopToggle, BOOL EjectToggle, bool LoadElevator)
+//	{
+//		/*
+//		if(LoadElevator)
+//			HarvesterAutoMode = HARV_AUTO_MODE_LOAD;
+//		if(EjectToggle)
+//			UserRequestEjectIdle = !UserRequestEjectIdle;
+//		*/
+//		/*
+//		if (true) { // manual mode
+//			if (RunStopToggle && !LastButtonValue) {
+//				UserRequestRunStop = !UserRequestRunStop;
+//			} else {
+//				// Maintain state
+//			}
+//			if (EjectToggle && !LastEjectValue) {
+//				UserRequestEjectIdle = !UserRequestEjectIdle;
+//			}
+//
+//			int direction = (UserRequestEjectIdle ? 1 : -1);
+//			if (UserRequestRunStop) {
+//				Harvester_Motor.Set(.5 * direction);
+//			} else {
+//				Harvester_Motor.Set(0.0);
+//			}
+//		}
+//		
+//		LastButtonValue = RunStopToggle;
+//		LastEjectValue = EjectToggle;
+//		
+//		*/
+//		/*
+//		if (RunStopToggle) {
+//			Harvester_Motor.Set(.5);
+//		} else if (EjectToggle) {
+//			Harvester_Motor.Set(-.5);
+//		}
+//		*/
+//		
+//		BOOL RSToggle = ToggleSwitch(RunStopToggle, &UserRequestHarvesterRunStop);
+//		BOOL EJToggle;
+//		
+//		// Only toggle eject if harvester is off.
+//		if(RSToggle==false)
+//			EJToggle = ToggleSwitch(EjectToggle, &UserRequestHarvesterEjectIdle);
+//		if(1){// Put Manual/Auto if condition here. 
+//			// Manual Mode
+//			if(RSToggle){
+//				Harvester_Motor.Set(.5);
+//			}
+//			else{
+//				if(EJToggle){
+//					Harvester_Motor.Set(-.5);
+//				}
+//				else{
+//					Harvester_Motor.Set(0.0);
+//				}
+//			}
+//		}
+//		else{
+//			// Auto mode code should be here.
+//		}
+//		
+//		// LastButtonValue = RunStopToggle;
+//
+//		return 0;
+//	}
 	
 	void InitElevator()
 	{
@@ -385,8 +454,9 @@ public:
 				testGyro = new Gyro(1,1);
 			}
 		
+		/*
 		bool RunStop,  EjectToggle;
-		
+
 		if(leftStick.GetButton(leftStick.kTopButton))
 			EjectToggle = true;
 		else
@@ -396,8 +466,10 @@ public:
 			RunStop = true;
 		else
 			RunStop = false;
+		*/
 		
-		ProcessHarvester(RunStop, EjectToggle, false);
+		ProcessHarvester(false);
+		//ProcessHarvester(RunStop, EjectToggle, false);
 		
 		//
 		// 
@@ -520,50 +592,50 @@ START_ROBOT_CLASS(PurpleMonkeys);
 // NOTE: IMPORTANT!!!
 // I didn't see why HAM passed it an int pointer at first, but now I know
 // it needs to be that way, to save the state outside the function.
-BOOL ToggleSwitch (BOOL Input, unsigned int *State)
-{
-  unsigned int s = *State;      // Dereference saved state to local variable
-  s = s << 1 | Input;  // Shift it left and add the input bit to it
-
-  switch (s) {         // Use it as a state variable
-
-    case 0:        // Idle State Off
-      *State = 0;  // Set NextState(0) - Spin here til the input goes to 1
-      return 0;    // Input = 0, Output = 0
-
-    case 1:        // Leading Edge Detected - Input transitioned from 0 to 1
-      *State = 1;  // Set NextState(3)
-      return 1;    // Input = 1, Output = 1
-
-    case 2:        // Trailing Edge Detected - Input transitioned from 1 to 0
-      *State = 3;  // Set NextState(6) - Return to Idle Stte On
-      return 1;    // Input = 0, Output = 1
-
-    case 3:        // Waiting for release
-      *State = 1;  // Set NextState(3) - Spin here until input goes to 0
-      return 1;    // Input = 1, Output = 1
-
-    case 4:        // Trailing Edge Detected - Input transitioned from 1 to 0
-      *State = 0;  // Set NextState(0) - Return to Idle State Off
-      return 0;    // Input = 0, Output = 0
-
-    case 5:        // Waiting for release
-      *State = 2;  // Set NextState(4) - Spin here until input goes to 0
-      return 0;    // Input = 1, Output = 0
-
-    case 6:        // Idle State On
-      *State = 3;  // Set NextState(6) - Spin here til the input goes to 1
-      return 1;    // Input = 1, Output = 1
-
-    case 7:        // Leading Edge Detected - Input transitioned from 0 to 1
-      *State = 2;  // Set NextState(5)
-      return 0;    // Input = 1, Output = 0
-
-    default:
-      return 0;
-  }    
-
-}	
+//BOOL ToggleSwitch (BOOL Input, unsigned int *State)
+//{
+//  unsigned int s = *State;      // Dereference saved state to local variable
+//  s = s << 1 | Input;  // Shift it left and add the input bit to it
+//
+//  switch (s) {         // Use it as a state variable
+//
+//    case 0:        // Idle State Off
+//      *State = 0;  // Set NextState(0) - Spin here til the input goes to 1
+//      return 0;    // Input = 0, Output = 0
+//
+//    case 1:        // Leading Edge Detected - Input transitioned from 0 to 1
+//      *State = 1;  // Set NextState(3)
+//      return 1;    // Input = 1, Output = 1
+//
+//    case 2:        // Trailing Edge Detected - Input transitioned from 1 to 0
+//      *State = 3;  // Set NextState(6) - Return to Idle Stte On
+//      return 1;    // Input = 0, Output = 1
+//
+//    case 3:        // Waiting for release
+//      *State = 1;  // Set NextState(3) - Spin here until input goes to 0
+//      return 1;    // Input = 1, Output = 1
+//
+//    case 4:        // Trailing Edge Detected - Input transitioned from 1 to 0
+//      *State = 0;  // Set NextState(0) - Return to Idle State Off
+//      return 0;    // Input = 0, Output = 0
+//
+//    case 5:        // Waiting for release
+//      *State = 2;  // Set NextState(4) - Spin here until input goes to 0
+//      return 0;    // Input = 1, Output = 0
+//
+//    case 6:        // Idle State On
+//      *State = 3;  // Set NextState(6) - Spin here til the input goes to 1
+//      return 1;    // Input = 1, Output = 1
+//
+//    case 7:        // Leading Edge Detected - Input transitioned from 0 to 1
+//      *State = 2;  // Set NextState(5)
+//      return 0;    // Input = 1, Output = 0
+//
+//    default:
+//      return 0;
+//  }    
+//
+//}	
 //  ***** End of ToggleSwitch *****
 
 
