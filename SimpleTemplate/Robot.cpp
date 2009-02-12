@@ -192,7 +192,7 @@ public:
 		//Harvester_Motor
 	}
 	
-	int ProcessHarvester(bool RunStopToggle, bool EjectToggle, bool LoadElevator)
+	int ProcessHarvester(BOOL RunStopToggle, BOOL EjectToggle, bool LoadElevator)
 	{
 		/*
 		if(LoadElevator)
@@ -232,21 +232,23 @@ public:
 		*/
 		
 		
-		bool RSToggle = ToggleSwitch(RunStopToggle, &UserRequestRunStop);
-		bool EjectReq = ToggleSwitch(EjectToggle, &UserRequestEjectIdle);
+		BOOL RSToggle = ToggleSwitch(RunStopToggle, &UserRequestRunStop);
+		BOOL EJToggle;
+		
+		// Only toggle eject if harvester is off.
+		if(RSToggle==false)
+			EJToggle = ToggleSwitch(EjectToggle, &UserRequestEjectIdle);
 		if(1){// Put Manual/Auto if condition here. 
 			// Manual Mode
 			if(RSToggle){
 				Harvester_Motor.Set(.5);
 			}
 			else{
-				if(EjectReq){
+				if(EJToggle){
 					Harvester_Motor.Set(-.5);
-					UserRequestEjectIdle = USR_RQ_EJECT;
 				}
 				else{
 					Harvester_Motor.Set(0.0);
-					HarvesterAutoMode = HARV_AUTO_MODE_IDLE;
 				}
 			}
 		}
