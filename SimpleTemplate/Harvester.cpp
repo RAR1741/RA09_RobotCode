@@ -105,6 +105,7 @@ void RobotHarvester::Process(bool LoadElevator)
 
 	if(1){// Put Manual/Auto if condition here. 
 		// Manual Mode
+		if (HarvesterStick != NULL && EjecterStick != NULL)
 		if (HarvesterToggle->GetOutput()){
 			HarvesterMotor->Set(.5);
 			EjecterToggle->Reset();

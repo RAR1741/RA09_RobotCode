@@ -2,8 +2,6 @@
 #define HARVESTER_H__
 
 #include "WPILib.h"
-#include "Target.h"
-#include "LimitSwitch.h"
 #include "Toggle.h"
 
 // #include "Robot.cpp"

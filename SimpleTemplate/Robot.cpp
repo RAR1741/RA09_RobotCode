@@ -24,9 +24,7 @@ using ::floor;
 #include "Turret.h"
 #include "Toggle.h"
 #include "Harvester.h"
-
-#define ELEVATOR_STATE_FULL 0
-#define ELEVATOR_STATE_EMPTY 1
+#include "Elevator.h"
 
 #define USR_RQ_EJECT 0
 #define USR_RQ_IDLE 1
@@ -75,7 +73,7 @@ class PurpleMonkeys : public IterativeRobot {
 	Turret TheTurret;
 	AnalogChannel leftCurrent;
 	AnalogChannel rightCurrent;
-	AnalogChannel elevatorCurrent;
+	//AnalogChannel elevatorCurrent;
 	AnalogChannel launchWheelsCurrent;
 	AnalogChannel turretPositionCurrent;
 	//AnalogChannel harvesterCurrent;
@@ -84,11 +82,12 @@ class PurpleMonkeys : public IterativeRobot {
 	//Jaguar Harvester_Motor;
 	Jaguar Launch_Wheels_Motor;
 	// Jaguar Turret_Pos_Motor; // Outsourced to Turret.h/cpp by PJF at 20:28 02/09/2009
-	Jaguar Elevator_Motor;
+	//Jaguar Elevator_Motor;
 	Solenoid Gate;
 	//Toggle HarvesterToggle;
 	//Toggle EjecterToggle;
 	RobotHarvester Harvester;
+	RobotElevator Elevator;
 	
 	// State Variables for toggle code.
 	
@@ -140,7 +139,7 @@ public:
 				TheTurret(),
 				leftCurrent(2,4),
 				rightCurrent(2,5),
-				elevatorCurrent(2,1),
+				//elevatorCurrent(2,1),
 				launchWheelsCurrent(2,2),
 				turretPositionCurrent(2,3),
 				//harvesterCurrent(2,6),
@@ -150,12 +149,13 @@ public:
 				//Harvester_Motor(4, 6),
 				Launch_Wheels_Motor(4,2),
 //				Turret_Pos_Motor(4,3),
-				Elevator_Motor(4,1),
+				//Elevator_Motor(4,1),
 				Gate(8,1),
 				//HarvesterToggle(&rightStick, 2),
 				//EjecterToggle(&leftStick, 2),
 				//RobotHarvester(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel);
-				Harvester(4, 6, 2, 6)
+				Harvester(4, 6, 2, 6),
+				Elevator(4, 1, 2, 1)
 				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 		
@@ -316,10 +316,11 @@ public:
 //		return 0;
 //	}
 	
-	void InitElevator()
-	{
-		
-	}
+//	void InitElevator()
+//	{
+//		
+//	}
+
 	// One time initialization of the robot
 	void RobotInit(void) {
 		GetWatchdog().SetExpiration(100);
@@ -347,6 +348,10 @@ public:
 		Harvester.Init();
 		Harvester.SetHarvesterControls(&rightStick, 2);
 		Harvester.SetEjecterControls(&leftStick, 2);
+		
+		Elevator.Init();
+		//JDM: Set the joystick and button to use to test the elevator
+		Elevator.SetElevatorControls(&testMotorStick, 2);
 	}
 
 	// Disabled state methods
@@ -472,6 +477,7 @@ public:
 			RunStop = false;
 		*/
 		
+		Elevator.Process();
 		Harvester.Process(false);
 		//ProcessHarvester(false);
 		//ProcessHarvester(RunStop, EjectToggle, false);
