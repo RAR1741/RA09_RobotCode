@@ -99,28 +99,28 @@ void RobotHarvester::Process(bool LoadElevator)
 		Harvester_Motor.Set(-.5);
 	}
 	*/
-	
-	HarvesterToggle->UpdateState();
-	EjecterToggle->UpdateState();
+	if (HarvesterStick != NULL && EjecterStick != NULL){
+		HarvesterToggle->UpdateState();
+		EjecterToggle->UpdateState();
 
-	if(1){// Put Manual/Auto if condition here. 
-		// Manual Mode
-		if (HarvesterStick != NULL && EjecterStick != NULL)
-		if (HarvesterToggle->GetOutput()){
-			HarvesterMotor->Set(.5);
-			EjecterToggle->Reset();
-		}
-		else{
-			if(EjecterToggle->GetOutput()){
-				HarvesterMotor->Set(-.5);
+		if(1){// Put Manual/Auto if condition here. 
+			// Manual Mode
+			if (HarvesterToggle->GetOutput()){
+				HarvesterMotor->Set(.5);
+				EjecterToggle->Reset();
 			}
 			else{
-				HarvesterMotor->Set(0.0);
+				if(EjecterToggle->GetOutput()){
+					HarvesterMotor->Set(-.5);
+				}
+				else{
+					HarvesterMotor->Set(0.0);
+				}
 			}
 		}
-	}
-	else{
-		// Auto mode code should be here.
+		else{
+			// Auto mode code should be here.
+		}
 	}
 }
 
