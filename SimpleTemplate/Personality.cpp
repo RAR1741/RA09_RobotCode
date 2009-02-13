@@ -11,14 +11,24 @@ Personality::Personality()
 //	TempSelector = 0;      // Note: these don't really need to be here
 //	SubMenuSelector = 0;   // Try deleting them when testing code to validate - HAM
 
-	fdSerialPort = fopen ("/tyCo/0", "r+");        // Open the serial port for reading and writing
+	//fdSerialPort = fopen ("/tyCo/0", "r+");        // Open the serial port for reading and writing
 	//fdConfigFile = fopen ("Robality.cfg", "r+");   // Open personality file
+}
+
+void Personality::Open(void)
+{
+	fdSerialPort = fopen ("/tyCo/0", "r+");           // Open the serial port for reading and writing
+}
+
+void Personality::Close(void)
+{
+	fclose (fdSerialPort);                            // Close the port
 }
 
 Personality::~Personality()
 {
 	//fclose (fdConfigFile);   // Close personality file
-	fclose (fdSerialPort);   // Close the port
+	//fclose (fdSerialPort);   // Close the port
 }
 
 void Personality::SqueekySayHello(void)
@@ -26,9 +36,10 @@ void Personality::SqueekySayHello(void)
 // ******** Test code to try to send a string to the main console **********
 //          Added by HAM 2/6/2009	
 	char TestString[22] = "\r\nSqueeky says hello.";  // Test message to send out serial port	
-//	fdSerialPort = fopen ("/tyCo/0", "r+");           // Open the serial port for reading and writing
-	fwrite (TestString, sizeof(TestString), 1, fdSerialPort);  // Write the string
-//	fclose (fdSerialPort);                            // Close the port
+	//fdSerialPort = fopen ("/tyCo/0", "r+");           // Open the serial port for reading and writing
+	//fwrite (TestString, sizeof(TestString), 1, fdSerialPort);  // Write the string
+	DisplayText(TestString);
+	//fclose (fdSerialPort);                            // Close the port
 }
 
 void Personality::DisplayText (const char *TxtAdd)

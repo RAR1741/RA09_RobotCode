@@ -69,7 +69,7 @@ class PurpleMonkeys : public IterativeRobot {
 	Gyro * testTemp;
 	// bool printed;
 	// Autonomous Auto;
-	//Personality * Squeeky;
+	Personality * Squeeky;
 	Turret TheTurret;
 	AnalogChannel leftCurrent;
 	AnalogChannel rightCurrent;
@@ -135,7 +135,7 @@ public:
 				//printed(false)
 				
 				//Auto()
-				//Squeeky(NULL),
+				Squeeky(NULL),
 				TheTurret(),
 				leftCurrent(2,4),
 				rightCurrent(2,5),
@@ -352,11 +352,14 @@ public:
 		Elevator.Init();
 		//JDM: Set the joystick and button to use to test the elevator
 		Elevator.SetElevatorControls(&testMotorStick, 2);
+
+		Squeeky = new Personality();
 	}
 
 	// Disabled state methods
 	void DisabledInit(void) {
-		//Squeeky = new Personality();
+		Squeeky->Open();
+		Squeeky->SqueekySayHello();
 		if(testGyro==NULL)
 			testGyro = new Gyro(1,1);
 		
@@ -373,6 +376,7 @@ public:
 
 	// Autonomous state methods
 	void AutonomousInit(void) {
+		Squeeky->Close();
 		LMQuadEncoder.Stop();
 		//testMotor.Set(0.0);
 		//myRobot.Drive(0.5, 0.0); // drive forwards half speed

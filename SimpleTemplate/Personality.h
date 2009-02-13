@@ -11,6 +11,8 @@ public:
 
 	void RPTCommandProccessor(void);
 	void SqueekySayHello(void);
+	void Open(void);
+	void Close(void);
 	
 private:
 	char SubMenuSelector;  // This state variable keeps track of sub menu from previous command
