@@ -1,14 +1,9 @@
 #include "Elevator.h"
 #include "Launcher.h"
 
-RobotElevator::RobotElevator(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel)
+RobotElevator::RobotElevator()
 {
-	ElevatorMotor = new Jaguar(MotorSlot, MotorChannel);
-	// LaunchMotor = new Jaguar(LaunchMotorSlot, LaunchMotorChannel);
-	ElevatorMotorCurrent = new AnalogChannel(CurrentSlot, CurrentChannel);
-	ElevatorButton = 0;
-	State = 0;
-	AutoMode = 0;
+
 }
 
 RobotElevator::~RobotElevator()
@@ -45,11 +40,18 @@ void RobotElevator::SetElevatorControls(Joystick *Stick, UINT32 Button)
 	theToggle = new Toggle(ElevatorStick, Button);
 }
 
-void RobotElevator::Init()
+void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel, Encoder * elevEncoder)
 {
 	State = 0;
 	AutoMode = 0;
+	ElevatorMotor = new Jaguar(MotorSlot, MotorChannel);
+	// LaunchMotor = new Jaguar(LaunchMotorSlot, LaunchMotorChannel);
+	ElevatorMotorCurrent = new AnalogChannel(CurrentSlot, CurrentChannel);
+	ElevatorButton = 0;
+	State = 0;
+	AutoMode = 0;
 	ElevatorMotor->Set(0.0);
+
 	// launcher = theLauncher;
 }
 
@@ -71,6 +73,7 @@ void RobotElevator::Process()
 					//LaunchMotor->Set(0.0);
 					// launcher->SetRun(false); // We want it to stop running
 				}
+				
 		}
 		else{
 			// Auto mode code should be here.
@@ -78,9 +81,9 @@ void RobotElevator::Process()
 	}
 }
 
-bool RobotElevator::isFull()
+bool RobotElevator::IsFull()
 {
 	return isFull;
 }
-}
+
 

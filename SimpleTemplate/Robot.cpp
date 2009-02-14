@@ -126,7 +126,7 @@ public:
 				testAccel_Z(1,5),
 //				Gate(8,1),
 				Harvester(4, 6, 2, 6),
-				Elevator(4,1,2,1),
+				Elevator(),
 				// Collector(8,1),
 				TheGate(),
 				ECellCatcher(),
@@ -155,7 +155,6 @@ public:
 			testTemp = new Gyro(1,2);
 		 if(StartCameraTask(13,0,k320x240,ROT_0)==-1)
 		 {
-		 {
 			 dprintf("Things screwed up with camera.\n");
 		 }
 		 
@@ -176,7 +175,7 @@ public:
 		Harvester.SetAutoMode(MODE_AUTO);
 		
 		
-		Elevator.Init();
+		Elevator.Init(4,1,2,1, &ElevatorEncoder);
 		//JDM: Set the joystick and button to use to test the elevator
 		Elevator.SetElevatorControls(&turretStick, 2);
 

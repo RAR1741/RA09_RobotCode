@@ -13,22 +13,23 @@
 class RobotElevator
 {
 public:
-	RobotElevator(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel);
+	RobotElevator();
 	~RobotElevator();
 	
 	void SetElevatorControls(Joystick *Stick, UINT32 Button);
-	void Init();
+	void Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel, Encoder * elevEncoder);
 	void Process();
 	UINT32 GetState(void);
 	void SetState(UINT32 State);
 	UINT32 GetAutoMode(void);
 	void SetAutoMode(UINT32);
-	bool isFull(void);
+	bool IsFull(void);
 	
 private:
 	////////////////////////////////////////////////////////
 	// HARDWARE
 	Jaguar *ElevatorMotor;
+	Encoder * ElevatorEncoder;
 	// Jaguar * LaunchMotor;
 	AnalogChannel *ElevatorMotorCurrent;
 	Joystick *ElevatorStick;
