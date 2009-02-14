@@ -21,6 +21,7 @@ using ::floor;
 #include "Harvester.h"
 #include "Elevator.h"
 #include "Launcher.h"
+#include "EmptyCellCatcher.h"
 #include "GateController.h"
 
 
@@ -71,9 +72,11 @@ class PurpleMonkeys : public IterativeRobot {
 	RobotHarvester Harvester;
 	RobotElevator Elevator;
 	GateController TheGate;
+	CellCatcher ECellCatcher;
 	// Solenoid Collector;
 	Toggle Trigger;
 	Toggle GateToggle;
+	Toggle CellCatcherToggle;
 	Launcher launcher;
 	// State Variables for toggle code.
 	
@@ -121,13 +124,15 @@ public:
 				testAccel_X(1,3),
 				testAccel_Y(1,4),
 				testAccel_Z(1,5),
-				Gate(8,1),
+//				Gate(8,1),
 				Harvester(4, 6, 2, 6),
 				Elevator(4,1,2,1),
 				// Collector(8,1),
-				GateControl(),
+				TheGate(),
+				ECellCatcher(),
 				Trigger(&leftStick, 2),
-				GateToggle(&turretStick, 3)
+				GateToggle(&turretStick, 3),
+				CellCatcherToggle(&rightStick,3)
 				
 	//			launcher(4,2)
 				{
@@ -159,8 +164,9 @@ public:
 		   dprintf("Robot initialized.");
 		   
 		// This should probably be in the Elevator code
-		if(!Gate.Get()) // Is the gate open?
-			Gate.Set(false); // Yes? Then close it.
+		   
+		//if(!Gate.Get()) // Is the gate open?
+		//	Gate.Set(false); // Yes? Then close it.
 		
 		Harvester.Init();
 		Harvester.SetHarvesterControls(&rightStick, 2);
@@ -170,6 +176,8 @@ public:
 		//JDM: Set the joystick and button to use to test the elevator
 		Elevator.SetElevatorControls(&turretStick, 2);
 
+		
+		ECellCatcher.Init(8,3,8,4);
 		Squeeky = new Personality();
 	}
 
@@ -292,7 +300,9 @@ public:
 		
 		TheGate.Set(GateToggle.GetOutput());
 		
+		ECellCatcher.Set(CellCatcherToggle.GetOutput());
 		GateToggle.UpdateState();
+		CellCatcherToggle.UpdateState();
 		
 //#warning "THIS IS TEST CODE. DON'T SEND THE ROBOT INTO COMPETITION"
 		
