@@ -89,7 +89,7 @@ class PurpleMonkeys : public IterativeRobot {
 	//Toggle EjecterToggle;
 	RobotHarvester Harvester;
 	// RobotElevator Elevator;
-	Solenoid Collector;
+	// Solenoid Collector;
 	Toggle Trigger;
 	Launcher launcher;
 	// State Variables for toggle code.
@@ -159,7 +159,7 @@ public:
 				//RobotHarvester(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel);
 				Harvester(4, 6, 2, 6),
 				// Elevator(4, 1, 2, 1),
-				Collector(8,1),
+				// Collector(8,1),
 				Trigger(&leftStick, 2),
 				launcher(4,2)
 				{
@@ -521,11 +521,6 @@ public:
 		// horizontalServo.Set((turretStick.GetX()+ 1.0) / 2.0);
 		// verticalServo.Set((turretStick.GetY()+ 1.0) / 2.0);
 		UpdateDashboard();
-
-		if (leftStick.GetTrigger())
-			Collector.Set(true);
-		else
-			Collector.Set(false);
 	}
 
 	void TeleopContinuous(void) {

@@ -3,6 +3,10 @@
 
 #include "WPIlib.h"
 
-void CollectorUpdate(void);
+class CellCatcher : public Solenoid
+{
+	CellCatcher(UINT32 slot, UINT32 slot);
+	~CellCatcher();
+};
 
 #endif
