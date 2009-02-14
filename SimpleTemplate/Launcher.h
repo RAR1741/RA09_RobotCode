@@ -1,12 +1,12 @@
 #ifndef __LAUNCHER_H
 #define __LAUNCHER_H
-#include "wpilib.h"
+#include "WPIlib.h"
 
-class Launcher : public Jaguar
+class Launcher
 {
 public:
-	Launcher(UINT32 slot, UINT32 channel);
-	~Launcher();
+	void Init(UINT32 slot, UINT32 channel);
+	//~Launcher();
 	void Update();
 	void SetJoyStick(Joystick * thestick);
 	void SetRun(bool runManrun);
@@ -14,6 +14,7 @@ private:
 	UINT32 slot;
 	UINT32 channel;
 	Joystick * stick;
+	Jaguar * motor;
 	bool shouldRun;
 };
 #endif

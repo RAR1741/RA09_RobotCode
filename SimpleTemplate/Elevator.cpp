@@ -60,6 +60,7 @@ void RobotElevator::Process()
 		// Manual Mode
 		if (ElevatorStick != NULL && theToggle != NULL && launcher != NULL)
 		{
+			theToggle->UpdateState();
 			if (theToggle->GetOutput()){
 				ElevatorMotor->Set(.5);
 				// This scales it to 0 - 1, the double negatives ARE correct.

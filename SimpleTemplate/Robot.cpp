@@ -67,6 +67,7 @@ class PurpleMonkeys : public IterativeRobot {
 	Accelerometer testAccel_X,testAccel_Y,testAccel_Z;
 	Solenoid Gate;
 	RobotHarvester Harvester;
+	RobotElevator Elevator;
 	// Solenoid Collector;
 	Toggle Trigger;
 	Launcher launcher;
@@ -118,9 +119,11 @@ public:
 				testAccel_Z(1,5),
 				Gate(8,1),
 				Harvester(4, 6, 2, 6),
+				Elevator(4,1,2,1),
 				// Collector(8,1),
-				Trigger(&leftStick, 2),
-				launcher(4,2)
+				Trigger(&leftStick, 2)
+				
+				// launcher(4,2)
 				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 						
@@ -131,8 +134,10 @@ public:
 	// One time initialization of the robot
 	void RobotInit(void) {
 		GetWatchdog().SetExpiration(100);
+		launcher.Init(4,2);
+		launcher.SetRun(true);
 		launcher.SetJoyStick(&turretStick);
-		// Elevator.Init(&launcher);
+		
 		if(testGyro==NULL)
 			testGyro = new Gyro(1,1);
 		if(testTemp==NULL)
@@ -155,9 +160,9 @@ public:
 		Harvester.SetHarvesterControls(&rightStick, 2);
 		Harvester.SetEjecterControls(&leftStick, 2);
 		
-		// Elevator.Init(&launcher);
+		Elevator.Init(&launcher);
 		//JDM: Set the joystick and button to use to test the elevator
-		// Elevator.SetElevatorControls(&turretStick, 2);
+		Elevator.SetElevatorControls(&turretStick, 2);
 
 		Squeeky = new Personality();
 	}
@@ -275,7 +280,7 @@ public:
 				testGyro = new Gyro(1,1);
 			}
 		
-		// Elevator.Process();
+		Elevator.Process();
 		Harvester.Process(false);
 		launcher.Update();
 		
