@@ -160,7 +160,7 @@ public:
 		Harvester.SetHarvesterControls(&rightStick, 2);
 		Harvester.SetEjecterControls(&leftStick, 2);
 		
-		Elevator.Init(&launcher);
+		Elevator.Init();
 		//JDM: Set the joystick and button to use to test the elevator
 		Elevator.SetElevatorControls(&turretStick, 2);
 

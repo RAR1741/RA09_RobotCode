@@ -45,12 +45,12 @@ void RobotElevator::SetElevatorControls(Joystick *Stick, UINT32 Button)
 	theToggle = new Toggle(ElevatorStick, Button);
 }
 
-void RobotElevator::Init(Launcher * theLauncher)
+void RobotElevator::Init()
 {
 	State = 0;
 	AutoMode = 0;
 	ElevatorMotor->Set(0.0);
-	launcher = theLauncher;
+	// launcher = theLauncher;
 }
 
 void RobotElevator::Process()
@@ -58,19 +58,19 @@ void RobotElevator::Process()
 	
 	if(1){// Put Manual/Auto if condition here. 
 		// Manual Mode
-		if (ElevatorStick != NULL && theToggle != NULL && launcher != NULL)
+		if (ElevatorStick != NULL && theToggle != NULL)
 		{
 			theToggle->UpdateState();
 			if (theToggle->GetOutput()){
 				ElevatorMotor->Set(.5);
 				// This scales it to 0 - 1, the double negatives ARE correct.
 			// 	LaunchMotor->Set(-((-ElevatorStick->GetZ()+1.0)/2.0));
-				launcher->SetRun(true); // Allow update() to run.
+				// launcher->SetRun(true); // Allow update() to run.
 			}
 			else{
 				ElevatorMotor->Set(0.0);
 				//LaunchMotor->Set(0.0);
-				launcher->SetRun(false); // We want it to stop running
+				// launcher->SetRun(false); // We want it to stop running
 			}
 	}
 	else{

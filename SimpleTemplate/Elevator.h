@@ -17,7 +17,7 @@ public:
 	~RobotElevator();
 	
 	void SetElevatorControls(Joystick *Stick, UINT32 Button);
-	void Init(Launcher * thelauncher);
+	void Init();
 	void Process();
 	UINT32 GetState(void);
 	void SetState(UINT32 State);
@@ -32,7 +32,7 @@ private:
 	AnalogChannel *ElevatorMotorCurrent;
 	Joystick *ElevatorStick;
 	Toggle * theToggle;
-	Launcher * launcher;
+	// Launcher * launcher;
 	UINT32 ElevatorButton;
 	
 	////////////////////////////////////////////////////////
