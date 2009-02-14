@@ -17,7 +17,7 @@ public:
 	~RobotElevator();
 	
 	void SetElevatorControls(Joystick *Stick, UINT32 Button);
-	void Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel, Encoder * elevEncoder);
+	void Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel);
 	void Process();
 	UINT32 GetState(void);
 	void SetState(UINT32 State);
@@ -31,9 +31,10 @@ private:
 	Jaguar *ElevatorMotor;
 	Encoder * ElevatorEncoder;
 	// Jaguar * LaunchMotor;
-	AnalogChannel *ElevatorMotorCurrent;
+	AnalogChannel * ElevatorMotorCurrent;
 	Joystick *ElevatorStick;
 	Toggle * theToggle;
+	// Encoder ElevatorEncoder;
 	// Launcher * launcher;
 	UINT32 ElevatorButton;
 	
@@ -42,11 +43,13 @@ private:
 	UINT32 State;
 	UINT32 AutoMode;
 	float launchDistance;
-	
+	INT32 CurrentElevatorEncoderValue;
+	INT32 LastElevatorEncoderValue;
 	bool ArmDisarmed;
 	bool RunStop;
 	bool ElevatorAutoMode;
 	bool isFull;
+	bool isJammed;
 };
 
 #endif

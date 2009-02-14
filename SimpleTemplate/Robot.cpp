@@ -54,7 +54,7 @@ class PurpleMonkeys : public IterativeRobot {
 	Encoder LMWheelEncoder;
 	Encoder RMWheelEncoder;
 	Encoder LaunchEncoder;
-	Encoder ElevatorEncoder;
+	
 	Encoder TurretEncoder;
 	
 	int counter;
@@ -109,7 +109,7 @@ public:
 				LMWheelEncoder(4,5,4,6,false),
 				RMWheelEncoder(4,7,4,8,false),
 				LaunchEncoder(4,9,4,10,false),
-				ElevatorEncoder(4,11,4,12,false),
+				//ElevatorEncoder(4,11,4,12,false),
 				TurretEncoder(4,13,4,14,false),
 				
 				counter(0),
@@ -174,8 +174,8 @@ public:
 		Harvester.SetGateControls(&TheGate);
 		Harvester.SetAutoMode(MODE_AUTO);
 		
-		
-		Elevator.Init(4,1,2,1, &ElevatorEncoder);
+		// Initiallize the Elevator class
+		Elevator.Init(4,1,2,1);
 		//JDM: Set the joystick and button to use to test the elevator
 		Elevator.SetElevatorControls(&turretStick, 2);
 
