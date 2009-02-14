@@ -50,7 +50,8 @@ void Personality::DisplayText (const char *TxtAdd)
 
 char Personality::GetKeyPress (void)
 {
-	int result = fgetc(fdSerialPort);      // If character is ready then return the character
+	//int result = fgetc(fdSerialPort);      // If character is ready then return the character
+	int result = getc(fdSerialPort);
 	if (result == EOF) return 0;
 	return result;
 }
