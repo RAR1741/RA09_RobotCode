@@ -63,64 +63,56 @@ void RobotHarvester::Init(void)
 
 void RobotHarvester::Process(bool LoadElevator)
 {
-	/*
-	if(LoadElevator)
-		HarvesterAutoMode = HARV_AUTO_MODE_LOAD;
-	if(EjectToggle)
-		UserRequestEjectIdle = !UserRequestEjectIdle;
-	*/
-	/*
-	if (true) { // manual mode
-		if (RunStopToggle && !LastButtonValue) {
-			UserRequestRunStop = !UserRequestRunStop;
-		} else {
-			// Maintain state
-		}
-		if (EjectToggle && !LastEjectValue) {
-			UserRequestEjectIdle = !UserRequestEjectIdle;
-		}
+	switch (AutoMode)
+	{
+		case MODE_MANUAL:
+			ProcessManual();
+			break;
+			
+		case MODE_SEMI_AUTO:
+			ProcessSemiAuto(LoadElevator);
+			break;
+			
+		case MODE_AUTO:
+			ProcessAuto(LoadElevator);
+			break;
+			
+		default:
+			break;
+	}
+}
 
-		int direction = (UserRequestEjectIdle ? 1 : -1);
-		if (UserRequestRunStop) {
-			Harvester_Motor.Set(.5 * direction);
-		} else {
-			Harvester_Motor.Set(0.0);
-		}
-	}
-	
-	LastButtonValue = RunStopToggle;
-	LastEjectValue = EjectToggle;
-	
-	*/
-	/*
-	if (RunStopToggle) {
-		Harvester_Motor.Set(.5);
-	} else if (EjectToggle) {
-		Harvester_Motor.Set(-.5);
-	}
-	*/
+void RobotHarvester::ProcessManual(void)
+{
 	if (HarvesterStick != NULL && EjecterStick != NULL){
 		HarvesterToggle->UpdateState();
 		EjecterToggle->UpdateState();
 
-		if(1){// Put Manual/Auto if condition here. 
-			// Manual Mode
-			if (HarvesterToggle->GetOutput()){
-				HarvesterMotor->Set(.5);
-				EjecterToggle->Reset();
-			}
-			else{
-				if(EjecterToggle->GetOutput()){
-					HarvesterMotor->Set(-.5);
-				}
-				else{
-					HarvesterMotor->Set(0.0);
-				}
-			}
+		if (HarvesterToggle->GetOutput()){
+			HarvesterMotor->Set(COLLECT_MOTOR_SPEED);
+			EjecterToggle->Reset();
 		}
 		else{
-			// Auto mode code should be here.
+			if(EjecterToggle->GetOutput()){
+				HarvesterMotor->Set(EJECT_MOTOR_SPEED);
+			}
+			else{
+				HarvesterMotor->Set(0.0);
+			}
 		}
 	}
 }
+
+void RobotHarvester::ProcessSemiAuto(bool LoadElevator)
+{
+}
+
+void RobotHarvester::ProcessAuto(bool LoadElevator)
+{
+	switch(AutoMode){
+		default:
+			break;
+	}
+}
+
 

@@ -3,11 +3,15 @@
 
 #include "WPILib.h"
 #include "Toggle.h"
-
+#include "Mode.h"
+ 
 // #include "Robot.cpp"
 
 #define HARV_STATE_NOT_FULL 0
 #define HARV_STATE_FULL 1
+
+#define COLLECT_MOTOR_SPEED .5
+#define EJECT_MOTOR_SPEED -.5
 
 #define HARV_AUTO_MODE_COLLECT 0
 #define HARV_AUTO_MODE_LOAD 1
@@ -30,6 +34,10 @@ public:
 	void SetAutoMode(UINT32);
 	
 private:
+	void ProcessManual(void);
+	void ProcessSemiAuto(bool LoadElevator);
+	void ProcessAuto(bool LoadElevator);
+	
 	////////////////////////////////////////////////////////
 	// HARDWARE
 	Jaguar *HarvesterMotor;
