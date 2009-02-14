@@ -13,6 +13,7 @@ public:
 	Turret();
 	~Turret();
 	
+	void RegisterMasterControl(int *mcontrol);
 	void TurretControl(void);
 	void TurretControl(Joystick *turret);
 	
@@ -20,6 +21,10 @@ public:
 	TrackingThreshold SecondaryThreshold() const { return td2; };
 	bool TargetInSight() const { return tracking; };
 	double GetTarget_X(); // HaHa Patrick! Added a function to YOUR code! How does THAT make you feel?
+	
+	float CurrentPosition(void);
+	float EncoderVoltage(void);
+	
 	// Am I a bad person? >:)
 	// Yes. --PF
 	
@@ -42,6 +47,7 @@ private:
 	
 	Jaguar *Turret_Pos_Motor;
 	LimitSwitch *Clockwise_Limit, *CounterClockwise_Limit;
+	AnalogChannel *Position_Encoder;
 	
 	////////////////////////////////////////////////////////
 	// STATE
@@ -51,6 +57,8 @@ private:
 	TrackingThresholdRGB custom1, custom2; // Custom color thresholds
 	
 	ParticleAnalysisReport par;		// particle analysis report
+	
+	int *masterControl;
 };
 
 #endif

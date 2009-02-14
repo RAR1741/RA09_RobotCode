@@ -5,7 +5,7 @@ Turret::Turret()
 	Turret_Pos_Motor = new Jaguar(4,3);
 	Clockwise_Limit = new LimitSwitch(6,10);
 	CounterClockwise_Limit = new LimitSwitch(6,9);
-	
+	Position_Encoder = new AnalogChannel(2,3);
 	memset(&par,0,sizeof(par));				// initialize particle analysis report
 	
 	/* image data for tracking - override default parameters if needed */
@@ -50,19 +50,41 @@ Turret::Turret()
 	custom2.B.minValue = 117;
 	custom2.B.maxValue = 150;
 	
+	masterControl = NULL;
 }
 
 Turret::~Turret()
 {
-	
+	delete Turret_Pos_Motor;
+	delete Clockwise_Limit;
+	delete CounterClockwise_Limit;
+	delete Position_Encoder;
 }
 
+void Turret::RegisterMasterControl(int *ptr)
+{
+	this->masterControl = ptr;
+}
 void Turret::TurretControl(void)
 {
 	Auto();
 }
 void Turret::TurretControl(Joystick * turretStick)
 {
+	switch (*masterControl)
+	{
+	case 0:	// Manual
+		Manual(turretStick);
+		break;
+	case 1: // Semi-Automatic (BANG! BANG!)
+		Manual(turretStick);
+		break;
+	case 2:	// Fully automatic AEGIS-style, full robot control
+		Auto();
+		break;
+	default:
+		Manual(turretStick);
+	}
 	Manual(turretStick);
 }
 
@@ -88,6 +110,18 @@ void Turret::Manual(Joystick *turretStick)
 	Turret_Pos_Motor->Set(x_axis);
 	return; // Guess what? return.
 }
+
+float Turret::CurrentPosition(void)
+{
+	// Range: -1 to 1
+	return Position_Encoder->GetVoltage();
+}
+
+float Turret::EncoderVoltage(void)
+{
+	return Position_Encoder->GetVoltage(); 
+}
+
 void Turret::ManualPositionMode(Joystick *turretStick)
 {
 	

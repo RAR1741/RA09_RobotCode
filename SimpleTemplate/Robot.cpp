@@ -81,6 +81,10 @@ class PurpleMonkeys : public IterativeRobot {
 	  ENABLE_AUTONOMOUS = 2,		// Autonomous/Teleop jumper is on DS Input 2 (Jumper present is autonomous)
 	} jumpers;	 
 	
+	
+	// 
+	int MasterControlMode;
+	
 public:
 	PurpleMonkeys(void) :
 		myRobot(4, 5), // these must be initialized in the same order
@@ -119,6 +123,8 @@ public:
 				launcher(4,2)
 				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
+						
+						MasterControlMode = 0; // Manual mode
 		
 	}
 
@@ -235,6 +241,9 @@ public:
 		light.Set(1);
 		// myRobot.Drive(0.0, 0.0); // stop robot
 		// myRobot.Drive(0.5, 0.0); // Go Straight Forward!
+		
+		TheTurret.RegisterMasterControl(&MasterControlMode);
+		
 		GetWatchdog().SetEnabled(true);
 		// Launch_Wheels_Motor.Set(0.0);
 	}
