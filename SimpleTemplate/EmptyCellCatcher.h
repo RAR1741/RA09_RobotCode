@@ -3,10 +3,16 @@
 
 #include "WPIlib.h"
 
-class CellCatcher : public Solenoid
+class CellCatcher
 {
-	CellCatcher(UINT32 slot, UINT32 slot);
+public:
+	CellCatcher();
 	~CellCatcher();
+	void Set(bool theBoolean);
+	void Init(UINT32 slotA, UINT32 channelA, UINT32 slotB, UINT32 channelB);
+private:
+	Solenoid * solenoidA;
+	Solenoid * solenoidB;
 };
 
 #endif
