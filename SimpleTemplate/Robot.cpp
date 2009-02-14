@@ -352,6 +352,9 @@ public:
 	 dashboardDataFormat.m_RMWheelEncoder = RMWheelEncoder.Get();
 	 dashboardDataFormat.m_LMWheelEncoder = LMWheelEncoder.Get();
 	 dashboardDataFormat.m_LeftMotorVoltage = leftCurrent.GetValue();
+	 dashboardDataFormat.m_RightMotorVoltage = rightCurrent.GetValue();
+	 dashboardDataFormat.m_launchWheelsCurrent = launchWheelsCurrent.GetValue();
+	 dashboardDataFormat.m_turretPositionCurrent = turretPositionCurrent.GetValue();
 	 dashboardDataFormat.m_accelX = testAccel_X.GetAcceleration();
 	 dashboardDataFormat.m_accelY = testAccel_Y.GetAcceleration();
 	 dashboardDataFormat.m_accelZ = testAccel_Z.GetAcceleration();

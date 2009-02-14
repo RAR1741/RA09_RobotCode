@@ -35,8 +35,11 @@ public:
 	UINT32 m_LeftBoundRect;
 	UINT32 m_RightBoundRect;
 	UINT32 m_BottomBoundRect;
-	
+
 	INT16 m_LeftMotorVoltage;
+	INT16 m_RightMotorVoltage;
+	INT16 m_launchWheelsCurrent;
+	INT16 m_turretPositionCurrent;
 	float m_gyroAngle;
 	float m_gyroTemp;    // Added by HAM 2/6/9
 	float m_accelX;
