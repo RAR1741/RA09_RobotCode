@@ -4,6 +4,7 @@
 #include "WPILib.h"
 #include "Toggle.h"
 #include "Mode.h"
+#include "GateController.h"
  
 // #include "Robot.cpp"
 
@@ -12,6 +13,7 @@
 
 #define COLLECT_MOTOR_SPEED .5
 #define EJECT_MOTOR_SPEED -.5
+#define MOTOR_STOP 0.0
 
 #define HARV_AUTO_MODE_COLLECT 0
 #define HARV_AUTO_MODE_LOAD 1
@@ -24,14 +26,16 @@ public:
 	RobotHarvester(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel);
 	~RobotHarvester();
 	
-	void SetHarvesterControls(Joystick *Stick, UINT32 Button);
-	void SetEjecterControls(Joystick *Stick, UINT32 Button);
+	void SetCollectEjectControls(Joystick *Stick, UINT32 Button);
+	void SetRunStopControls(Joystick *Stick, UINT32 Button);
+	void SetGateControls(GateController *Gate);
 	void Init(void);
 	void Process(bool LoadElevator);
 	UINT32 GetState(void);
 	void SetState(UINT32 State);
 	UINT32 GetAutoMode(void);
 	void SetAutoMode(UINT32);
+	float GetHarvesterMotorVoltage(void);
 	
 private:
 	void ProcessManual(void);
@@ -42,17 +46,21 @@ private:
 	// HARDWARE
 	Jaguar *HarvesterMotor;
 	AnalogChannel *HarvesterMotorCurrent;
-	Joystick *HarvesterStick;
-	UINT32 HarvesterButton;
-	Joystick *EjecterStick;
-	UINT32 EjecterButton;
-	Toggle *HarvesterToggle;
-	Toggle *EjecterToggle;
+	Joystick *RunStopStick;
+	UINT32 RunStopButton;
+	Joystick *CollectEjectStick;
+	UINT32 CollectEjectButton;
+	Toggle *RunStopToggle;
+	Toggle *CollectEjectToggle;
+	GateController *TheGate;
 	
 	////////////////////////////////////////////////////////
 	// STATE
 	UINT32 State;
 	UINT32 AutoMode;
+	bool HarvesterFull;
+	float HarvesterMotorVoltage;
+	UINT32 HarvesterMode;
 };
 
 #endif

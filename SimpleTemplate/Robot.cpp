@@ -169,8 +169,11 @@ public:
 		//	Gate.Set(false); // Yes? Then close it.
 		
 		Harvester.Init();
-		Harvester.SetHarvesterControls(&rightStick, 2);
-		Harvester.SetEjecterControls(&leftStick, 2);
+		Harvester.SetCollectEjectControls(&rightStick, 2);
+		Harvester.SetRunStopControls(&leftStick, 2);
+		Harvester.SetGateControls(&TheGate);
+		Harvester.SetAutoMode(MODE_AUTO);
+		
 		
 		Elevator.Init();
 		//JDM: Set the joystick and button to use to test the elevator
