@@ -302,7 +302,8 @@ public:
 			}
 		
 		Elevator.Process();
-		Harvester.Process(false);
+		// JDM: Use joystick to test, needs to use Elevator Load flag
+		Harvester.Process(turretStick.GetRawButton(3));
 		launcher.Update();
 		
 		TheGate.Set(GateToggle.GetOutput());
