@@ -1,8 +1,10 @@
 #include "Elevator.h"
+#include "Launcher.h"
 
 RobotElevator::RobotElevator(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel)
 {
 	ElevatorMotor = new Jaguar(MotorSlot, MotorChannel);
+	// LaunchMotor = new Jaguar(LaunchMotorSlot, LaunchMotorChannel);
 	ElevatorMotorCurrent = new AnalogChannel(CurrentSlot, CurrentChannel);
 	ElevatorButton = 0;
 	State = 0;
@@ -37,32 +39,41 @@ void RobotElevator::SetAutoMode(UINT32 NewAutoMode)
 }
 
 void RobotElevator::SetElevatorControls(Joystick *Stick, UINT32 Button) 
-{ 
+{
 	ElevatorStick = Stick;
 	ElevatorButton = Button;
+	theToggle = new Toggle(ElevatorStick, Button);
 }
 
-void RobotElevator::Init(void)
+void RobotElevator::Init(Launcher * theLauncher)
 {
 	State = 0;
 	AutoMode = 0;
 	ElevatorMotor->Set(0.0);
+	launcher = theLauncher;
 }
 
-void RobotElevator::Process(void)
+void RobotElevator::Process()
 {
+	
 	if(1){// Put Manual/Auto if condition here. 
 		// Manual Mode
-		if (ElevatorStick != NULL)
+		if (ElevatorStick != NULL && theToggle != NULL && launcher != NULL)
 		{
-			if (ElevatorStick->GetRawButton(ElevatorButton))
+			if (theToggle->GetOutput()){
 				ElevatorMotor->Set(.5);
-			else
+				// This scales it to 0 - 1, the double negatives ARE correct.
+			// 	LaunchMotor->Set(-((-ElevatorStick->GetZ()+1.0)/2.0));
+				launcher->SetRun(true); // Allow update() to run.
+			}
+			else{
 				ElevatorMotor->Set(0.0);
-		}
+				//LaunchMotor->Set(0.0);
+				launcher->SetRun(false); // We want it to stop running
+			}
 	}
 	else{
 		// Auto mode code should be here.
 	}
-}
+}}
 

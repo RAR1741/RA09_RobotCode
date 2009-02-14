@@ -73,7 +73,7 @@ void Turret::Manual(Joystick *turretStick)
 	float x_axis = turretStick->GetX();
 	
 	// Scale value down 2x?
-	x_axis /= 8.0;
+	x_axis *= .60;
 	// Limit x_axis
 	
 	// Set motor to scaled value

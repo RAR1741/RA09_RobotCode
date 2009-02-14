@@ -2,7 +2,8 @@
 #define ELEVATOR_H__
 
 #include "WPILib.h"
-
+#include "toggle.h"
+#include "launcher.h"
 // #include "Robot.cpp"
 
 #define ELEVATOR_STATE_FULL 0
@@ -16,8 +17,8 @@ public:
 	~RobotElevator();
 	
 	void SetElevatorControls(Joystick *Stick, UINT32 Button);
-	void Init(void);
-	void Process(void);
+	void Init(Launcher * thelauncher);
+	void Process();
 	UINT32 GetState(void);
 	void SetState(UINT32 State);
 	UINT32 GetAutoMode(void);
@@ -27,14 +28,22 @@ private:
 	////////////////////////////////////////////////////////
 	// HARDWARE
 	Jaguar *ElevatorMotor;
+	// Jaguar * LaunchMotor;
 	AnalogChannel *ElevatorMotorCurrent;
 	Joystick *ElevatorStick;
+	Toggle * theToggle;
+	Launcher * launcher;
 	UINT32 ElevatorButton;
 	
 	////////////////////////////////////////////////////////
 	// STATE
 	UINT32 State;
 	UINT32 AutoMode;
+	float launchDistance;
+	
+	bool ArmDisarmed;
+	bool RunStop;
+	bool ElevatorAutoMode;
 };
 
 #endif

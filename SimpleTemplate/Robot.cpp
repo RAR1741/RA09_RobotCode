@@ -25,6 +25,7 @@ using ::floor;
 #include "Toggle.h"
 #include "Harvester.h"
 #include "Elevator.h"
+#include "Launcher.h"
 
 #define USR_RQ_EJECT 0
 #define USR_RQ_IDLE 1
@@ -80,15 +81,17 @@ class PurpleMonkeys : public IterativeRobot {
 	
 	Accelerometer testAccel_X,testAccel_Y,testAccel_Z;
 	//Jaguar Harvester_Motor;
-	Jaguar Launch_Wheels_Motor;
+	// Jaguar Launch_Wheels_Motor;
 	// Jaguar Turret_Pos_Motor; // Outsourced to Turret.h/cpp by PJF at 20:28 02/09/2009
 	//Jaguar Elevator_Motor;
 	Solenoid Gate;
 	//Toggle HarvesterToggle;
 	//Toggle EjecterToggle;
 	RobotHarvester Harvester;
-	RobotElevator Elevator;
-	
+	// RobotElevator Elevator;
+	Solenoid Collector;
+	Toggle Trigger;
+	Launcher launcher;
 	// State Variables for toggle code.
 	
 	//// Harvester State Vars
@@ -147,7 +150,7 @@ public:
 				testAccel_Y(1,4),
 				testAccel_Z(1,5),
 				//Harvester_Motor(4, 6),
-				Launch_Wheels_Motor(4,2),
+				// Launch_Wheels_Motor(4,2),
 //				Turret_Pos_Motor(4,3),
 				//Elevator_Motor(4,1),
 				Gate(8,1),
@@ -155,7 +158,10 @@ public:
 				//EjecterToggle(&leftStick, 2),
 				//RobotHarvester(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel);
 				Harvester(4, 6, 2, 6),
-				Elevator(4, 1, 2, 1)
+				// Elevator(4, 1, 2, 1),
+				Collector(8,1),
+				Trigger(&leftStick, 2),
+				launcher(4,2)
 				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 		
@@ -324,7 +330,8 @@ public:
 	// One time initialization of the robot
 	void RobotInit(void) {
 		GetWatchdog().SetExpiration(100);
-
+		launcher.SetJoyStick(&turretStick);
+		// Elevator.Init(&launcher);
 		if(testGyro==NULL)
 			testGyro = new Gyro(1,1);
 		if(testTemp==NULL)
@@ -349,9 +356,9 @@ public:
 		Harvester.SetHarvesterControls(&rightStick, 2);
 		Harvester.SetEjecterControls(&leftStick, 2);
 		
-		Elevator.Init();
+		// Elevator.Init(&launcher);
 		//JDM: Set the joystick and button to use to test the elevator
-		Elevator.SetElevatorControls(&testMotorStick, 2);
+		// Elevator.SetElevatorControls(&turretStick, 2);
 
 		Squeeky = new Personality();
 	}
@@ -438,6 +445,7 @@ public:
 		// myRobot.Drive(0.0, 0.0); // stop robot
 		// myRobot.Drive(0.5, 0.0); // Go Straight Forward!
 		GetWatchdog().SetEnabled(true);
+		// Launch_Wheels_Motor.Set(0.0);
 	}
 
 	void TeleopPeriodic(void) {
@@ -481,8 +489,9 @@ public:
 			RunStop = false;
 		*/
 		
-		Elevator.Process();
+		// Elevator.Process();
 		Harvester.Process(false);
+		launcher.Update();
 		//ProcessHarvester(false);
 		//ProcessHarvester(RunStop, EjectToggle, false);
 		
@@ -490,7 +499,7 @@ public:
 		// 
 		//
 		
-#warning "THIS IS TEST CODE. DON'T SEND THE ROBOT INTO COMPETITION"
+//#warning "THIS IS TEST CODE. DON'T SEND THE ROBOT INTO COMPETITION"
 		
 		/*
 		
@@ -504,12 +513,19 @@ public:
 		// Map X-Axis of joystick to turret position
 		//Turret_Pos_Motor.Set(turretStick.GetX());
 		TheTurret.TurretControl(&turretStick);
-		Launch_Wheels_Motor.Set(turretStick.GetZ());
+		
+		// Moved to elevator code.
+		// Launch_Wheels_Motor.Set(-((-turretStick.GetZ()+1.0)/2.0));
 	
 		
 		// horizontalServo.Set((turretStick.GetX()+ 1.0) / 2.0);
 		// verticalServo.Set((turretStick.GetY()+ 1.0) / 2.0);
 		UpdateDashboard();
+
+		if (leftStick.GetTrigger())
+			Collector.Set(true);
+		else
+			Collector.Set(false);
 	}
 
 	void TeleopContinuous(void) {
