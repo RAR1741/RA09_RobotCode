@@ -155,6 +155,7 @@ public:
 			testTemp = new Gyro(1,2);
 		 if(StartCameraTask(13,0,k320x240,ROT_0)==-1)
 		 {
+		 {
 			 dprintf("Things screwed up with camera.\n");
 		 }
 		 
@@ -281,13 +282,12 @@ public:
 		// determine if tank or arcade mode; default with no jumper is for tank drive
 		if (m_ds->GetDigitalIn(ARCADE_MODE) == 0) {	
 			// myRobot.TankDrive(leftStick, rightStick);	 // drive with tank style
-			
-			// This is a quick temporary for the inverted Y axis Mr. Meyer,
-			// but I think the issue with the inverted joysticks is with the motors...
-			// they may need to have the wires on their polarity switched.
-			myRobot.TankDrive(-leftStick.GetY(), -rightStick.GetY());
+			//myRobot.
+			// myRobot.TankDrive(leftStick.GetY(), rightStick.GetY());
+			myRobot.TankDrive(leftStick, rightStick);
 		} else{
-			myRobot.ArcadeDrive(-rightStick.GetY(), - rightStick.GetX());	         // drive with arcade style (use right stick)
+			//myRobot.ArcadeDrive(rightStick.GetY(), - rightStick.GetX());	         // drive with arcade style (use right stick)
+			myRobot.ArcadeDrive(rightStick);
 		}
 		
 		// Just for testing, comment if you don't want it.

@@ -57,24 +57,30 @@ void RobotElevator::Process()
 {
 	
 	if(1){// Put Manual/Auto if condition here. 
-		// Manual Mode
-		if (ElevatorStick != NULL && theToggle != NULL)
-		{
-			theToggle->UpdateState();
-			if (theToggle->GetOutput()){
-				ElevatorMotor->Set(.5);
-				// This scales it to 0 - 1, the double negatives ARE correct.
-			// 	LaunchMotor->Set(-((-ElevatorStick->GetZ()+1.0)/2.0));
-				// launcher->SetRun(true); // Allow update() to run.
-			}
-			else{
-				ElevatorMotor->Set(0.0);
-				//LaunchMotor->Set(0.0);
-				// launcher->SetRun(false); // We want it to stop running
-			}
+			// Manual Mode
+		if (ElevatorStick != NULL && theToggle != NULL){
+				theToggle->UpdateState();
+				if (theToggle->GetOutput()){
+					ElevatorMotor->Set(.5);
+					// This scales it to 0 - 1, the double negatives ARE correct.
+				// 	LaunchMotor->Set(-((-ElevatorStick->GetZ()+1.0)/2.0));
+					// launcher->SetRun(true); // Allow update() to run.
+				}
+				else{
+					ElevatorMotor->Set(0.0);
+					//LaunchMotor->Set(0.0);
+					// launcher->SetRun(false); // We want it to stop running
+				}
+		}
+		else{
+			// Auto mode code should be here.
+		}
 	}
-	else{
-		// Auto mode code should be here.
-	}
-}}
+}
+
+bool RobotElevator::isFull()
+{
+	return isFull;
+}
+}
 

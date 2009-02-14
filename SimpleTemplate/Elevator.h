@@ -23,6 +23,7 @@ public:
 	void SetState(UINT32 State);
 	UINT32 GetAutoMode(void);
 	void SetAutoMode(UINT32);
+	bool isFull(void);
 	
 private:
 	////////////////////////////////////////////////////////
@@ -44,6 +45,7 @@ private:
 	bool ArmDisarmed;
 	bool RunStop;
 	bool ElevatorAutoMode;
+	bool isFull;
 };
 
 #endif
