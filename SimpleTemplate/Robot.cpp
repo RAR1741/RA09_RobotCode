@@ -278,9 +278,13 @@ public:
 		// determine if tank or arcade mode; default with no jumper is for tank drive
 		if (m_ds->GetDigitalIn(ARCADE_MODE) == 0) {	
 			// myRobot.TankDrive(leftStick, rightStick);	 // drive with tank style
-			myRobot.TankDrive( leftStick.GetY(), rightStick.GetY());
+			
+			// This is a quick temporary for the inverted Y axis Mr. Meyer,
+			// but I think the issue with the inverted joysticks is with the motors...
+			// they may need to have the wires on their polarity switched.
+			myRobot.TankDrive(-leftStick.GetY(), -rightStick.GetY());
 		} else{
-			myRobot.ArcadeDrive(rightStick.GetY(), - rightStick.GetX());	         // drive with arcade style (use right stick)
+			myRobot.ArcadeDrive(-rightStick.GetY(), - rightStick.GetX());	         // drive with arcade style (use right stick)
 		}
 		
 		// Just for testing, comment if you don't want it.
@@ -358,6 +362,7 @@ public:
 	 
 	 dashboardDataFormat.m_LaunchEncoder = LaunchEncoder.Get();
 	 dashboardDataFormat.m_TurretEncoder = TurretEncoder.Get();
+	 
 	 dashboardDataFormat.m_accelX = testAccel_X.GetAcceleration();
 	 dashboardDataFormat.m_accelY = testAccel_Y.GetAcceleration();
 	 dashboardDataFormat.m_accelZ = testAccel_Z.GetAcceleration();
