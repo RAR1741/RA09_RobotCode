@@ -51,7 +51,7 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 	State = 0;
 	AutoMode = 0;
 	ElevatorMotor->Set(0.0);
-
+	ElevatorEncoder = elevEncoder;
 	// launcher = theLauncher;
 }
 
