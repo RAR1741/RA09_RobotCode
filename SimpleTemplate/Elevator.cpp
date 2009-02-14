@@ -1,5 +1,6 @@
 #include "Elevator.h"
-#include "Launcher.h"
+#include "DriverStationLCD.h"
+
 
 #define ANTI_JAM 0 // I don't want the code to be used yet.
 RobotElevator::RobotElevator()
@@ -77,6 +78,9 @@ void RobotElevator::Process()
 						//LaunchMotor->Set(0.0);
 						// launcher->SetRun(false); // We want it to stop running
 					}
+					DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
+					dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Elevator Voltage:%d", CurrentElevatorEncoderValue);
+					dsLCD->UpdateLCD();
 		}
 		else{
 			// Auto mode code should be here.
