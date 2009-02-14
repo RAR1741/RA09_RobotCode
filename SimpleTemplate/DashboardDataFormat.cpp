@@ -64,9 +64,11 @@ void DashboardDataFormat::PackAndSend(void)
 	dashboardPacker.AddI32(m_LMWheelEncoder);
 	dashboardPacker.AddI32(m_RMWheelEncoder);
 	
+	dashboardPacker.AddI32(m_LaunchEncoder);
+	dashboardPacker.AddI32(m_ElevatorEncoder);
+	dashboardPacker.AddI32(m_TurretEncoder);
 	dashboardPacker.AddI16(m_LeftMotorVoltage);
 	dashboardPacker.AddI16(m_RightMotorVoltage);
-	
 	dashboardPacker.AddFloat(m_gyroAngle);
 	dashboardPacker.AddFloat(m_gyroTemp);    // Added by HAM 2/6/9
 	

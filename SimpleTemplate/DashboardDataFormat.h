@@ -30,6 +30,9 @@ public:
 	INT32 m_RM_QuadEncoder;
 	INT32 m_LMWheelEncoder;
 	INT32 m_RMWheelEncoder;
+	INT32 m_LaunchEncoder;
+	INT32 m_ElevatorEncoder;
+	INT32 m_TurretEncoder;
 	
 	UINT32 m_TopBoundRect;
 	UINT32 m_LeftBoundRect;
