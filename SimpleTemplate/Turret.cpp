@@ -5,7 +5,7 @@ Turret::Turret()
 	Turret_Pos_Motor = new Jaguar(4,3);
 	Clockwise_Limit = new LimitSwitch(6,10);
 	CounterClockwise_Limit = new LimitSwitch(6,9);
-	Position_Encoder = new AnalogChannel(2,3);
+	Position_Encoder = new AnalogChannel(1,7);
 	memset(&par,0,sizeof(par));				// initialize particle analysis report
 	
 	/* image data for tracking - override default parameters if needed */

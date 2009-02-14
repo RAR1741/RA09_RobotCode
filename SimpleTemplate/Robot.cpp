@@ -21,6 +21,8 @@ using ::floor;
 #include "Harvester.h"
 #include "Elevator.h"
 #include "Launcher.h"
+#include "GateController.h"
+
 
 #define USR_RQ_EJECT 0
 #define USR_RQ_IDLE 1
@@ -65,11 +67,13 @@ class PurpleMonkeys : public IterativeRobot {
 	AnalogChannel turretPositionCurrent;
 	
 	Accelerometer testAccel_X,testAccel_Y,testAccel_Z;
-	Solenoid Gate;
+	//Solenoid Gate;
 	RobotHarvester Harvester;
 	RobotElevator Elevator;
+	GateController TheGate;
 	// Solenoid Collector;
 	Toggle Trigger;
+	Toggle GateToggle;
 	Launcher launcher;
 	// State Variables for toggle code.
 	
@@ -121,9 +125,11 @@ public:
 				Harvester(4, 6, 2, 6),
 				Elevator(4,1,2,1),
 				// Collector(8,1),
-				Trigger(&leftStick, 2)
+				GateControl(),
+				Trigger(&leftStick, 2),
+				GateToggle(&turretStick, 3)
 				
-				// launcher(4,2)
+	//			launcher(4,2)
 				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 						
@@ -284,6 +290,9 @@ public:
 		Harvester.Process(false);
 		launcher.Update();
 		
+		TheGate.Set(GateToggle.GetOutput());
+		
+		GateToggle.UpdateState();
 		
 //#warning "THIS IS TEST CODE. DON'T SEND THE ROBOT INTO COMPETITION"
 		
