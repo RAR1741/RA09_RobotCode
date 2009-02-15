@@ -56,7 +56,6 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 	ElevatorEncoder = new Encoder(4,11,4,12,false);
 	ElevatorEncoder->Start();
 	ElevatorMotorCurrent = new AnalogChannel(2,1);
-	LastElevatorEncoderValue = CurrentElevatorEncoderValue = 0;
 	isFull = false;
 	isJammed = false;
 	HomeItFlag = false;
@@ -68,26 +67,18 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 
 void RobotElevator::Process()
 {
-	
+	DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
+	// Common LCD update
 	if(false){// Put Manual/Auto if condition here. 
 			// Manual Mode
 		if (ElevatorStick != NULL && theToggle != NULL){
 					theToggle->UpdateState();
 					
-					// If the trigger has been pushed, fire semi automatic
-					if (ElevatorStick->GetRawButton(1) && !isJammed && !HomeItFlag){
-					
-						//if(!CycleFlag){//We don't want to do this if Cycle flag is already true
+					if (ElevatorStick->GetRawButton(1) && !isJammed)
 						ElevatorMotor->Set(.5);
-						//CycleFlag=true;
-						//tell HomeIt() to cycle the elevator
-						//}
-					}
 					else
 						ElevatorMotor->Set(0);
 					
-
-					DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
 					if(ElevatorEncoder==NULL){
 						dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "ERR");
 					}
@@ -111,29 +102,22 @@ void RobotElevator::Process()
 			if(CycleFlag){ // if we are cycling
 					Cycle(.5);
 			}
-			else if(!HomeItFlag){
-				//ElevatorMotor->Set(0.0);
-				//LaunchMotor->Set(0.0);
-				// launcher->SetRun(false); // We want it to stop running
-			}
-		}
-	// Set encoder values.	
-	LastElevatorEncoderValue = CurrentElevatorEncoderValue;
-	CurrentElevatorEncoderValue = ElevatorEncoder->Get();
-	
+		}	
 	// Anti Jamming Code.
 #if ANTI_JAM
 	if(ElevatorEncoder!=NULL && ElevatorMotorCurrent!=NULL){ // Do we have valid ptrs to use?
-		if(ElevatorMotorCurrent->GetVoltage()>=4.2 &&
+		if(ElevatorMotorCurrent->GetVoltage()>=4.8 &&
 			ElevatorMotorCurrent->GetVoltage() <=5.2){ // Is the motor voltage on?
 			if(!isJammed){ // Has a jam not recently been detected?
-				if((CurrentElevatorEncoderValue - LastElevatorEncoderValue)<=250){ 
+				if((CurrentElevatorEncoderValue - LastElevatorEncoderValue)<=50){ 
 					// Is the encoder getting a smaller
 					// than normal rate for the motor being on?
 					
 					// If all the above conditions have been meant then...
 					ElevatorMotor->Set(0.0);
 					isJammed = true;
+					dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "ERR: Evtr Jammed.");
+					dsLCD->UpdateLCD();
 				}
 			}
 		}

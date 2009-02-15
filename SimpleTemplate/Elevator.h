@@ -45,8 +45,6 @@ private:
 	UINT32 State;
 	UINT32 AutoMode;
 	float launchDistance;
-	INT32 CurrentElevatorEncoderValue;
-	INT32 LastElevatorEncoderValue;
 	bool ArmDisarmed;
 	bool RunStop;
 	bool ElevatorAutoMode;
