@@ -177,7 +177,7 @@ public:
 		// Initiallize the Elevator class
 		Elevator.Init(4,1,2,1);
 		//JDM: Set the joystick and button to use to test the elevator
-		Elevator.SetElevatorControls(&turretStick, 2);
+		Elevator.SetElevatorControls(&turretStick, 1);
 
 		
 		ECellCatcher.Init(8,3,8,4);
