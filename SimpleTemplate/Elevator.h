@@ -24,7 +24,7 @@ public:
 	UINT32 GetAutoMode(void);
 	void SetAutoMode(UINT32);
 	bool IsFull(void);
-	void HomeIt();
+	void HomeIt(float MotorSpeed, bool flag);
 private:
 	////////////////////////////////////////////////////////
 	// HARDWARE

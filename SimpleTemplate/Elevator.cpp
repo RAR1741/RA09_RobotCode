@@ -71,8 +71,9 @@ void RobotElevator::Process()
 			// Manual Mode
 		if (ElevatorStick != NULL && theToggle != NULL){
 					theToggle->UpdateState();
-					if (theToggle->GetOutput() && !isJammed){
+					if (ElevatorStick->GetRawButton(1) && !isJammed){
 						ElevatorMotor->Set(.5);
+						HomeItFlag=true;
 						// This scales it to 0 - 1, the double negatives ARE correct.
 					// 	LaunchMotor->Set(-((-ElevatorStick->GetZ()+1.0)/2.0));
 						// launcher->SetRun(true); // Allow update() to run.
@@ -94,7 +95,7 @@ void RobotElevator::Process()
 					if(ElevatorStick->GetRawButton(7))
 						HomeItFlag=true;
 					if(HomeItFlag)
-						HomeIt();
+						HomeIt(.25, HomeItFlag); // Home at 1/4 speed
 		}
 		else{
 			// Auto mode code should be here.
@@ -130,13 +131,13 @@ bool RobotElevator::IsFull()
 }
 
 
-void RobotElevator::HomeIt()
+void RobotElevator::HomeIt(float MotorSpeed, bool flag)
 {
 		// static bool isHomed=false;
-		ElevatorMotor->Set(.25);
+		ElevatorMotor->Set(MotorSpeed);
 		if(HomeSwitch->IsTripped()){
 			ElevatorMotor->Set(0);
-			HomeItFlag=false;
+			flag=false;
 		}
 		
 }
