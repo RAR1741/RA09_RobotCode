@@ -24,7 +24,7 @@ public:
 	UINT32 GetAutoMode(void);
 	void SetAutoMode(UINT32);
 	bool IsFull(void);
-	
+	void HomeIt();
 private:
 	////////////////////////////////////////////////////////
 	// HARDWARE
@@ -37,6 +37,7 @@ private:
 	// Encoder ElevatorEncoder;
 	// Launcher * launcher;
 	UINT32 ElevatorButton;
+	LimitSwitch * HomeSwitch;
 	
 	////////////////////////////////////////////////////////
 	// STATE
@@ -50,6 +51,7 @@ private:
 	bool ElevatorAutoMode;
 	bool isFull;
 	bool isJammed;
+	bool HomeItFlag;
 };
 
 #endif

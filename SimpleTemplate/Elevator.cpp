@@ -57,7 +57,10 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 	ElevatorEncoder->Start();
 	ElevatorMotorCurrent = new AnalogChannel(2,1);
 	LastElevatorEncoderValue = CurrentElevatorEncoderValue = 0;
-	isFull = isJammed = false;
+	isFull = false;
+	isJammed = false;
+	HomeItFlag = false;
+	HomeSwitch = new LimitSwitch(6,6);
 	// launcher = theLauncher;
 }
 
@@ -84,10 +87,14 @@ void RobotElevator::Process()
 						dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "ERR");
 					}
 					else
-					dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Elevator Encoder:%d",ElevatorEncoder->Get());
+					dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Elevator Encoder:%4d",ElevatorEncoder->Get());
 					dsLCD->UpdateLCD();
 					if(ElevatorStick->GetRawButton(6))
 						ElevatorEncoder->Reset();
+					if(ElevatorStick->GetRawButton(7))
+						HomeItFlag=true;
+					if(HomeItFlag)
+						HomeIt();
 		}
 		else{
 			// Auto mode code should be here.
@@ -122,4 +129,15 @@ bool RobotElevator::IsFull()
 	return isFull;
 }
 
+
+void RobotElevator::HomeIt()
+{
+		// static bool isHomed=false;
+		ElevatorMotor->Set(.25);
+		if(HomeSwitch->IsTripped()){
+			ElevatorMotor->Set(0);
+			HomeItFlag=false;
+		}
+		
+}
 
