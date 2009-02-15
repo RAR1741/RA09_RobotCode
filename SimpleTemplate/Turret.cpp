@@ -53,8 +53,8 @@ Turret::Turret()
 	
 	masterControl = NULL;
 	
-	max_encoder_voltage = 3.0;
-	min_encoder_voltage = 1.0;
+	max_encoder_voltage = 3.5;
+	min_encoder_voltage = 1.7;
 	
 	pid = new PIDController(1.0,	// Use proportional
 							0.0,	// Don't use derivative
@@ -87,7 +87,8 @@ void Turret::TurretControl(Joystick * turretStick)
 	switch (*masterControl)
 	{
 	case 0:	// Manual
-		Manual(turretStick);
+		//Manual(turretStick);
+		ManualPositionMode(turretStick);
 		break;
 	case 1: // Semi-Automatic (BANG! BANG!)
 		//Manual(turretStick);
