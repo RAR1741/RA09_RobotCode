@@ -54,6 +54,7 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 	AutoMode = 0;
 	ElevatorMotor->Set(0.0);
 	ElevatorEncoder = new Encoder(4,11,4,12,false);
+	ElevatorEncoder->Start();
 	ElevatorMotorCurrent = new AnalogChannel(2,1);
 	LastElevatorEncoderValue = CurrentElevatorEncoderValue = 0;
 	isFull = isJammed = false;
