@@ -106,6 +106,7 @@ void Turret::TurretControl(Joystick * turretStick)
 
 void Turret::Manual(Joystick *turretStick)
 {
+	EndServoish();
 	// Read Joystick X Axis
 	float x_axis = turretStick->GetX();
 	
@@ -145,12 +146,14 @@ float Turret::EncoderVoltage(void)
 
 void Turret::ManualPositionMode(Joystick *turretStick)
 {
+	InitServoish();
 	SetTurretPosition((turretStick->GetX()+1.0)/2);
 	
 	UpdateState();
 }
 void Turret::Auto(void)
 {
+	InitServoish();
 	Target();
 	UpdateState();
 }
