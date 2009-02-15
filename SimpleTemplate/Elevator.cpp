@@ -86,6 +86,8 @@ void RobotElevator::Process()
 					else
 					dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Elevator Encoder:%d",ElevatorEncoder->Get());
 					dsLCD->UpdateLCD();
+					if(ElevatorStick->GetRawButton(6))
+						ElevatorEncoder->Reset();
 		}
 		else{
 			// Auto mode code should be here.
