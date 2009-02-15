@@ -62,6 +62,11 @@ Turret::Turret()
 							Position_Encoder,
 							Turret_Pos_Motor); 
 	
+	// Set the input range to reflect knowledge
+	// of our encoder 
+	pid->SetInputRange(0, 5);
+	pid->SetOutputRange(-1,1);
+	
 	//pid->SetSource(Position_Encoder);
 	//pid->SetOutput(Turret_Pos_Motor, -1.0, 1.0);
 }
