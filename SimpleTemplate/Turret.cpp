@@ -90,7 +90,8 @@ void Turret::TurretControl(Joystick * turretStick)
 		Manual(turretStick);
 		break;
 	case 1: // Semi-Automatic (BANG! BANG!)
-		Manual(turretStick);
+		//Manual(turretStick);
+		ManualPositionMode(turretStick);
 		break;
 	case 2:	// Fully automatic AEGIS-style, full robot control
 		Auto();
@@ -125,6 +126,8 @@ void Turret::Manual(Joystick *turretStick)
 	DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 	
 	dsLCD->Printf(DriverStationLCD::kUser_Line6, 2, "Encoder :%7.1f V", this->EncoderVoltage());
+	
+	UpdateState();
 	return; // Guess what? return.
 }
 
@@ -142,10 +145,13 @@ float Turret::EncoderVoltage(void)
 void Turret::ManualPositionMode(Joystick *turretStick)
 {
 	SetTurretPosition((turretStick->GetX()+1.0)/2);
+	
+	UpdateState();
 }
 void Turret::Auto(void)
 {
 	Target();
+	UpdateState();
 }
 
 void Turret::Target(void)
@@ -186,6 +192,18 @@ void Turret::UpdateState(void)
 	// Update maximum and minimum observed encoder voltages for range
 	if (EncoderVoltage() < min_encoder_voltage) min_encoder_voltage = EncoderVoltage();
 	else if (EncoderVoltage() > max_encoder_voltage) max_encoder_voltage = EncoderVoltage();
+	
+	
+	// Set motor to scaled value
+	float x_axis = Turret_Pos_Motor->Get();
+		if (x_axis < 0) {
+			Clockwise_Limit->LimitNegative(x_axis);
+		}
+		else {
+			CounterClockwise_Limit->LimitPositive(x_axis);
+		}
+		
+	Turret_Pos_Motor->Set(x_axis);
 	
 }
 
