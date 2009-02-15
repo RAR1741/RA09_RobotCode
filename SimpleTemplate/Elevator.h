@@ -24,7 +24,8 @@ public:
 	UINT32 GetAutoMode(void);
 	void SetAutoMode(UINT32);
 	bool IsFull(void);
-	void HomeIt(float MotorSpeed, bool * flag, bool SlowDown);
+	void HomeIt();
+	void Cycle(float MotorSpeed);
 private:
 	////////////////////////////////////////////////////////
 	// HARDWARE
@@ -55,6 +56,7 @@ private:
 	bool HomeItFlag;
 	// flag for regular cycle
 	bool CycleFlag;
+	bool UntripFlag;
 };
 
 #endif

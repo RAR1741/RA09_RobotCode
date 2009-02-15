@@ -100,7 +100,7 @@ void Turret::TurretControl(Joystick * turretStick)
 	default:
 		Manual(turretStick);
 	}
-	Manual(turretStick);
+	//Manual(turretStick);
 }
 
 

@@ -61,6 +61,7 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 	isJammed = false;
 	HomeItFlag = false;
 	CycleFlag = false;
+	UntripFlag = false;
 	HomeSwitch = new LimitSwitch(6,6);
 	// launcher = theLauncher;
 }
@@ -68,33 +69,24 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 void RobotElevator::Process()
 {
 	
-	if(1){// Put Manual/Auto if condition here. 
+	if(false){// Put Manual/Auto if condition here. 
 			// Manual Mode
 		if (ElevatorStick != NULL && theToggle != NULL){
 					theToggle->UpdateState();
 					
 					// If the trigger has been pushed, fire semi automatic
-					if (ElevatorStick->GetRawButton(1) && !isJammed){
+					if (ElevatorStick->GetRawButton(1) && !isJammed && !HomeItFlag){
 					
-						if(!CycleFlag){//We don't want to do this if Cycle flag is already true
+						//if(!CycleFlag){//We don't want to do this if Cycle flag is already true
 						ElevatorMotor->Set(.5);
-						CycleFlag=true;
+						//CycleFlag=true;
 						//tell HomeIt() to cycle the elevator
-						}
+						//}
 					}
+					else
+						ElevatorMotor->Set(0);
 					
-					if(CycleFlag){ // if we are cycling
-							HomeIt(.5, &CycleFlag, true);
-							// call Homeit, start running motor at half speed,
-							// use CycleFlag as call flag, and the last parameter
-							// tells HomeIt that we want to slow down as it approached
-							// the limit switch.
-					}
-					else{
-						ElevatorMotor->Set(0.0);
-						//LaunchMotor->Set(0.0);
-						// launcher->SetRun(false); // We want it to stop running
-					}
+
 					DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
 					if(ElevatorEncoder==NULL){
 						dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "ERR");
@@ -102,17 +94,29 @@ void RobotElevator::Process()
 					else
 					dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Elevator Encoder:%4d",ElevatorEncoder->Get());
 					dsLCD->UpdateLCD();
-					if(ElevatorStick->GetRawButton(6))
-						ElevatorEncoder->Reset();
-					if(ElevatorStick->GetRawButton(7))
-						HomeItFlag=true;
-					if(HomeItFlag)
-						HomeIt(.25, &HomeItFlag, false); // Home at 1/4 speed
-		}
-		else{
-			// Auto mode code should be here.
 		}
 	}
+		else{
+			// Auto mode code should be here.
+			if(ElevatorStick->GetRawButton(6))
+				ElevatorEncoder->Reset();
+			if(ElevatorStick->GetRawButton(7))
+				HomeItFlag=true;
+			if(HomeItFlag)
+				HomeIt(); // Home at 1/4 speed
+			if(ElevatorStick->GetRawButton(1) && !HomeItFlag && !CycleFlag){
+				CycleFlag=true;
+				UntripFlag=true;
+			}
+			if(CycleFlag){ // if we are cycling
+					Cycle(.5);
+			}
+			else if(!HomeItFlag){
+				//ElevatorMotor->Set(0.0);
+				//LaunchMotor->Set(0.0);
+				// launcher->SetRun(false); // We want it to stop running
+			}
+		}
 	// Set encoder values.	
 	LastElevatorEncoderValue = CurrentElevatorEncoderValue;
 	CurrentElevatorEncoderValue = ElevatorEncoder->Get();
@@ -143,36 +147,38 @@ bool RobotElevator::IsFull()
 }
 
 
-void RobotElevator::HomeIt(float MotorSpeed, bool *flag, bool SlowDown)
+void RobotElevator::HomeIt()
 {
-		// This tracks the first calls in a elevator cycle to this function
-		// necessary for reseting the encoder at beginning of cycle.
-		static bool isFirstTime = true;
+		ElevatorMotor->Set(.25);// Otherwise, just use motorspeed.
 		
-		if(isFirstTime){
-			ElevatorEncoder->Reset(); // reset encoder the first time the function is called.
-			isFirstTime=false;
-		}
-		
-		if(SlowDown){// To use slowdown, pass true into the slowdown parameter when calling HomeIt()
-				if(ElevatorEncoder->Get()<=800)
-					ElevatorMotor->Set(MotorSpeed);
-				
-				else if(ElevatorEncoder->Get()<=950)
-					ElevatorMotor->Set(MotorSpeed/2.0);
-				
-				else
-					ElevatorMotor->Set(MotorSpeed/4.0);
-		}
-		else
-			ElevatorMotor->Set(MotorSpeed);// Otherwise, just use motorspeed.
-		
-		if(HomeSwitch->IsTripped()){
+		if(!HomeSwitch->IsTripped()){
 			ElevatorMotor->Set(0);
-			*flag=false;
-			isFirstTime=true; 
+			HomeItFlag=false;
+			ElevatorEncoder->Reset();
+			//isFirstTime=true; 
 			// This will reset homeit to reset the encoder again the next cycle.
 		}
 		
 }
 
+void RobotElevator::Cycle(float motorSpeed)
+{
+	if(UntripFlag){// Do we need to untrip the switch?
+		ElevatorMotor->Set(motorSpeed);
+		if(HomeSwitch->IsTripped())
+			UntripFlag=false;
+	}
+	else{
+		if(ElevatorEncoder->Get()<800)
+			ElevatorMotor->Set(motorSpeed);
+		else if(ElevatorEncoder->Get()<950)
+			ElevatorMotor->Set(motorSpeed/1.5);
+		else
+			ElevatorMotor->Set(motorSpeed/2.0);
+		if(!HomeSwitch->IsTripped()){
+			CycleFlag=false;
+			ElevatorMotor->Set(0);
+			ElevatorEncoder->Reset();
+		}
+	}
+}
