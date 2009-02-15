@@ -60,6 +60,7 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 	isFull = false;
 	isJammed = false;
 	HomeItFlag = false;
+	CycleFlag = false;
 	HomeSwitch = new LimitSwitch(6,6);
 	// launcher = theLauncher;
 }
@@ -71,12 +72,23 @@ void RobotElevator::Process()
 			// Manual Mode
 		if (ElevatorStick != NULL && theToggle != NULL){
 					theToggle->UpdateState();
+					
+					// If the trigger has been pushed, fire semi automatic
 					if (ElevatorStick->GetRawButton(1) && !isJammed){
+					
+						if(!CycleFlag){//We don't want to do this if Cycle flag is already true
 						ElevatorMotor->Set(.5);
-						HomeItFlag=true;
-						// This scales it to 0 - 1, the double negatives ARE correct.
-					// 	LaunchMotor->Set(-((-ElevatorStick->GetZ()+1.0)/2.0));
-						// launcher->SetRun(true); // Allow update() to run.
+						CycleFlag=true;
+						//tell HomeIt() to cycle the elevator
+						}
+					}
+					
+					if(CycleFlag){ // if we are cycling
+							HomeIt(.5, &CycleFlag, true);
+							// call Homeit, start running motor at half speed,
+							// use CycleFlag as call flag, and the last parameter
+							// tells HomeIt that we want to slow down as it approached
+							// the limit switch.
 					}
 					else{
 						ElevatorMotor->Set(0.0);
@@ -95,7 +107,7 @@ void RobotElevator::Process()
 					if(ElevatorStick->GetRawButton(7))
 						HomeItFlag=true;
 					if(HomeItFlag)
-						HomeIt(.25, HomeItFlag); // Home at 1/4 speed
+						HomeIt(.25, &HomeItFlag, false); // Home at 1/4 speed
 		}
 		else{
 			// Auto mode code should be here.
@@ -131,13 +143,35 @@ bool RobotElevator::IsFull()
 }
 
 
-void RobotElevator::HomeIt(float MotorSpeed, bool flag)
+void RobotElevator::HomeIt(float MotorSpeed, bool *flag, bool SlowDown)
 {
-		// static bool isHomed=false;
-		ElevatorMotor->Set(MotorSpeed);
+		// This tracks the first calls in a elevator cycle to this function
+		// necessary for reseting the encoder at beginning of cycle.
+		static bool isFirstTime = true;
+		
+		if(isFirstTime){
+			ElevatorEncoder->Reset(); // reset encoder the first time the function is called.
+			isFirstTime=false;
+		}
+		
+		if(SlowDown){// To use slowdown, pass true into the slowdown parameter when calling HomeIt()
+				if(ElevatorEncoder->Get()<=800)
+					ElevatorMotor->Set(MotorSpeed);
+				
+				else if(ElevatorEncoder->Get()<=950)
+					ElevatorMotor->Set(MotorSpeed/2.0);
+				
+				else
+					ElevatorMotor->Set(MotorSpeed/4.0);
+		}
+		else
+			ElevatorMotor->Set(MotorSpeed);// Otherwise, just use motorspeed.
+		
 		if(HomeSwitch->IsTripped()){
 			ElevatorMotor->Set(0);
-			flag=false;
+			*flag=false;
+			isFirstTime=true; 
+			// This will reset homeit to reset the encoder again the next cycle.
 		}
 		
 }
