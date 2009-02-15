@@ -5,6 +5,8 @@
 #include "Target.h"
 #include "LimitSwitch.h"
 
+
+
 // #include "Robot.cpp"
 
 class Turret
@@ -29,6 +31,10 @@ public:
 	// Yes. --PF
 	
 	
+	void SetTurretPosition(float position);
+	float TurretPosition(void);
+	
+	
 	ParticleAnalysisReport TargetData() const { return par; }
 
 	
@@ -41,6 +47,15 @@ private:
 	void Manual(Joystick *turretStick);
 	void ManualPositionMode(Joystick *turretStick);
 	void Auto(void); // Autonomous does not need joystick, neither should auto
+
+	void UpdateState(void);
+	
+	void InitServoish(void);
+	
+	void EndServoish(void);
+	
+	float ServoToEncoderUnits(float servo);
+	float EncoderUnitsToServo(float volts);
 	
 	////////////////////////////////////////////////////////
 	// HARDWARE
@@ -52,11 +67,16 @@ private:
 	////////////////////////////////////////////////////////
 	// STATE
 	
+	float max_encoder_voltage;
+	float min_encoder_voltage;
 	bool tracking;
 	TrackingThreshold td1, td2;		// color thresholds	
 	TrackingThresholdRGB custom1, custom2; // Custom color thresholds
 	
 	ParticleAnalysisReport par;		// particle analysis report
+	
+	PIDController *pid;
+	PIDSource *pid_src;
 	
 	int *masterControl;
 };

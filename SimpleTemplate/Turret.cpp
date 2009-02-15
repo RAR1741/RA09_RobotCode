@@ -52,6 +52,18 @@ Turret::Turret()
 	custom2.B.maxValue = 150;
 	
 	masterControl = NULL;
+	
+	max_encoder_voltage = 3.0;
+	min_encoder_voltage = 1.0;
+	
+	pid = new PIDController(1.0,	// Use proportional
+							0.0,	// Don't use derivative
+							0.0,		// Don't use integral
+							Position_Encoder,
+							Turret_Pos_Motor); 
+	
+	//pid->SetSource(Position_Encoder);
+	//pid->SetOutput(Turret_Pos_Motor, -1.0, 1.0);
 }
 
 Turret::~Turret()
@@ -129,7 +141,7 @@ float Turret::EncoderVoltage(void)
 
 void Turret::ManualPositionMode(Joystick *turretStick)
 {
-	
+	SetTurretPosition((turretStick->GetX()+1.0)/2);
 }
 void Turret::Auto(void)
 {
@@ -157,4 +169,42 @@ double Turret::GetTarget_X()
 	return par.center_mass_x_normalized;
 }
 
+void Turret::SetTurretPosition(float position)
+{
+	pid->SetSetpoint(ServoToEncoderUnits(position));
+}
 
+float Turret::TurretPosition(void)
+{
+	return EncoderUnitsToServo(EncoderVoltage());
+	//return (1.0 - (max_encoder_voltage - GetEncoderVoltage()) / (max_encoder_voltage - min_encoder_voltage));
+	//return GetEncoderVoltage();
+}
+
+void Turret::UpdateState(void)
+{
+	// Update maximum and minimum observed encoder voltages for range
+	if (EncoderVoltage() < min_encoder_voltage) min_encoder_voltage = EncoderVoltage();
+	else if (EncoderVoltage() > max_encoder_voltage) max_encoder_voltage = EncoderVoltage();
+	
+}
+
+void Turret::InitServoish(void)
+{
+	pid->Enable();
+}
+
+void Turret::EndServoish(void)
+{
+	pid->Disable();
+}
+
+inline float Turret::ServoToEncoderUnits(float servo)
+{
+	return min_encoder_voltage + (servo * (max_encoder_voltage - min_encoder_voltage));
+}
+
+inline float Turret::EncoderUnitsToServo(float volts)
+{
+	return (volts - min_encoder_voltage) / (max_encoder_voltage - min_encoder_voltage);
+}
