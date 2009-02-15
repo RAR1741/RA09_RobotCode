@@ -82,9 +82,10 @@ void RobotHarvester::Process(bool LoadElevator)
 	CollectEjectToggle->UpdateState();
 
 	HarvesterMotorVoltage = HarvesterMotorCurrent->GetVoltage();
+	HarvesterFull = HarvesterMotorVoltage > 4.5;
 	DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 	
-	dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Current:%7.1f", HarvesterMotorVoltage);
+	dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "HC:%3.1f", HarvesterMotorVoltage);
 //	dsLCD->Printf(DriverStationLCD::kUser_Line2, 8, ":%7.1f", GetClock());
 //	dsLCD->Printf(DriverStationLCD::kUser_Line3, 17, "%7.1f", GetClock());
 //	dsLCD->Printf(DriverStationLCD::kUser_Line4, 7, "%7.1f", GetClock());
@@ -92,6 +93,7 @@ void RobotHarvester::Process(bool LoadElevator)
 //	dsLCD->Printf(DriverStationLCD::kUser_Line6, 10, "%7.1f", GetClock());
 //	dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "%-7.1f", GetClock());
 	dsLCD->UpdateLCD();
+	dsLCD = NULL;
 	
 	switch (AutoMode)
 	{
@@ -136,12 +138,17 @@ void RobotHarvester::ProcessSemiAuto(bool LoadElevator)
 
 void RobotHarvester::ProcessAuto(bool LoadElevator)
 {
+	int OldState = State;
+	int OldHarvesterMode = HarvesterMode;
 	State = HarvesterFull | 
 			(CollectEjectToggle->GetOutput() << 1) |
 			(RunStopToggle->GetOutput() << 2) |
 			(LoadElevator << 3) |
 			(HarvesterMode << 4);
 	
+	DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
+	
+
 	switch(State){
 		case 0:		// Run/Stop = Stop
 		case 1:
@@ -230,6 +237,16 @@ void RobotHarvester::ProcessAuto(bool LoadElevator)
 		default:
 			break;
 	}
+	dsLCD->Printf(DriverStationLCD::kUser_Line4, 10, "H1:%d  H2:%d", OldHarvesterMode, HarvesterMode);
+	dsLCD->Printf(DriverStationLCD::kUser_Line5, 10, "S1:%d  S2:%d", OldState, State);
+//	dsLCD->Printf(DriverStationLCD::kUser_Line2, 8, ":%7.1f", GetClock());
+//	dsLCD->Printf(DriverStationLCD::kUser_Line3, 17, "%7.1f", GetClock());
+//	dsLCD->Printf(DriverStationLCD::kUser_Line4, 7, "%7.1f", GetClock());
+//	dsLCD->Printf(DriverStationLCD::kUser_Line5, 4, "%7.1f", GetClock());
+//	dsLCD->Printf(DriverStationLCD::kUser_Line6, 10, "%7.1f", GetClock());
+//	dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "%-7.1f", GetClock());
+	dsLCD->UpdateLCD();
+	dsLCD = NULL;
 }
 
 

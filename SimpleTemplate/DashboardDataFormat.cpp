@@ -95,7 +95,11 @@ void DashboardDataFormat::PackAndSend(void)
 	dashboardPacker.AddI32(m_SecondaryMaxHue);
 	dashboardPacker.AddI32(m_SecondaryMaxSat);
 	dashboardPacker.AddI32(m_SecondaryMaxLum);
-		
+	
+	dashboardPacker.AddU16(this->m_LeftState);
+	dashboardPacker.AddU16(this->m_RightState);
+	dashboardPacker.AddU16(this->m_TurretState);
+	dashboardPacker.AddFloat(m_TurretPotentEncoderVoltage);
 	// Flush the data to the driver station.
 	dashboardPacker.Finalize();
 }

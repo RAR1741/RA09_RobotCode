@@ -132,9 +132,9 @@ public:
 				ECellCatcher(),
 				Trigger(&leftStick, 2),
 				GateToggle(&turretStick, 3),
-				CellCatcherToggle(&rightStick,3)
+				CellCatcherToggle(&rightStick,3),
 				
-	//			launcher(4,2)
+				launcher()
 				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 						
@@ -281,12 +281,13 @@ public:
 		// determine if tank or arcade mode; default with no jumper is for tank drive
 		if (m_ds->GetDigitalIn(ARCADE_MODE) == 0) {	
 			// myRobot.TankDrive(leftStick, rightStick);	 // drive with tank style
-			//myRobot.
-			// myRobot.TankDrive(leftStick.GetY(), rightStick.GetY());
-			myRobot.TankDrive(leftStick, rightStick);
+			
+			// This is a quick temporary for the inverted Y axis Mr. Meyer,
+			// but I think the issue with the inverted joysticks is with the motors...
+			// they may need to have the wires on their polarity switched.
+			myRobot.TankDrive(-leftStick.GetY(), -rightStick.GetY());
 		} else{
-			//myRobot.ArcadeDrive(rightStick.GetY(), - rightStick.GetX());	         // drive with arcade style (use right stick)
-			myRobot.ArcadeDrive(rightStick);
+			myRobot.ArcadeDrive(-rightStick.GetY(), - rightStick.GetX());	         // drive with arcade style (use right stick)
 		}
 		
 		// Just for testing, comment if you don't want it.
@@ -370,6 +371,8 @@ public:
 	 dashboardDataFormat.m_accelY = testAccel_Y.GetAcceleration();
 	 dashboardDataFormat.m_accelZ = testAccel_Z.GetAcceleration();
 	 dashboardDataFormat.m_gyroTemp = testTemp->GetAngle();
+	 
+	 
 	 if (testGyro == NULL) {
 		 dashboardDataFormat.m_gyroAngle = -42.0001;
 	 } else {
@@ -377,6 +380,12 @@ public:
 		 //dashboardDataFormat.m_gyroAngle = 589.7;
 	 }	 
 	//  dashboardDataFormat.m_accelX = 84.0;
+	 
+	 dashboardDataFormat.m_TurretState = 0;
+	 dashboardDataFormat.m_LeftState = 0;
+	 dashboardDataFormat.m_RightState = 0;
+	 
+	 dashboardDataFormat.m_TurretPotentEncoderVoltage = TheTurret.EncoderVoltage();
 	 
 	 GetTheDashboard().Printf("Encoder Counts: %d, Distance: %f, Gyro Angle: %f, Left Motor Voltage: %d", dashboardDataFormat.m_RM_QuadEncoder, LMQuadEncoder.GetDistance(), testGyro->GetAngle(), dashboardDataFormat.m_LeftMotorVoltage);
 	 num += 0.01;
@@ -407,6 +416,7 @@ public:
 		   retval |= (stick->GetRawButton(i) ? 1 : 0);
 		   retval <<= 1;
 	   }
+	   return retval;
    }
 
 	

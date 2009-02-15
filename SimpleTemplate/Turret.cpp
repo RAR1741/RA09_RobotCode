@@ -1,4 +1,5 @@
 #include "Turret.h"
+#include "DriverStationLCD.h"
 
 Turret::Turret()
 {
@@ -108,6 +109,10 @@ void Turret::Manual(Joystick *turretStick)
 	
 	
 	Turret_Pos_Motor->Set(x_axis);
+	
+	DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
+	
+	dsLCD->Printf(DriverStationLCD::kUser_Line6, 2, "Encoder :%7.1f V", this->EncoderVoltage());
 	return; // Guess what? return.
 }
 

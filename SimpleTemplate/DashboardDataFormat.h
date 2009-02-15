@@ -63,6 +63,12 @@ public:
 	INT32 m_SecondaryMaxSat;
 	INT32 m_SecondaryMaxLum;
 	
+	float m_TurretPotentEncoderVoltage;
+	
+	UINT16 m_LeftState;
+	UINT16 m_RightState;
+	UINT16 m_TurretState;
+	
 	void PackAndSend(void);
 private:
 	DISALLOW_COPY_AND_ASSIGN(DashboardDataFormat);

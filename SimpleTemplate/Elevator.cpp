@@ -80,7 +80,11 @@ void RobotElevator::Process()
 						// launcher->SetRun(false); // We want it to stop running
 					}
 					DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
-					dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Elevator Voltage:%d", CurrentElevatorEncoderValue);
+					if(ElevatorEncoder==NULL){
+						dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "ERR");
+					}
+					else
+					dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Elevator Encoder:%d",ElevatorEncoder->Get());
 					dsLCD->UpdateLCD();
 		}
 		else{
