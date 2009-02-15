@@ -400,7 +400,14 @@ public:
 		*/
 	}
 	
-   
+   UINT16 PackJoystickState(Joystick *stick)
+   {
+	   UINT16 retval = 0;
+	   for (int i = 0; i <= 12; i++) {
+		   retval |= (stick->GetRawButton(i) ? 1 : 0);
+		   retval <<= 1;
+	   }
+   }
 
 	
 };
