@@ -54,6 +54,7 @@ private:
 	bool HomeItFlag;
 	// flag for regular cycle
 	bool CycleFlag;
+	// flag for untripping switch before cycling
 	bool UntripFlag;
 };
 

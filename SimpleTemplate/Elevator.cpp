@@ -2,7 +2,11 @@
 #include "DriverStationLCD.h"
 
 
-#define ANTI_JAM 0 // I don't want the code to be used yet.
+#define ANTI_JAM 0
+
+// IMPORTANT COMMENT: the logic for LimitSwitch.IsTripped(), as of this comment,
+// is inverted. The ! operators in front of some of the if statements are correct,
+// do not modify unless Patrick has fixed his class.
 RobotElevator::RobotElevator()
 {
 
@@ -47,7 +51,6 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 	State = 0;
 	AutoMode = 0;
 	ElevatorMotor = new Jaguar(MotorSlot, MotorChannel);
-	// LaunchMotor = new Jaguar(LaunchMotorSlot, LaunchMotorChannel);
 	ElevatorMotorCurrent = new AnalogChannel(CurrentSlot, CurrentChannel);
 	ElevatorButton = 0;
 	State = 0;
@@ -62,7 +65,6 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 	CycleFlag = false;
 	UntripFlag = false;
 	HomeSwitch = new LimitSwitch(6,6);
-	// launcher = theLauncher;
 }
 
 void RobotElevator::Process()
@@ -93,7 +95,7 @@ void RobotElevator::Process()
 				ElevatorEncoder->Reset();
 			if(ElevatorStick->GetRawButton(7))
 				HomeItFlag=true;
-			if(HomeItFlag)
+			if(HomeItFlag && !CycleFlag)
 				HomeIt(); // Home at 1/4 speed
 			if(ElevatorStick->GetRawButton(1) && !HomeItFlag && !CycleFlag){
 				CycleFlag=true;
@@ -133,36 +135,45 @@ bool RobotElevator::IsFull()
 
 void RobotElevator::HomeIt()
 {
-		ElevatorMotor->Set(.25);// Otherwise, just use motorspeed.
+		ElevatorMotor->Set(.25);
 		
 		if(!HomeSwitch->IsTripped()){
 			ElevatorMotor->Set(0);
 			HomeItFlag=false;
 			ElevatorEncoder->Reset();
-			//isFirstTime=true; 
-			// This will reset homeit to reset the encoder again the next cycle.
 		}
-		
 }
 
 void RobotElevator::Cycle(float motorSpeed)
 {
 	if(UntripFlag){// Do we need to untrip the switch?
+		// Then set motor and wait until it's untripped.
 		ElevatorMotor->Set(motorSpeed);
 		if(HomeSwitch->IsTripped())
 			UntripFlag=false;
 	}
-	else{
+	else{// Otherwise...
+		
+		// Slowdown code, uses encoder to determine speed...
+		// The encoder reads about 1130 to 1170 counts when a cycle completes.
+		// So...
+		
 		if(ElevatorEncoder->Get()<800)
 			ElevatorMotor->Set(motorSpeed);
+			// If we still have less than  8/11ths of the way to go
+			// set full motor speed
 		else if(ElevatorEncoder->Get()<950)
 			ElevatorMotor->Set(motorSpeed/1.5);
+			// when we read greater than 800, but less than 950, we're getting close
+			// so cut speed a little.
 		else
 			ElevatorMotor->Set(motorSpeed/2.0);
-		if(!HomeSwitch->IsTripped()){
-			CycleFlag=false;
+			// Otherwise, we're getting super close, so cut in half.
+		
+		if(!HomeSwitch->IsTripped()){// If this goes, then the limit switch is tripped.
+			CycleFlag=false;// Set false so not called again.
 			ElevatorMotor->Set(0);
-			ElevatorEncoder->Reset();
+			ElevatorEncoder->Reset();// Encoder must reset for another possible cycle.
 		}
 	}
 }
