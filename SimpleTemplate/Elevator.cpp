@@ -71,7 +71,7 @@ void RobotElevator::Process()
 {
 	DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
 	// Common LCD update
-	if(false){// Put Manual/Auto if condition here. 
+	if(true){// Put Manual/Auto if condition here. 
 			// Manual Mode
 		if (ElevatorStick != NULL && theToggle != NULL){
 					theToggle->UpdateState();
