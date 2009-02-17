@@ -5,6 +5,7 @@
 #include "CameraControl.h"
 #include "WPILib.h"
 #include "DashboardDataFormat.h"
+#include "DriverStationLCD.h"
 
 #include <climits>
 #include <cmath>
@@ -282,6 +283,8 @@ public:
 
 		GetWatchdog().Feed();
 		
+		DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
+		
 		//myRobot.ArcadeDrive(stick); // drive with arcade style (use right stick)
 		
 		// testMotor.SetRaw((UINT8)floor(test.GetRawAxis( Joystick::kDefaultYAxis )));
@@ -308,19 +311,39 @@ public:
 				delete testGyro;
 				testGyro = new Gyro(1,1);
 			}
+		
 		switch (m_ds->GetDigitalIn(MODE_SWITCH_1) * 2 + m_ds->GetDigitalIn(MODE_SWITCH_2))
 		{
 		case 0:  //Manual mode
-			MasterControlMode = 0;
+			
+			MasterControlMode = MODE_MANUAL;
 			break;
 		case 1:  //Semi automatic
-			MasterControlMode = 1;
+			MasterControlMode = MODE_SEMI_AUTO;
+			
 			break;
 		case 2:  //Full automatic
-			MasterControlMode = 2;
+			MasterControlMode = MODE_AUTO;
+			break;
+		default:		
+			//dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Err:");
+			MasterControlMode = 0;
+		}
+		
+		switch (MasterControlMode)
+		{
+		case MODE_MANUAL:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual");
+			break;
+		case MODE_SEMI_AUTO:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Semi-Automatic");
+			break;
+		case MODE_AUTO:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Full-Automatic");
 			break;
 		default:
-			MasterControlMode = 0;
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Error: Setting to Manual");
+			
 		}
 		Elevator.Process();
 		// JDM: Use joystick to test, needs to use Elevator Load flag
