@@ -71,7 +71,7 @@ void RobotElevator::Process()
 {
 	DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
 	// Common LCD update
-	if(true){// Put Manual/Auto if condition here. 
+	if(false){// Put Manual/Auto if condition here. 
 			// Manual Mode
 		if (ElevatorStick != NULL && theToggle != NULL){
 					theToggle->UpdateState();
@@ -95,7 +95,7 @@ void RobotElevator::Process()
 				ElevatorEncoder->Reset();
 			if(ElevatorStick->GetRawButton(7))
 				HomeItFlag=true;
-			if(HomeItFlag && !CycleFlag)
+			if(HomeItFlag)
 				HomeIt(); // Home at 1/4 speed
 			if(ElevatorStick->GetRawButton(1) && !HomeItFlag && !CycleFlag){
 				CycleFlag=true;
@@ -142,6 +142,8 @@ void RobotElevator::HomeIt()
 			HomeItFlag=false;
 			ElevatorEncoder->Reset();
 		}
+		DriverStationLCD * dlcd = DriverStationLCD::GetInstance();
+		dlcd->Printf(DriverStationLCD::kUser_Line2, 7, "%4d", ElevatorEncoder->Get());
 }
 
 void RobotElevator::Cycle(float motorSpeed)
@@ -176,4 +178,7 @@ void RobotElevator::Cycle(float motorSpeed)
 			ElevatorEncoder->Reset();// Encoder must reset for another possible cycle.
 		}
 	}
+
+	DriverStationLCD * dlcd = DriverStationLCD::GetInstance();
+	dlcd->Printf(DriverStationLCD::kUser_Line2, 7, "%4d", ElevatorEncoder->Get());
 }

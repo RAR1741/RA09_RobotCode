@@ -195,6 +195,8 @@ public:
 		
 		ECellCatcher.Init(8,3,8,4);
 		Squeeky = new Personality();
+		
+		TheCompressor.Start();
 		LaunchEncoder.Start();
 		TurretEncoder.Start();
 		RMQuadEncoder.Start();
@@ -435,8 +437,7 @@ public:
 	 dashboardDataFormat.m_accelY = testAccel_Y.GetAcceleration();
 	 dashboardDataFormat.m_accelZ = testAccel_Z.GetAcceleration();
 	 dashboardDataFormat.m_gyroTemp = testTemp->GetAngle();
-	 dashboardDataFormat.m_LeftFollowerWheel = LFollowWheelEncoder.Get();
-	 dashboardDataFormat.m_RightFollowerWheel = RFollowWheelEncoder.Get();
+	 
 	 
 	 if (testGyro == NULL) {
 		 dashboardDataFormat.m_gyroAngle = -42.0001;
