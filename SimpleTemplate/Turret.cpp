@@ -1,6 +1,6 @@
 #include "Turret.h"
 #include "DriverStationLCD.h"
-
+#include "Mode.h"
 Turret::Turret()
 {
 	Turret_Pos_Motor = new Jaguar(4,3);
@@ -91,15 +91,15 @@ void Turret::TurretControl(Joystick * turretStick)
 {
 	switch (*masterControl)
 	{
-	case 0:	// Manual
+	case MODE_MANUAL:	// Manual
 		Manual(turretStick);
 		//ManualPositionMode(turretStick);
 		break;
-	case 1: // Semi-Automatic (BANG! BANG!)
+	case MODE_SEMI_AUTO: // Semi-Automatic (BANG! BANG!)
 		Manual(turretStick);
 		//ManualPositionMode(turretStick);
 		break;
-	case 2:	// Fully automatic AEGIS-style, full robot control
+	case MODE_AUTO:	// Fully automatic AEGIS-style, full robot control
 		Auto();
 		break;
 	default:
