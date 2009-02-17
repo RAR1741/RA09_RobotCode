@@ -100,6 +100,9 @@ void DashboardDataFormat::PackAndSend(void)
 	dashboardPacker.AddU16(this->m_RightState);
 	dashboardPacker.AddU16(this->m_TurretState);
 	dashboardPacker.AddFloat(m_TurretPotentEncoderVoltage);
+	
+	dashboardPacker.AddI32(m_LeftFollowerWheel);
+	dashboardPacker.AddI32(m_RightFollowerWheel);
 	// Flush the data to the driver station.
 	dashboardPacker.Finalize();
 }

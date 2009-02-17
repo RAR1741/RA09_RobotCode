@@ -81,7 +81,8 @@ class PurpleMonkeys : public IterativeRobot {
 	Toggle CellCatcherToggle;
 	Launcher launcher;
 	Compressor TheCompressor;	// The air compressor for the robot.
-	
+	Encoder RFollowWheelEncoder;
+	Encoder LFollowWheelEncoder;
 	// State Variables for toggle code.
 	
 	// Elevator state vars
@@ -144,7 +145,9 @@ public:
 				// No furthur control is really necessary.
 				// Pressure switch, slot 6 channel 11
 				// Spike relay, slot 4 channel 1
-				TheCompressor(6,11,4,1)
+				TheCompressor(6,11,4,1),
+				RFollowWheelEncoder(4,7,4,8,false),
+				LFollowWheelEncoder(4,5,4,6,false)
 				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 						
@@ -192,6 +195,14 @@ public:
 		
 		ECellCatcher.Init(8,3,8,4);
 		Squeeky = new Personality();
+		LaunchEncoder.Start();
+		TurretEncoder.Start();
+		RMQuadEncoder.Start();
+		LMQuadEncoder.Start();
+		RMWheelEncoder.Start();
+		LMWheelEncoder.Start();
+		RFollowWheelEncoder.Start();
+		LFollowWheelEncoder.Start();
 	}
 
 	// Disabled state methods
@@ -424,7 +435,8 @@ public:
 	 dashboardDataFormat.m_accelY = testAccel_Y.GetAcceleration();
 	 dashboardDataFormat.m_accelZ = testAccel_Z.GetAcceleration();
 	 dashboardDataFormat.m_gyroTemp = testTemp->GetAngle();
-	 
+	 dashboardDataFormat.m_LeftFollowerWheel = LFollowWheelEncoder.Get();
+	 dashboardDataFormat.m_RightFollowerWheel = RFollowWheelEncoder.Get();
 	 
 	 if (testGyro == NULL) {
 		 dashboardDataFormat.m_gyroAngle = -42.0001;

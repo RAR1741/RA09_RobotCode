@@ -69,6 +69,8 @@ public:
 	UINT16 m_RightState;
 	UINT16 m_TurretState;
 	
+	INT32 m_LeftFollowerWheel;
+	INT32 m_RightFollowerWheel;
 	void PackAndSend(void);
 private:
 	DISALLOW_COPY_AND_ASSIGN(DashboardDataFormat);
