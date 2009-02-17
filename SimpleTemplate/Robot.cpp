@@ -89,6 +89,7 @@ class PurpleMonkeys : public IterativeRobot {
 	enum							// Driver Station jumpers to control program operation
 	{ ARCADE_MODE = 1,				// Tank/Arcade jumper is on DS Input 1 (Jumper present is arcade)
 	  ENABLE_AUTONOMOUS = 2,		// Autonomous/Teleop jumper is on DS Input 2 (Jumper present is autonomous)
+	  MODE_SWITCH = 3,
 	} jumpers;	 
 	
 	
@@ -306,7 +307,20 @@ public:
 				delete testGyro;
 				testGyro = new Gyro(1,1);
 			}
-		
+		switch (m_ds->GetDigitalIn(MODE_SWITCH))
+		{
+		case 0:  //Manual mode
+			MasterControlMode = 0;
+			break;
+		case 1:  //Semi automatic
+			MasterControlMode = 1;
+			break;
+		case 2:  //Full automatic
+			MasterControlMode = 2;
+			break;
+		default:
+			MasterControlMode = 0;
+		}
 		Elevator.Process();
 		// JDM: Use joystick to test, needs to use Elevator Load flag
 		Harvester.Process(turretStick.GetRawButton(3));
