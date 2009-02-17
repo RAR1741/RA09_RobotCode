@@ -92,12 +92,12 @@ void Turret::TurretControl(Joystick * turretStick)
 	switch (*masterControl)
 	{
 	case 0:	// Manual
-		//Manual(turretStick);
-		ManualPositionMode(turretStick);
+		Manual(turretStick);
+		//ManualPositionMode(turretStick);
 		break;
 	case 1: // Semi-Automatic (BANG! BANG!)
-		//Manual(turretStick);
-		ManualPositionMode(turretStick);
+		Manual(turretStick);
+		//ManualPositionMode(turretStick);
 		break;
 	case 2:	// Fully automatic AEGIS-style, full robot control
 		Auto();
