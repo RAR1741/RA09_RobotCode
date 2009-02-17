@@ -142,8 +142,6 @@ void RobotElevator::HomeIt()
 			HomeItFlag=false;
 			ElevatorEncoder->Reset();
 		}
-		DriverStationLCD * dlcd = DriverStationLCD::GetInstance();
-		dlcd->Printf(DriverStationLCD::kUser_Line2, 7, "%4d", ElevatorEncoder->Get());
 }
 
 void RobotElevator::Cycle(float motorSpeed)
@@ -178,7 +176,4 @@ void RobotElevator::Cycle(float motorSpeed)
 			ElevatorEncoder->Reset();// Encoder must reset for another possible cycle.
 		}
 	}
-
-	DriverStationLCD * dlcd = DriverStationLCD::GetInstance();
-	dlcd->Printf(DriverStationLCD::kUser_Line2, 7, "%4d", ElevatorEncoder->Get());
 }
