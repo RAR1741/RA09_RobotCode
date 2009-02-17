@@ -25,6 +25,7 @@ using ::floor;
 #include "EmptyCellCatcher.h"
 #include "GateController.h"
 #include "Mode.h"
+#include "DriverStationLCD.h"
 
 
 #define USR_RQ_EJECT 0
@@ -312,25 +313,28 @@ public:
 				testGyro = new Gyro(1,1);
 			}
 		
+		int testInput = 0;
 		switch (m_ds->GetDigitalIn(MODE_SWITCH_1) * 2 + m_ds->GetDigitalIn(MODE_SWITCH_2))
 		{
 		case 0:  //Manual mode
-			
-			MasterControlMode = MODE_MANUAL;
+			testInput = MODE_MANUAL;
+			//MasterControlMode = MODE_MANUAL;
 			break;
 		case 1:  //Semi automatic
-			MasterControlMode = MODE_SEMI_AUTO;
-			
+			//MasterControlMode = MODE_SEMI_AUTO;
+			testInput = MODE_SEMI_AUTO;
 			break;
 		case 2:  //Full automatic
-			MasterControlMode = MODE_AUTO;
+			testInput = MODE_AUTO;
+			//MasterControlMode = MODE_AUTO;
 			break;
 		default:		
 			//dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Err:");
-			MasterControlMode = 0;
+			//MasterControlMode = 0;
+			testInput = MODE_MANUAL;
 		}
 		
-		switch (MasterControlMode)
+		switch (testInput)
 		{
 		case MODE_MANUAL:
 			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual");
@@ -351,6 +355,9 @@ public:
 		launcher.Update();
 		
 		TheGate.Set(GateToggle.GetOutput());
+
+		DriverStationLCD * dlcd = DriverStationLCD::GetInstance();
+		dlcd->Printf(DriverStationLCD::kUser_Line4, 5, "%1d", GateToggle.GetOutput());
 		
 		ECellCatcher.Set(CellCatcherToggle.GetOutput());
 		GateToggle.UpdateState();

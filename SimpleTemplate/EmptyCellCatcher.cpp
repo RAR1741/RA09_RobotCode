@@ -1,4 +1,5 @@
 #include "EmptyCellCatcher.h"
+#include "DriverStationLCD.h"
 
 CellCatcher::CellCatcher()
 {
@@ -7,6 +8,8 @@ CellCatcher::CellCatcher()
 
 void CellCatcher::Set(bool theBoolean)
 {
+	DriverStationLCD * dlcd = DriverStationLCD::GetInstance();
+	dlcd->Printf(DriverStationLCD::kUser_Line4, 7, "%1d", theBoolean);
 	solenoidA->Set(theBoolean);
 	solenoidB->Set(!theBoolean);
 }

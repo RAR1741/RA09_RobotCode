@@ -1,6 +1,8 @@
 #include "Turret.h"
 #include "DriverStationLCD.h"
 #include "Mode.h"
+
+#define USE_PID 0
 Turret::Turret()
 {
 	Turret_Pos_Motor = new Jaguar(4,3);
@@ -55,18 +57,18 @@ Turret::Turret()
 	
 	max_encoder_voltage = 3.5;
 	min_encoder_voltage = 1.7;
-	
+#if USE_PID
 	pid = new PIDController(1.0,	// Use proportional
 							0.0,	// Don't use derivative
 							0.0,		// Don't use integral
 							Position_Encoder,
 							Turret_Pos_Motor); 
-	
+
 	// Set the input range to reflect knowledge
 	// of our encoder 
 	pid->SetInputRange(0, 5);
 	pid->SetOutputRange(-1,1);
-	
+#endif	
 	//pid->SetSource(Position_Encoder);
 	//pid->SetOutput(Turret_Pos_Motor, -1.0, 1.0);
 }
@@ -100,7 +102,8 @@ void Turret::TurretControl(Joystick * turretStick)
 		//ManualPositionMode(turretStick);
 		break;
 	case MODE_AUTO:	// Fully automatic AEGIS-style, full robot control
-		Auto();
+		//Auto();
+		Manual(turretStick);
 		break;
 	default:
 		Manual(turretStick);
@@ -186,7 +189,10 @@ double Turret::GetTarget_X()
 
 void Turret::SetTurretPosition(float position)
 {
+#if USE_PID
 	pid->SetSetpoint(ServoToEncoderUnits(position));
+#else
+#endif 
 }
 
 float Turret::TurretPosition(void)
@@ -218,12 +224,16 @@ void Turret::UpdateState(void)
 
 void Turret::InitServoish(void)
 {
+#if USE_PID
 	pid->Enable();
+#endif
 }
 
 void Turret::EndServoish(void)
 {
+#if USE_PID
 	pid->Disable();
+#endif
 }
 
 inline float Turret::ServoToEncoderUnits(float servo)

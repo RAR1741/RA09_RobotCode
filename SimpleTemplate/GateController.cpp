@@ -1,4 +1,5 @@
 #include "GateController.h"
+#include "DriverStationLCD.h"
 
 GateController::GateController(void)
 {
