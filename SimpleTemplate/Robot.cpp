@@ -136,8 +136,8 @@ public:
 				TheGate(),
 				ECellCatcher(),
 				Trigger(&leftStick, 2),
-				GateToggle(&turretStick, 3),
-				CellCatcherToggle(&rightStick,3),
+				GateToggle(&turretStick, 2),
+				CellCatcherToggle(&rightStick, 1),
 				
 				launcher(),
 				// No furthur control is really necessary.
@@ -178,8 +178,8 @@ public:
 		//	Gate.Set(false); // Yes? Then close it.
 		
 		Harvester.Init();
-		Harvester.SetCollectEjectControls(&rightStick, 2);
-		Harvester.SetRunStopControls(&leftStick, 2);
+		Harvester.SetCollectEjectControls(&rightStick, 4);
+		Harvester.SetRunStopControls(&rightStick, 3);
 		Harvester.SetGateControls(&TheGate);
 		Harvester.SetAutoMode(MODE_AUTO);
 		
