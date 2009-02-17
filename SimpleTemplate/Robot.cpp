@@ -78,6 +78,8 @@ class PurpleMonkeys : public IterativeRobot {
 	Toggle GateToggle;
 	Toggle CellCatcherToggle;
 	Launcher launcher;
+	Compressor TheCompressor;	// The air compressor for the robot.
+	
 	// State Variables for toggle code.
 	
 	// Elevator state vars
@@ -134,7 +136,11 @@ public:
 				GateToggle(&turretStick, 3),
 				CellCatcherToggle(&rightStick,3),
 				
-				launcher()
+				launcher(),
+				// No furthur control is really necessary.
+				// Pressure switch, slot 6 channel 11
+				// Spike relay, slot 4 channel 1
+				TheCompressor(6,11,4,1)
 				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 						
@@ -324,6 +330,8 @@ public:
 		
 		// horizontalServo.Set((turretStick.GetX()+ 1.0) / 2.0);
 		// verticalServo.Set((turretStick.GetY()+ 1.0) / 2.0);
+		
+		AirCompressorControl(); // This doesn't really do anything
 		UpdateDashboard();
 	}
 
@@ -419,6 +427,10 @@ public:
 	   return retval;
    }
 
+   void AirCompressorControl(void)
+   {
+	   
+   }
 	
 };
 
