@@ -89,7 +89,8 @@ class PurpleMonkeys : public IterativeRobot {
 	enum							// Driver Station jumpers to control program operation
 	{ ARCADE_MODE = 1,				// Tank/Arcade jumper is on DS Input 1 (Jumper present is arcade)
 	  ENABLE_AUTONOMOUS = 2,		// Autonomous/Teleop jumper is on DS Input 2 (Jumper present is autonomous)
-	  MODE_SWITCH = 3,
+	  MODE_SWITCH_1 = 3,
+	  MODE_SWITCH_2 = 4,
 	} jumpers;	 
 	
 	
@@ -307,7 +308,7 @@ public:
 				delete testGyro;
 				testGyro = new Gyro(1,1);
 			}
-		switch (m_ds->GetDigitalIn(MODE_SWITCH))
+		switch (m_ds->GetDigitalIn(MODE_SWITCH_1) * 2 + m_ds->GetDigitalIn(MODE_SWITCH_2))
 		{
 		case 0:  //Manual mode
 			MasterControlMode = 0;
