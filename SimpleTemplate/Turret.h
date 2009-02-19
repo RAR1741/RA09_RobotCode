@@ -6,6 +6,7 @@
 #include "LimitSwitch.h"
 
 
+#define ENABLE_TURRET 0
 
 // #include "Robot.cpp"
 
@@ -34,6 +35,11 @@ public:
 	void SetTurretPosition(float position);
 	float TurretPosition(void);
 	
+	
+	void SetMode(int m)
+	{
+		this->mode = mode;
+	}
 	
 	ParticleAnalysisReport TargetData() const { return par; }
 
@@ -64,12 +70,17 @@ private:
 	LimitSwitch *Clockwise_Limit, *CounterClockwise_Limit;
 	AnalogChannel *Position_Encoder;
 	
+	static const float kCCWVoltage = 1.7;
+	static const float kCWVoltage = 3.6;
+	static const float kEncoderRange = 1.9;
 	////////////////////////////////////////////////////////
 	// STATE
 	
 	float max_encoder_voltage;
 	float min_encoder_voltage;
 	bool tracking;
+	
+	int mode;
 	TrackingThreshold td1, td2;		// color thresholds	
 	TrackingThresholdRGB custom1, custom2; // Custom color thresholds
 	

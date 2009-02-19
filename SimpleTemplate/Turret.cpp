@@ -55,6 +55,8 @@ Turret::Turret()
 	
 	masterControl = NULL;
 	
+	mode = MODE_MANUAL;
+	
 	max_encoder_voltage = 3.5;
 	min_encoder_voltage = 1.7;
 #if USE_PID
@@ -91,14 +93,14 @@ void Turret::TurretControl(void)
 }
 void Turret::TurretControl(Joystick * turretStick)
 {
-	switch (*masterControl)
+	switch (mode)
 	{
 	case MODE_MANUAL:	// Manual
 		Manual(turretStick);
 		//ManualPositionMode(turretStick);
 		break;
 	case MODE_SEMI_AUTO: // Semi-Automatic (BANG! BANG!)
-		Manual(turretStick);
+		ManualPositionMode(turretStick);
 		//ManualPositionMode(turretStick);
 		break;
 	case MODE_AUTO:	// Fully automatic AEGIS-style, full robot control
@@ -192,6 +194,28 @@ void Turret::SetTurretPosition(float position)
 #if USE_PID
 	pid->SetSetpoint(ServoToEncoderUnits(position));
 #else
+	float error = ServoToEncoderUnits(position) - EncoderVoltage();
+	
+	float output = 1.0 / Turret::kEncoderRange * error;
+	
+	float x_axis = output * .6;
+	
+	if (x_axis < 0) {
+		Clockwise_Limit->LimitNegative(x_axis);
+	}
+	else {
+		CounterClockwise_Limit->LimitPositive(x_axis);
+	}
+	
+	DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
+	dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "TSPID:%.3f",output);
+	dsLCD->UpdateLCD();
+	
+#if ENABLE_TURRET
+#error "What are you doing? This code doesn't work!"
+#else
+	Turret_Pos_Motor->Set(0.0);
+#endif
 #endif 
 }
 

@@ -287,7 +287,8 @@ public:
 		// myRobot.Drive(0.0, 0.0); // stop robot
 		// myRobot.Drive(0.5, 0.0); // Go Straight Forward!
 		
-		TheTurret.RegisterMasterControl(&MasterControlMode);
+		//TheTurret.RegisterMasterControl(&MasterControlMode);
+		TheTurret.SetMode(MODE_SEMI_AUTO);
 		
 		GetWatchdog().SetEnabled(true);
 		// Launch_Wheels_Motor.Set(0.0);
