@@ -159,7 +159,7 @@ void Turret::ManualPositionMode(Joystick *turretStick)
 	InitServoish();
 	SetTurretPosition((turretStick->GetX()+1.0)/2);
 	
-	UpdateState();
+	//UpdateState();
 }
 void Turret::Auto(void)
 {
@@ -198,7 +198,7 @@ void Turret::SetTurretPosition(float position)
 	
 	float output = 1.0 / Turret::kEncoderRange * error;
 	
-	float x_axis = output * .6;
+	float x_axis = output * 1;
 	
 	if (x_axis < 0) {
 		Clockwise_Limit->LimitNegative(x_axis);
@@ -208,11 +208,11 @@ void Turret::SetTurretPosition(float position)
 	}
 	
 	DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
-	dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "TSPID:%.3f",output);
+	dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "TSPID:%.3f",x_axis);
 	dsLCD->UpdateLCD();
 	
 #if ENABLE_TURRET
-#error "What are you doing? This code doesn't work!"
+	Turret_Pos_Motor->Set(x_axis);
 #else
 	Turret_Pos_Motor->Set(0.0);
 #endif
@@ -262,10 +262,13 @@ void Turret::EndServoish(void)
 
 inline float Turret::ServoToEncoderUnits(float servo)
 {
-	return min_encoder_voltage + (servo * (max_encoder_voltage - min_encoder_voltage));
+	//return Turret::kCWVoltage + 
+	return Turret::kCCWVoltage + (servo * Turret::kEncoderRange);
+	//return min_encoder_voltage + (servo * (max_encoder_voltage - min_encoder_voltage));
 }
 
 inline float Turret::EncoderUnitsToServo(float volts)
 {
-	return (volts - min_encoder_voltage) / (max_encoder_voltage - min_encoder_voltage);
+	//return (volts - min_encoder_voltage) / (max_encoder_voltage - min_encoder_voltage);
+	return (volts - Turret::kCCWVoltage) / Turret::kEncoderRange;
 }

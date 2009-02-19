@@ -65,27 +65,32 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 	CycleFlag = false;
 	UntripFlag = false;
 	HomeSwitch = new LimitSwitch(6,6);
+	//IsClearingJam = false;
 }
 
 void RobotElevator::Process()
 {
 	DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
 	// Common LCD update
-	if(false){// Put Manual/Auto if condition here. 
+	if(true){// Put Manual/Auto if condition here. 
 			// Manual Mode
 		if (ElevatorStick != NULL && theToggle != NULL){
 					theToggle->UpdateState();
 					
 					if (ElevatorStick->GetRawButton(1) && !isJammed)
 						ElevatorMotor->Set(.5);
-					else
+					else if(!isJammed)
 						ElevatorMotor->Set(0);
 					
+					DetectJams();
+					if(isJammed)
+						ClearJam(-.5);
+					
 					if(ElevatorEncoder==NULL){
-						dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "ERR");
+					dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "ERR");
 					}
 					else
-					dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Elevator Encoder:%4d",ElevatorEncoder->Get());
+					dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "Elevator Encoder:%4d",ElevatorEncoder->Get());
 					dsLCD->UpdateLCD();
 		}
 	}
@@ -97,34 +102,20 @@ void RobotElevator::Process()
 				HomeItFlag=true;
 			if(HomeItFlag)
 				HomeIt(); // Home at 1/4 speed
-			if(ElevatorStick->GetRawButton(1) && !HomeItFlag && !CycleFlag){
+			if(ElevatorStick->GetRawButton(1) && !HomeItFlag && !CycleFlag && !isJammed){
 				CycleFlag=true;
 				UntripFlag=true;
 			}
 			if(CycleFlag){ // if we are cycling
 					Cycle(.5);
 			}
+			DetectJams();
+			if(isJammed)
+				ClearJam(.5);
 		}	
 	// Anti Jamming Code.
 #if ANTI_JAM
-	if(ElevatorEncoder!=NULL && ElevatorMotorCurrent!=NULL){ // Do we have valid ptrs to use?
-		if(ElevatorMotorCurrent->GetVoltage()>=4.8 &&
-			ElevatorMotorCurrent->GetVoltage() <=5.2){ // Is the motor voltage on?
-			if(!isJammed){ // Has a jam not recently been detected?
-				if((CurrentElevatorEncoderValue - LastElevatorEncoderValue)<=50){ 
-					// Is the encoder getting a smaller
-					// than normal rate for the motor being on?
-					
-					// If all the above conditions have been meant then...
-					ElevatorMotor->Set(0.0);
-					isJammed = true;
-					dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "ERR: Evtr Jammed.");
-					dsLCD->UpdateLCD();
-				}
-			}
-		}
-	}
-	else isJammed = false;
+
 #endif
 }
 bool RobotElevator::IsFull()
@@ -146,34 +137,87 @@ void RobotElevator::HomeIt()
 
 void RobotElevator::Cycle(float motorSpeed)
 {
-	if(UntripFlag){// Do we need to untrip the switch?
-		// Then set motor and wait until it's untripped.
-		ElevatorMotor->Set(motorSpeed);
-		if(HomeSwitch->IsTripped())
-			UntripFlag=false;
-	}
-	else{// Otherwise...
-		
-		// Slowdown code, uses encoder to determine speed...
-		// The encoder reads about 1130 to 1170 counts when a cycle completes.
-		// So...
-		
-		if(ElevatorEncoder->Get()<800)
+		if(UntripFlag){// Do we need to untrip the switch?
+			// Then set motor and wait until it's untripped.
 			ElevatorMotor->Set(motorSpeed);
-			// If we still have less than  8/11ths of the way to go
-			// set full motor speed
-		else if(ElevatorEncoder->Get()<950)
-			ElevatorMotor->Set(motorSpeed/1.5);
-			// when we read greater than 800, but less than 950, we're getting close
-			// so cut speed a little.
+			if(HomeSwitch->IsTripped())
+				UntripFlag=false;
+		}
+		else{
+			if(motorSpeed>0){
+			// Otherwise...
+			
+			// Slowdown code, uses encoder to determine speed...
+			// The encoder reads about 1130 to 1170 counts when a cycle completes.
+			// So...
+			
+			if(ElevatorEncoder->Get()<800)
+				ElevatorMotor->Set(motorSpeed);
+				// If we still have less than  8/11ths of the way to go
+				// set full motor speed
+			else if(ElevatorEncoder->Get()<950)
+				ElevatorMotor->Set(motorSpeed/1.5);
+				// when we read greater than 800, but less than 950, we're getting close
+				// so cut speed a little.
+			else
+				ElevatorMotor->Set(motorSpeed/2.0);
+				// Otherwise, we're getting super close, so cut in half.
+			
+			if(!HomeSwitch->IsTripped()){// If this goes, then the limit switch is tripped.
+				CycleFlag=false;// Set false so not called again.
+				ElevatorMotor->Set(0);
+				ElevatorEncoder->Reset();// Encoder must reset for another possible cycle.
+			}
+		}
+	}
+}
+void RobotElevator::DetectJams()
+{
+	if(ElevatorEncoder!=NULL && ElevatorMotorCurrent!=NULL){ // Do we have valid ptrs to use?
+		if(ElevatorMotorCurrent->GetVoltage() >=2.4){ // Is the motor voltage on?
+				if((CurrentElevatorEncoderValue - LastElevatorEncoderValue)<=50 &&
+						(CurrentElevatorEncoderValue - LastElevatorEncoderValue) >= 0){
+							if(ElevatorMotor->Get()>0){
+					// Is the encoder getting a smaller
+					// than normal rate for the motor being on?
+					
+					// If all the above conditions have been meant then...
+					ElevatorMotor->Set(0.0);
+					//Cycle(-.5);
+					isJammed = true;
+					CycleFlag = false; // stop cycling
+					UntripFlag = true;
+							}
+				//	dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "ERR: Evtr Jammed.");
+				//	dsLCD->UpdateLCD();
+			}
+		}
+	}
+	else isJammed = false;	
+}
+
+	void RobotElevator::ClearJam(float motorSpeed)
+	{
+
+		// Cycle Bacckwords code.
+		if(UntripFlag){// Do we need to untrip the switch?
+			// Then set motor and wait until it's untripped.
+			ElevatorMotor->Set(motorSpeed);
+			if(HomeSwitch->IsTripped())
+				UntripFlag=false;
+		}
+		else{
+		if(ElevatorEncoder->Get()>450)
+		ElevatorMotor->Set(motorSpeed);
+		if(ElevatorEncoder->Get()>200)
+		ElevatorMotor->Set(motorSpeed/1.5);
 		else
-			ElevatorMotor->Set(motorSpeed/2.0);
-			// Otherwise, we're getting super close, so cut in half.
-		
-		if(!HomeSwitch->IsTripped()){// If this goes, then the limit switch is tripped.
-			CycleFlag=false;// Set false so not called again.
+		ElevatorMotor->Set(motorSpeed/2.0);
+		if(!HomeSwitch->IsTripped()) {// If this goes, then the limit switch is tripped.
+			isJammed=false;// Set false so not called again.
 			ElevatorMotor->Set(0);
 			ElevatorEncoder->Reset();// Encoder must reset for another possible cycle.
 		}
+
 	}
 }

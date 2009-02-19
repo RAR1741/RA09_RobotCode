@@ -26,6 +26,8 @@ public:
 	bool IsFull(void);
 	void HomeIt();
 	void Cycle(float MotorSpeed);
+	void DetectJams();
+	void ClearJam(float MotorSpeed);
 private:
 	////////////////////////////////////////////////////////
 	// HARDWARE
@@ -56,6 +58,8 @@ private:
 	bool CycleFlag;
 	// flag for untripping switch before cycling
 	bool UntripFlag;
+	bool CurrentElevatorEncoderValue;
+	bool LastElevatorEncoderValue;
 };
 
 #endif
