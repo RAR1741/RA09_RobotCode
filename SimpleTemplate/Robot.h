@@ -50,7 +50,8 @@ public:
 	void TeleopPeriodic(void);
 
 	void TeleopContinuous(void);
-	 void UpdateDashboard(void);
+	void UpdateDashboard(void);
+	bool CheckMode(void);
 
 	Dashboard& GetTheDashboard();
 };

@@ -136,6 +136,7 @@ public:
 
 	// One time initialization of the robot
 	void RobotInit(void) {
+		MasterControlMode = MODE_MANUAL;
 		GetWatchdog().SetExpiration(100);
 		launcher.Init(4, 2);
 		launcher.SetRun(true);
@@ -163,12 +164,14 @@ public:
 		Harvester.SetCollectEjectControls(&rightStick, 4);
 		Harvester.SetRunStopControls(&rightStick, 3);
 		Harvester.SetGateControls(&TheGate);
-		Harvester.SetAutoMode(MODE_AUTO);
+		Harvester.SetAutoMode(MasterControlMode);
+		//Harvester.SetAutoMode(MODE_AUTO);
 
 		// Initiallize the Elevator class
 		Elevator.Init(4, 1, 2, 1);
 		//JDM: Set the joystick and button to use to test the elevator
 		Elevator.SetElevatorControls(&turretStick, 1);
+		Elevator.SetAutoMode(MasterControlMode);
 
 		ECellCatcher.Init(8, 3, 8, 4);
 		Squeeky = new Personality();
@@ -186,6 +189,7 @@ public:
 
 	// Disabled state methods
 	void DisabledInit(void) {
+		MasterControlMode = MODE_MANUAL;
 		Squeeky->Open();
 		Squeeky->SqueekySayHello();
 		if (testGyro==NULL)
@@ -196,6 +200,38 @@ public:
 	}
 
 	void DisabledPeriodic(void) {
+		CheckMode();
+//		int DSMode;
+//		DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
+//
+//		DSMode = m_ds->GetDigitalIn(MODE_SWITCH_1) * 2 + m_ds->GetDigitalIn(MODE_SWITCH_2);
+//		switch (DSMode) {
+//		case 0: //Manual mode
+//			MasterControlMode = MODE_MANUAL;
+//			break;
+//		case 1: //Semi automatic
+//			MasterControlMode = MODE_SEMI_AUTO;
+//			break;
+//		case 2: //Full automatic
+//			//MasterControlMode = MODE_AUTO;
+//			break;
+//		default:
+//			MasterControlMode = MODE_MANUAL;
+//		}
+//
+//		switch (DSMode) {
+//		case MODE_MANUAL:
+//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual        ");
+//			break;
+//		case MODE_SEMI_AUTO:
+//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Semi-Automatic");
+//			break;
+//		case MODE_AUTO:
+//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Full-Automatic");
+//			break;
+//		default:
+//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual (Error)");
+//		}
 		//Squeeky->RPTCommandProccessor();
 	}
 
@@ -260,18 +296,61 @@ public:
 		// myRobot.Drive(0.0, 0.0); // stop robot
 		// myRobot.Drive(0.5, 0.0); // Go Straight Forward!
 
-		//TheTurret.RegisterMasterControl(&MasterControlMode);
-		TheTurret.SetMode(MODE_MANUAL);
+		Harvester.SetAutoMode(MasterControlMode);
+		Elevator.SetAutoMode(MasterControlMode);
+		TheTurret.SetMode(MasterControlMode);
+//		TheTurret.SetMode(MODE_MANUAL);
+//		//TheTurret.RegisterMasterControl(&MasterControlMode);
 
 		GetWatchdog().SetEnabled(true);
 		// Launch_Wheels_Motor.Set(0.0);
 	}
 
+	bool CheckMode(void)
+	{
+		int DSMode;
+		bool ModeChanged;
+		DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
+
+		DSMode = m_ds->GetDigitalIn(MODE_SWITCH_1) * 2 + m_ds->GetDigitalIn(MODE_SWITCH_2);
+		ModeChanged = (DSMode == MasterControlMode);
+		
+		switch (DSMode) {
+		case 0: //Manual mode
+			MasterControlMode = MODE_MANUAL;
+			break;
+		case 1: //Semi automatic
+			MasterControlMode = MODE_SEMI_AUTO;
+			break;
+		case 2: //Full automatic
+			//MasterControlMode = MODE_AUTO;
+			break;
+		default:
+			MasterControlMode = MODE_MANUAL;
+		}
+
+		switch (DSMode) {
+		case MODE_MANUAL:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual        ");
+			break;
+		case MODE_SEMI_AUTO:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Semi-Automatic");
+			break;
+		case MODE_AUTO:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Full-Automatic");
+			break;
+		default:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual (Error)");
+		}
+		
+		return ModeChanged;
+	}
+	
 	void TeleopPeriodic(void) {
 
 		GetWatchdog().Feed();
 
-		DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
+		//DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 
 		//myRobot.ArcadeDrive(stick); // drive with arcade style (use right stick)
 
@@ -299,44 +378,15 @@ public:
 			testGyro = new Gyro(1,1);
 		}
 
-		int testInput = 0;
-		switch (m_ds->GetDigitalIn(MODE_SWITCH_1) * 2
-				+ m_ds->GetDigitalIn(MODE_SWITCH_2)) {
-		case 0: //Manual mode
-			testInput = MODE_MANUAL;
-			//MasterControlMode = MODE_MANUAL;
-			break;
-		case 1: //Semi automatic
-			//MasterControlMode = MODE_SEMI_AUTO;
-			testInput = MODE_SEMI_AUTO;
-			break;
-		case 2: //Full automatic
-			testInput = MODE_AUTO;
-			//MasterControlMode = MODE_AUTO;
-			break;
-		default:
-			//dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Err:");
-			//MasterControlMode = 0;
-			testInput = MODE_MANUAL;
-		}
+//		// Check to see if the Master Control Mode has changed
+//		// If so, update the modes for the Harvester, Elevator, and Turret
+//		if (CheckMode())
+//		{
+//			Harvester.SetAutoMode(MasterControlMode);
+//			Elevator.SetAutoMode(MasterControlMode);
+//			TheTurret.SetMode(MasterControlMode);
+//		}
 
-		switch (testInput) {
-		case MODE_MANUAL:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual");
-			break;
-		case MODE_SEMI_AUTO:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1,
-					"Mode: Semi-Automatic");
-			break;
-		case MODE_AUTO:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1,
-					"Mode: Full-Automatic");
-			break;
-		default:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1,
-					"Error: Setting to Manual");
-
-		}
 		//TheTurret.SetMode(MODE_)
 		Elevator.Process();
 		// JDM: Use joystick to test, needs to use Elevator Load flag
