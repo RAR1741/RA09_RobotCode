@@ -116,7 +116,7 @@ void RobotElevator::Process()
 		}
 		dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "IJ:%1d",isJammed);
 		//DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
-		dsLCD->Printf(DriverStationLCD::kUser_Line3, 5, "MV:%1.1f",ElevatorMotorCurrent->GetVoltage());
+		dsLCD->Printf(DriverStationLCD::kUser_Line3, 5, "MC:%1.1f",ElevatorMotorCurrent->GetCurrent());
 		dsLCD->Printf(DriverStationLCD::kUser_Line3, 14, "EN:%2d",(CurrentElevatorEncoderValue));
 		dsLCD->UpdateLCD();
 						//dsLCD->UpdateLCD();
