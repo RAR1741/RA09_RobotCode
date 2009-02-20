@@ -114,7 +114,8 @@ void Turret::TurretControl(Joystick * turretStick)
 		//ManualPositionMode(turretStick);
 		break;
 	case MODE_SEMI_AUTO: // Semi-Automatic (BANG! BANG!)
-		ManualPositionMode(turretStick);
+		//ManualPositionMode(turretStick);
+		Auto();
 		//ManualPositionMode(turretStick);
 		break;
 	case MODE_AUTO:	// Fully automatic AEGIS-style, full robot control
