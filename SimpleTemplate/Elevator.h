@@ -4,6 +4,7 @@
 #include "WPILib.h"
 #include "toggle.h"
 #include "launcher.h"
+#include "CurrentSensor.h"
 // #include "Robot.cpp"
 
 #define ELEVATOR_STATE_FULL 0
@@ -34,7 +35,7 @@ private:
 	Jaguar *ElevatorMotor;
 	Encoder * ElevatorEncoder;
 	// Jaguar * LaunchMotor;
-	AnalogChannel * ElevatorMotorCurrent;
+	CurrentSensor * ElevatorMotorCurrent;
 	Joystick *ElevatorStick;
 	Toggle * theToggle;
 	// Encoder ElevatorEncoder;
@@ -58,8 +59,8 @@ private:
 	bool CycleFlag;
 	// flag for untripping switch before cycling
 	bool UntripFlag;
-	bool CurrentElevatorEncoderValue;
-	bool LastElevatorEncoderValue;
+	int CurrentElevatorEncoderValue;
+	int LastElevatorEncoderValue;
 };
 
 #endif

@@ -18,13 +18,13 @@ double CurrentSensor::GetCurrent()
 	current -= bias;
 	switch(sensorType)
 	{
-		case m_5Volt:
+		case m_5Amp:
 			current /= .158;
 			break;
-		case m_20Volt:
+		case m_20Amp:
 			current /= 1;
 			break;
-		case m_30Volt:
+		case m_30Amp:
 			current /= .066;
 			break;
 	}

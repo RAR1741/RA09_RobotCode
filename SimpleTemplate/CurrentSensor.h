@@ -5,7 +5,7 @@
 class CurrentSensor
 {
 	public:
-		enum{m_5Volt, m_20Volt, m_30Volt};
+		enum{m_5Amp, m_20Amp, m_30Amp};
 	void Init(int slot, int channel, double bias, int sensor);
 	double GetVoltage();
 	double GetCurrent();
