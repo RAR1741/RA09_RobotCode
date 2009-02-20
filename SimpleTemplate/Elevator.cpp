@@ -182,7 +182,9 @@ void RobotElevator::DetectJams()
 {
 	if(ElevatorEncoder!=NULL && ElevatorMotorCurrent!=NULL){ // Do we have valid ptrs to use?
 		if(ElevatorMotorCurrent->GetVoltage() <=2.4){ // Is the motor voltage on?
-				if((CurrentElevatorEncoderValue - LastElevatorEncoderValue)<=50 &&
+// Colin: Remind me tonight to change the sign. I thought of an easy way to make it
+// output positive values with going forward. We may need this on others as well.  Hugh
+			if((CurrentElevatorEncoderValue - LastElevatorEncoderValue)<=50 &&
 						(CurrentElevatorEncoderValue - LastElevatorEncoderValue) >= 0){
 							if(ElevatorMotor->Get()>0){
 					
