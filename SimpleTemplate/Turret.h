@@ -38,7 +38,7 @@ public:
 	
 	void SetMode(int m)
 	{
-		this->mode = mode;
+		this->mode = m;
 	}
 	
 	ParticleAnalysisReport TargetData() const { return par; }

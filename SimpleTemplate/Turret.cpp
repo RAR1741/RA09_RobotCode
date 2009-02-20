@@ -58,7 +58,7 @@ Turret::Turret()
 	
 	masterControl = NULL;
 	
-	mode = MODE_MANUAL;
+	mode = MODE_AUTO;
 	
 	max_encoder_voltage = 3.5;
 	min_encoder_voltage = 1.7;
@@ -119,7 +119,7 @@ void Turret::TurretControl(Joystick * turretStick)
 		break;
 	case MODE_AUTO:	// Fully automatic AEGIS-style, full robot control
 		//Auto();
-		Manual(turretStick);
+		Auto();
 		break;
 	default:
 		Manual(turretStick);
@@ -179,6 +179,7 @@ void Turret::Auto(void)
 {
 	InitServoish();
 	Target();
+	Track();
 	UpdateState();
 }
 
