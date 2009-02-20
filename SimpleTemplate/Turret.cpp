@@ -150,8 +150,8 @@ void Turret::Manual(Joystick *turretStick)
 	Turret_Pos_Motor->Set(x_axis);
 	
 	DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
-	
-	dsLCD->Printf(DriverStationLCD::kUser_Line6, 2, "Encoder :%7.1f V", this->EncoderVoltage());
+	dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "TSMAN:%.3f",x_axis);
+	//dsLCD->Printf(DriverStationLCD::kUser_Line6, 2, "Encoder :%7.1f V", this->EncoderVoltage());
 	
 	UpdateState();
 	return; // Guess what? return.
