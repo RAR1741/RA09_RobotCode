@@ -53,7 +53,9 @@ private:
 	void Manual(Joystick *turretStick);
 	void ManualPositionMode(Joystick *turretStick);
 	void Auto(void); // Autonomous does not need joystick, neither should auto
-
+	
+	void Track(void);
+	
 	void UpdateState(void);
 	
 	void InitServoish(void);
@@ -62,6 +64,8 @@ private:
 	
 	float ServoToEncoderUnits(float servo);
 	float EncoderUnitsToServo(float volts);
+	
+	void AdjustServoPositions(float dH, float dV);
 	
 	////////////////////////////////////////////////////////
 	// HARDWARE
@@ -90,6 +94,23 @@ private:
 	PIDSource *pid_src;
 	
 	int *masterControl;
+	
+	////////////////////////////////////////////////////////
+	// AUTO-CONTROL State
+	float incrementH, incrementV;
+	// pan needs a 1-up number for each call
+	int panIncrement; // = 0;							
+	float sinStart;
+	float horizontalDestination;	// servo destination (0.0-1.0)
+	float verticalDestination;		// servo destination (0.0-1.0)
+	float horizontalPosition, verticalPosition;	// current servo positions
+	float servoDeadband;			// percentage servo delta to trigger move
+	int framesPerSecond;			// number of camera frames to get per second
+	
+	double savedImageTimestamp;		// = 0.0;
+	bool staleImage;				// = false; 
+		
+		
 };
 
 #endif
