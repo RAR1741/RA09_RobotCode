@@ -119,7 +119,7 @@ void RobotElevator::Process(bool LauncherStatus)
 			else
 				DetectJams();
 				
-		}/*
+		}
 		else{
 			switch(State){
 				case 0:
@@ -215,7 +215,7 @@ void RobotElevator::Process(bool LauncherStatus)
 					State = 4;
 					break;
 			}
-		}*/
+		}
 	
 		/*
 		//DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
