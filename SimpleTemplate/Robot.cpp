@@ -340,7 +340,7 @@ public:
 			MasterControlMode = MODE_SEMI_AUTO;
 			break;
 		case 2: //Full automatic
-			//MasterControlMode = MODE_AUTO;
+			MasterControlMode = MODE_AUTO;
 			break;
 		default:
 			MasterControlMode = MODE_MANUAL;
