@@ -1,6 +1,7 @@
 #ifndef __LAUNCHER_H
 #define __LAUNCHER_H
 #include "WPIlib.h"
+#include "CurrentSensor.h"
 
 class Launcher
 {
@@ -11,13 +12,15 @@ public:
 	void SetJoyStick(Joystick * thestick);
 	void SetRun(bool runManrun);
 	bool GetStatus();
-	INT32 GetLauncherEncoderVal();
+	double GetCurrentVal();
+	INT32 GetEncoderVal();
 private:
 	UINT32 slot;
 	UINT32 channel;
 	Joystick * stick;
 	Jaguar * motor;
 	Encoder * LaunchEncoder;
+	CurrentSensor * launchWheelsCurrent;
 	bool shouldRun;
 	bool Status;
 };

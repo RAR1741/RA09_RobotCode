@@ -1,5 +1,6 @@
 #include "Launcher.h"
 
+
 void Launcher::Init(UINT32 Slot, UINT32 Channel)
 	{
 		slot = Slot;
@@ -9,6 +10,9 @@ void Launcher::Init(UINT32 Slot, UINT32 Channel)
 		motor = new Jaguar(Slot, Channel);
 		LaunchEncoder = new Encoder(4, 9, 4, 10, false);
 		LaunchEncoder->Start();
+
+		launchWheelsCurrent = new CurrentSensor();
+		launchWheelsCurrent->Init(2, 2, 2.5, CurrentSensor::m_20Amp);
 	}
 
 void Launcher::Update()
@@ -29,7 +33,7 @@ void Launcher::SetRun(bool runManrun)
 	shouldRun=runManrun;
 }
 
-INT32 Launcher::GetLauncherEncoderVal()
+INT32 Launcher::GetEncoderVal()
 {
 	return LaunchEncoder->Get();
 }
@@ -37,4 +41,9 @@ INT32 Launcher::GetLauncherEncoderVal()
 bool Launcher::GetStatus()
 {
 	return Status;
+}
+
+double Launcher::GetCurrentVal()
+{
+	return launchWheelsCurrent->GetCurrent();
 }

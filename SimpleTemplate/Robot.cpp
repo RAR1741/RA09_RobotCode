@@ -63,7 +63,7 @@ class PurpleMonkeys : public IterativeRobot {
 	Turret TheTurret;
 	AnalogChannel leftCurrent;
 	AnalogChannel rightCurrent;
-	AnalogChannel launchWheelsCurrent;
+
 	AnalogChannel turretPositionCurrent;
 
 	Accelerometer testAccel_X, testAccel_Y, testAccel_Z;
@@ -99,32 +99,49 @@ class PurpleMonkeys : public IterativeRobot {
 public:
 	PurpleMonkeys(void) :
 				myRobot(4, 5), // these must be initialized in the same order
-				leftStick(1), rightStick(2), turretStick(3), testMotorStick(4),
+				leftStick(1), 
+				rightStick(2), 
+				turretStick(3), 
+				testMotorStick(4),
 
-				light(4, 14), theCamera(), dashboardDataFormat(),
-				LMQuadEncoder(4, 1, 4, 2, false), RMQuadEncoder(4, 3, 4, 4,
-						false),
+				light(4, 14), 
+				theCamera(),
+				dashboardDataFormat(),
+				LMQuadEncoder(4, 1, 4, 2, false),
+				RMQuadEncoder(4, 3, 4, 4,false),
 				LMWheelEncoder(4, 5, 4, 6, false),
 				RMWheelEncoder(4, 7, 4, 8, false),
 				//ElevatorEncoder(4,11,4,12,false),
 				TurretEncoder(4, 13, 4, 14, false),
 
-				counter(0), testGyro(NULL), testTemp(NULL), Squeeky(NULL),
-				TheTurret(), leftCurrent(2, 4), rightCurrent(2, 5),
-				launchWheelsCurrent(2, 2), turretPositionCurrent(2, 3),
-				testAccel_X(1, 3), testAccel_Y(1, 4), testAccel_Z(1, 5),
+				counter(0),
+				testGyro(NULL), 
+				testTemp(NULL), 
+				Squeeky(NULL),
+				TheTurret(), 
+				leftCurrent(2, 4), 
+				rightCurrent(2, 5),
+				turretPositionCurrent(2, 3),
+				testAccel_X(1, 3), 
+				testAccel_Y(1, 4),
+				testAccel_Z(1, 5),
 				//				Gate(8,1),
-				Harvester(4, 6, 2, 6), Elevator(),
+				Harvester(4, 6, 2, 6), 
+				Elevator(),
 				// Collector(8,1),
-				TheGate(), ECellCatcher(), Trigger(&leftStick, 2), GateToggle(
-						&turretStick, 2), CellCatcherToggle(&rightStick, 1),
+				TheGate(),
+				ECellCatcher(), 
+				Trigger(&leftStick, 2), 
+				GateToggle(&turretStick, 2), 
+				CellCatcherToggle(&rightStick, 1),
 
 				launcher(),
 				// No furthur control is really necessary.
 				// Pressure switch, slot 6 channel 11
 				// Spike relay, slot 4 channel 1
-				TheCompressor(6, 11, 4, 1), RFollowWheelEncoder(4, 7, 4, 8,
-						false), LFollowWheelEncoder(4, 5, 4, 6, false) {
+				TheCompressor(6, 11, 4, 1), 
+				RFollowWheelEncoder(4, 7, 4, 8,false),
+				LFollowWheelEncoder(4, 5, 4, 6, false) {
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 
 		MasterControlMode = 0; // Manual mode
@@ -451,11 +468,11 @@ public:
 		dashboardDataFormat.m_LeftMotorVoltage = leftCurrent.GetValue();
 		dashboardDataFormat.m_RightMotorVoltage = rightCurrent.GetValue();
 		dashboardDataFormat.m_launchWheelsCurrent
-				= launchWheelsCurrent.GetValue();
+				= (INT16)(launcher.GetCurrentVal());
 		dashboardDataFormat.m_turretPositionCurrent
 				= turretPositionCurrent.GetValue();
 
-		dashboardDataFormat.m_LaunchEncoder = launcher.GetLauncherEncoderVal();
+		dashboardDataFormat.m_LaunchEncoder = launcher.GetEncoderVal();
 		dashboardDataFormat.m_TurretEncoder = TurretEncoder.Get();
 
 		dashboardDataFormat.m_accelX = testAccel_X.GetAcceleration();
