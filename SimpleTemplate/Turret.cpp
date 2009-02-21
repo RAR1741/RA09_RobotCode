@@ -18,6 +18,7 @@ Turret::Turret()
 	/* recommend making PINK the first color because GREEN is more 
 	 * subsceptible to hue variations due to lighting type so may
 	 * result in false positives */
+	
 	// PINK
 	sprintf(td1.name, "PINK");
 	td1.hue.minValue = 220;
@@ -40,6 +41,7 @@ Turret::Turret()
 	//td2.luminance.maxValue = 255;
 	td2.luminance.maxValue = 180;
 	
+#if 0
 	sprintf(custom1.name, "PINK");
 	custom1.R.minValue = 235;
 	custom1.R.maxValue = 255;
@@ -63,7 +65,30 @@ Turret::Turret()
 	custom2.B.minValue = 117;
 	//custom2.B.minValue = 133;
 	custom2.B.maxValue = 150;
+#else
+	custom1.R.minValue = 240;
+	custom1.R.maxValue = 255;
+	custom1.G.minValue = 90;
+	//custom1.G.minValue = 70;
+	custom1.G.maxValue = 120;
+	//custom1.G.maxValue = 92;
+	custom1.B.minValue = 180;
+	//custom1.B.minValue = 150;
+	custom1.B.maxValue = 210;
 	
+	sprintf(custom2.name, "GREEN");
+	custom2.R.minValue = 90;
+	//custom2.R.minValue = 80;
+	custom2.R.maxValue = 120;
+	//custom2.R.maxValue = 90;
+	custom2.G.minValue = 200;
+	//custom2.G.minValue = 185;
+	custom2.G.maxValue = 250;
+	//custom2.G.maxValue = 215;
+	custom2.B.minValue = 150;
+	//custom2.B.minValue = 133;
+	custom2.B.maxValue = 190;
+#endif
 	masterControl = NULL;
 	
 	mode = MODE_AUTO;
