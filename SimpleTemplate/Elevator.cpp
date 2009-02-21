@@ -137,14 +137,14 @@ void RobotElevator::Process(bool LauncherStatus)
 					break;
 				case 2:
 					DetectJams();
-					if(HomeItFlag)
+					if(HomeItFlag){
 						HomeIt();
+						State = 2;
+					}
 					if(isJammed)
 						State = 10;
 					else if(!BusyFlag)
 						State = 3;
-					else
-						State = 2;
 					break;
 				case 3:
 					DetectJams();
@@ -217,15 +217,19 @@ void RobotElevator::Process(bool LauncherStatus)
 			}
 		}
 	
-		/*
+		
 		//DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
-		dsLCD->Printf(DriverStationLCD::kUser_Line3, 5, "MC:%2.1f",ElevatorMotorCurrent->GetCurrent());
-		dsLCD->Printf(DriverStationLCD::kUser_Line3, 14, "EN:%4d",ElevatorEncoder->Get());
-		dsLCD->UpdateLCD();*/
+		dsLCD->Printf(DriverStationLCD::kUser_Line3, 5, "ES:%2d",State);
+		//dsLCD->Printf(DriverStationLCD::kUser_Line3, 14, "EN:%4d",ElevatorEncoder->Get());
+		//dsLCD->UpdateLCD()
 		dsLCD->UpdateLCD();
 		LastElevatorEncoderValue = CurrentElevatorEncoderValue;
 		CurrentElevatorEncoderValue = ElevatorEncoder->Get();
 		RunStopToggle->UpdateState();
+		if(RunStopToggle->GetOutput())
+			RunStop = true;
+		else
+			RunStop = false;
 }
 bool RobotElevator::IsFull()
 {

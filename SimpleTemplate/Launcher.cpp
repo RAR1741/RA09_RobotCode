@@ -23,15 +23,16 @@ void Launcher::Update()
 	else
 		motor->Set(0.0);
 	
-	if(launchWheelsCurrent->GetCurrent()>=10)
+	if(launchWheelsCurrent->GetCurrent()>=8)
 		Status = true;
 	else Status = false;
 	/*
 	DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
-    dsLCD->Printf(DriverStationLCD::kUser_Line3, 3, "LC:%2.2f",launchWheelsCurrent->GetCurrent());
+    dsLCD->Printf(DriverStationLCD::kUser_Line3, 30, "LC:%2.2f",launchWheelsCurrent->GetCurrent());*/
+  //  dsLCD->UpdateLCD();
 	//DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
-	dsLCD->Printf(DriverStationLCD::kUser_Line3, 9, "LEN:%4d",LaunchEncoder->Get());
-	dsLCD->UpdateLCD();*/
+	/*dsLCD->Printf(DriverStationLCD::kUser_Line3, 9, "LEN:%4d",LaunchEncoder->Get());
+	*/
 }
 
 void Launcher::SetJoyStick(Joystick * thestick)

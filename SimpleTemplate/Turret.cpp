@@ -41,19 +41,27 @@ Turret::Turret()
 	td2.luminance.maxValue = 180;
 	
 	sprintf(custom1.name, "PINK");
-	custom1.R.minValue = 240;
+	custom1.R.minValue = 235;
 	custom1.R.maxValue = 255;
 	custom1.G.minValue = 79;
+	//custom1.G.minValue = 70;
 	custom1.G.maxValue = 153;
+	//custom1.G.maxValue = 92;
 	custom1.B.minValue = 128;
-	custom1.B.maxValue = 179;
+	//custom1.B.minValue = 150;
+	custom1.B.maxValue = 200;
 	
 	sprintf(custom2.name, "GREEN");
 	custom2.R.minValue = 116;
+	//custom2.R.minValue = 80;
 	custom2.R.maxValue = 160;
+	//custom2.R.maxValue = 90;
 	custom2.G.minValue = 217;
+	//custom2.G.minValue = 185;
 	custom2.G.maxValue = 250;
+	//custom2.G.maxValue = 215;
 	custom2.B.minValue = 117;
+	//custom2.B.minValue = 133;
 	custom2.B.maxValue = 150;
 	
 	masterControl = NULL;
