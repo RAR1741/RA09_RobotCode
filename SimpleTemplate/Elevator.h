@@ -19,7 +19,7 @@ public:
 	
 	void SetElevatorControls(Joystick *Stick, UINT32 Button);
 	void Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel);
-	void Process();
+	void Process(bool LauncherStatus);
 	UINT32 GetState(void);
 	void SetState(UINT32 State);
 	UINT32 GetAutoMode(void);
@@ -38,7 +38,7 @@ private:
 	// Jaguar * LaunchMotor;
 	CurrentSensor * ElevatorMotorCurrent;
 	Joystick *ElevatorStick;
-	Toggle * theToggle;
+	Toggle * RunStopToggle;
 	// Encoder ElevatorEncoder;
 	// Launcher * launcher;
 	UINT32 ElevatorButton;
@@ -62,6 +62,7 @@ private:
 	bool CycleFlag;
 	// flag for untripping switch before cycling
 	bool UntripFlag;
+	bool LauncherStatus;
 	int CurrentElevatorEncoderValue;
 	int LastElevatorEncoderValue;
 };

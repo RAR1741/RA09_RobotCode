@@ -147,7 +147,6 @@ public:
 		MasterControlMode = 0; // Manual mode
 
 	}
-
 	// One time initialization of the robot
 	void RobotInit(void) {
 		MasterControlMode = MODE_MANUAL;
@@ -301,6 +300,7 @@ public:
 
 	// Teleop state methods
 	void TeleopInit(void) {
+		
 		//		testEncoder.SetDistancePerTick(300.0);
 		//		LMQuadEncoder.SetDistancePerPulse(300.0);
 		LMQuadEncoder.Start();
@@ -330,7 +330,7 @@ public:
 		ModeChanged = (DSMode == MasterControlMode);
 		
 		switch (DSMode) {
-		case 0: //Manual mode
+		case 3: //Manual mode
 			MasterControlMode = MODE_MANUAL;
 			break;
 		case 1: //Semi automatic
@@ -402,7 +402,7 @@ public:
 //		}
 
 		//TheTurret.SetMode(MODE_)
-		Elevator.Process();
+		Elevator.Process(launcher.GetStatus());
 		// JDM: Use joystick to test, needs to use Elevator Load flag
 		Harvester.Process(turretStick.GetRawButton(3));
 		launcher.Update();

@@ -44,7 +44,6 @@ void RobotElevator::SetElevatorControls(Joystick *Stick, UINT32 Button)
 {
 	ElevatorStick = Stick;
 	ElevatorButton = Button;
-	theToggle = new Toggle(ElevatorStick, Button);
 }
 
 void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel)
@@ -69,21 +68,24 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 	RunStop = false;
 	BusyFlag = false;
 	LoadHarvesterLoad = false;
+	LauncherStatus = false;
 	HomeSwitch = new LimitSwitch(6,6);
 	CurrentElevatorEncoderValue = 0;
 	LastElevatorEncoderValue = 0;
+	RunStopToggle = new Toggle(ElevatorStick, 11);
 	//IsClearingJam = false;
 }
 
-void RobotElevator::Process()
+void RobotElevator::Process(bool LauncherStatus)
 {
-	DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
+	this->LauncherStatus = LauncherStatus;
+    DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
 	// Common LCD update
 	// AutoMode = MODE_MANUAL;
 	if(AutoMode == MODE_MANUAL){// Put Manual/Auto if condition here. 
 			// Manual Mode
-		if (ElevatorStick != NULL && theToggle != NULL){
-					theToggle->UpdateState();
+		if (ElevatorStick != NULL){
+					
 					
 					if (ElevatorStick->GetRawButton(1) && !isJammed)
 						ElevatorMotor->Set(.5);
@@ -117,12 +119,12 @@ void RobotElevator::Process()
 			else
 				DetectJams();
 				
-		}
+		}/*
 		else{
-			
+			RunStopToggle->UpdateState();
 			switch(State){
 				case 0:
-					if(RunStop)
+					if(RunStopToggle->GetOutput())
 						State = 1;
 					else{
 						State = 0;
@@ -161,8 +163,8 @@ void RobotElevator::Process()
 					
 				case 5:
 					if(ElevatorStick->GetRawButton(1)){
-						CycleFlag = true;
-						UntripFlag = true;
+						CycleFlag = true; // Signal to cycle the elevator
+						UntripFlag = true; // must "dehome it" first
 						State = 6;
 					}
 					else
@@ -174,8 +176,9 @@ void RobotElevator::Process()
 					State = 8;
 					break;
 				case 7:
-					// Imaginary launch motor status code...
-					State = 5;
+					if(this->LauncherStatus)
+						State = 5;
+					else State = 7;
 					break;
 					
 				case 8:
@@ -213,13 +216,20 @@ void RobotElevator::Process()
 					State = 4;
 					break;
 			}
-		}
-		dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "IJ:%1d",isJammed);
+		}*/
+	
+		if(RunStopToggle->GetOutput())
+			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "AUTGL:RUN");
+		else
+			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "AUTGL:IDL");
+		
+		dsLCD->Printf(DriverStationLCD::kUser_Line3, 30, "STE:%d", State);
+		/*
 		//DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
 		dsLCD->Printf(DriverStationLCD::kUser_Line3, 5, "MC:%2.1f",ElevatorMotorCurrent->GetCurrent());
-		dsLCD->Printf(DriverStationLCD::kUser_Line3, 14, "EN:%2d",(CurrentElevatorEncoderValue-LastElevatorEncoderValue));
+		dsLCD->Printf(DriverStationLCD::kUser_Line3, 14, "EN:%4d",ElevatorEncoder->Get());
+		dsLCD->UpdateLCD();*/
 		dsLCD->UpdateLCD();
-						//dsLCD->UpdateLCD();
 		LastElevatorEncoderValue = CurrentElevatorEncoderValue;
 		CurrentElevatorEncoderValue = ElevatorEncoder->Get();
 }

@@ -1,5 +1,5 @@
 #include "Launcher.h"
-
+#include "DriverStationLCD.h"
 
 void Launcher::Init(UINT32 Slot, UINT32 Channel)
 	{
@@ -7,12 +7,13 @@ void Launcher::Init(UINT32 Slot, UINT32 Channel)
 		channel = Channel;
 		// stick = joystick;
 		shouldRun=false;
+		Status = false;
 		motor = new Jaguar(Slot, Channel);
 		LaunchEncoder = new Encoder(4, 9, 4, 10, false);
 		LaunchEncoder->Start();
-
+		// LaunchEncoder->Reset();
 		launchWheelsCurrent = new CurrentSensor();
-		launchWheelsCurrent->Init(2, 2, 2.5, CurrentSensor::m_20Amp);
+		launchWheelsCurrent->Init(2, 2, 2.5, CurrentSensor::m_30Amp);
 	}
 
 void Launcher::Update()
@@ -21,6 +22,16 @@ void Launcher::Update()
 		motor->Set(-((-stick->GetZ()+1.0)/2.0));
 	else
 		motor->Set(0.0);
+	
+	if(launchWheelsCurrent->GetCurrent()>=10)
+		Status = true;
+	else Status = false;
+	/*
+	DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
+    dsLCD->Printf(DriverStationLCD::kUser_Line3, 3, "LC:%2.2f",launchWheelsCurrent->GetCurrent());
+	//DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
+	dsLCD->Printf(DriverStationLCD::kUser_Line3, 9, "LEN:%4d",LaunchEncoder->Get());
+	dsLCD->UpdateLCD();*/
 }
 
 void Launcher::SetJoyStick(Joystick * thestick)
