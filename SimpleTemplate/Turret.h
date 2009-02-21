@@ -4,6 +4,7 @@
 #include "WPILib.h"
 #include "Target.h"
 #include "LimitSwitch.h"
+#include "IFF.h"
 
 
 #define ENABLE_TURRET 0
@@ -25,6 +26,13 @@ public:
 	bool TargetInSight() const { return tracking; };
 	double GetTarget_X(); // HaHa Patrick! Added a function to YOUR code! How does THAT make you feel?
 	
+	
+	void InitTurret(int motorSlot, int motorChannel,
+					int cLimitSlot, int cLimitChannel,
+					int ccLimitSlot, int ccLimitChannel,
+					int poEncoderSlot, int poEncoderChannel,
+					IFF * iff_module,
+					int gogglePin);
 	float CurrentPosition(void);
 	float EncoderVoltage(void);
 	
@@ -65,6 +73,11 @@ private:
 	float ServoToEncoderUnits(float servo);
 	float EncoderUnitsToServo(float volts);
 	
+	// This will notify the other modules and/or drivers that
+	// the turret is a happenin' place. This notably includes the
+	// cool googles.
+	
+	void NotifySystem(void);
 	void AdjustServoPositions(float dH, float dV);
 	
 	////////////////////////////////////////////////////////
@@ -74,9 +87,14 @@ private:
 	LimitSwitch *Clockwise_Limit, *CounterClockwise_Limit;
 	AnalogChannel *Position_Encoder;
 	
+	int m_goggleLightPin;
+	
 	static const float kCCWVoltage = 1.7;
 	static const float kCWVoltage = 3.6;
 	static const float kEncoderRange = 1.9;
+	
+	static const int kGoggleLightPin = 5;
+	
 	////////////////////////////////////////////////////////
 	// STATE
 	
@@ -95,6 +113,7 @@ private:
 	
 	int *masterControl;
 	
+	IFF *m_iff_module;
 	////////////////////////////////////////////////////////
 	// AUTO-CONTROL State
 	float incrementH, incrementV;
@@ -109,7 +128,8 @@ private:
 	
 	double savedImageTimestamp;		// = 0.0;
 	bool staleImage;				// = false; 
-		
+	
+	
 		
 };
 

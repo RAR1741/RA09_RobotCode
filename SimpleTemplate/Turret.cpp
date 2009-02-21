@@ -2,16 +2,19 @@
 #include "DriverStationLCD.h"
 #include "Mode.h"
 
-#include <cmath>
+#include "DriverStation.h"
+#include <cmath> // For some advanced math that I need. :)
 
 #define PI 3.14159265358979
 #define USE_PID 0
 Turret::Turret()
 {
+#if 0
 	Turret_Pos_Motor = new Jaguar(4,3);
 	Clockwise_Limit = new LimitSwitch(6,10);
 	CounterClockwise_Limit = new LimitSwitch(6,9);
 	Position_Encoder = new AnalogChannel(1,7);
+#endif
 	memset(&par,0,sizeof(par));				// initialize particle analysis report
 	
 	/* image data for tracking - override default parameters if needed */
@@ -122,6 +125,22 @@ Turret::Turret()
 			
 }
 
+void Turret::InitTurret(int motorSlot, int motorChannel,
+		int cLimitSlot, int cLimitChannel,
+		int ccLimitSlot, int ccLimitChannel,
+		int poEncoderSlot, int poEncoderChannel,
+		IFF * iff_module,
+		int gogglePin)
+{
+	Turret_Pos_Motor = new Jaguar(motorSlot,motorChannel);
+	Clockwise_Limit = new LimitSwitch(cLimitSlot,cLimitChannel);
+	CounterClockwise_Limit = new LimitSwitch(ccLimitSlot,ccLimitChannel);
+	Position_Encoder = new AnalogChannel(poEncoderSlot,poEncoderChannel);
+	
+	this->m_goggleLightPin = gogglePin;
+	this->m_iff_module = m_iff_module;
+	
+}
 Turret::~Turret()
 {
 	delete Turret_Pos_Motor;
@@ -220,7 +239,11 @@ void Turret::Auto(void)
 void Turret::Target(void)
 {
 	// if ( FindTwoColors(td1, td2, BELOW, &par) ){
-	if ( FindTwoColorsRGB(custom1, custom2, BELOW, &par) ){
+	
+	SecondColorPosition pos = this->m_iff_module->GetTargetConfiguration();
+	
+	//if ( FindTwoColorsRGB(custom1, custom2, BELOW, &par) ){
+	if ( FindTwoColorsRGB(custom1, custom2, pos, &par) ){
 			// We found a target
 			
 			//theRobot->GetTheDashboard().Printf("Target found-- (%d %d) h: %d w: %d", par.boundingRect.top, par.boundingRect.left,
@@ -434,6 +457,20 @@ void Turret::EndServoish(void)
 #if USE_PID
 	pid->Disable();
 #endif
+}
+
+void Turret::NotifySystem(void)
+{
+	// Notify those guys on the driver's station that things
+	// are a happenin'.
+	
+	DriverStation *ds = DriverStation::GetInstance();
+	
+	if (this->TargetInSight()) {
+		ds->SetDigitalOut(m_goggleLightPin, true);
+	} else {
+		ds->SetDigitalOut(m_goggleLightPin, false);
+	}
 }
 
 inline float Turret::ServoToEncoderUnits(float servo)

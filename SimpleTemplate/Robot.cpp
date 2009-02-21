@@ -80,6 +80,7 @@ class PurpleMonkeys : public IterativeRobot {
 	Compressor TheCompressor; // The air compressor for the robot.
 	Encoder RFollowWheelEncoder;
 	Encoder LFollowWheelEncoder;
+	IFF IdentFriendFoe;
 	// State Variables for toggle code.
 
 	// Elevator state vars
@@ -141,7 +142,9 @@ public:
 				// Spike relay, slot 4 channel 1
 				TheCompressor(6, 11, 4, 1), 
 				RFollowWheelEncoder(4, 7, 4, 8,false),
-				LFollowWheelEncoder(4, 5, 4, 6, false) {
+				LFollowWheelEncoder(4, 5, 4, 6, false),
+				IdentFriendFoe()
+				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
 
 		MasterControlMode = 0; // Manual mode
@@ -186,6 +189,12 @@ public:
 		Elevator.SetElevatorControls(&turretStick, 1);
 		Elevator.SetAutoMode(MasterControlMode);
 
+		TheTurret.InitTurret(4,3,	// Turret jaguar
+							6,10,	// CW Limit Switch
+							6,9,	// CCW Limit Switch
+							4,7,	// Potentiometer Encoder
+							&IdentFriendFoe,	// IFF
+							8);		// DS IO pin for Goggle
 		ECellCatcher.Init(8, 3, 8, 4);
 		Squeeky = new Personality();
 
