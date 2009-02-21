@@ -240,7 +240,9 @@ int FindColorHits(ColorMode mode, const Range* plane1Range, const Range* plane2R
 	if (numberHitsRequested > FRC_MAX_HITS)  numberHitsRequested = FRC_MAX_HITS;
 			
 	/* create an image object */
-	Image* cameraImage = frcCreateImage(IMAQ_IMAGE_HSL);
+	// PJF: Why on earth is this hardcoded?
+	//Image* cameraImage = frcCreateImage(IMAQ_IMAGE_HSL);
+	Image* cameraImage = frcCreateImage(IMAQ_IMAGE_RGB);
 	if (!cameraImage)  { return success; }
 
 	/* get image from camera - if the camera has not finished initializing,

@@ -179,7 +179,7 @@ void Turret::ManualPositionMode(Joystick *turretStick)
 void Turret::Auto(void)
 {
 	InitServoish();
-	Target();
+	//Target();
 	Track();
 	UpdateState();
 }
@@ -203,6 +203,7 @@ void Turret::Target(void)
 
 void Turret::Track(void)
 {
+	Target();
 	if ( this->TargetInSight() ){
 					//PrintReport(&par);
 					//foundColor = true;
