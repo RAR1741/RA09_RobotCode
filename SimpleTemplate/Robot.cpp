@@ -54,8 +54,6 @@ class PurpleMonkeys : public IterativeRobot {
 	Encoder RMQuadEncoder;
 	Encoder LMWheelEncoder;
 	Encoder RMWheelEncoder;
-	Encoder LaunchEncoder;
-
 	Encoder TurretEncoder;
 
 	int counter;
@@ -108,7 +106,6 @@ public:
 						false),
 				LMWheelEncoder(4, 5, 4, 6, false),
 				RMWheelEncoder(4, 7, 4, 8, false),
-				LaunchEncoder(4, 9, 4, 10, false),
 				//ElevatorEncoder(4,11,4,12,false),
 				TurretEncoder(4, 13, 4, 14, false),
 
@@ -177,7 +174,7 @@ public:
 		Squeeky = new Personality();
 
 		TheCompressor.Start();
-		LaunchEncoder.Start();
+		// LaunchEncoder.Start();
 		TurretEncoder.Start();
 		RMQuadEncoder.Start();
 		LMQuadEncoder.Start();
@@ -458,7 +455,7 @@ public:
 		dashboardDataFormat.m_turretPositionCurrent
 				= turretPositionCurrent.GetValue();
 
-		dashboardDataFormat.m_LaunchEncoder = LaunchEncoder.Get();
+		dashboardDataFormat.m_LaunchEncoder = launcher.GetLauncherEncoderVal();
 		dashboardDataFormat.m_TurretEncoder = TurretEncoder.Get();
 
 		dashboardDataFormat.m_accelX = testAccel_X.GetAcceleration();

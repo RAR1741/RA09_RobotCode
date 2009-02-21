@@ -11,11 +11,13 @@ public:
 	void SetJoyStick(Joystick * thestick);
 	void SetRun(bool runManrun);
 	bool GetStatus();
+	INT32 GetLauncherEncoderVal();
 private:
 	UINT32 slot;
 	UINT32 channel;
 	Joystick * stick;
 	Jaguar * motor;
+	Encoder * LaunchEncoder;
 	bool shouldRun;
 	bool Status;
 };
