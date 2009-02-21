@@ -14,7 +14,7 @@
 
 #ifndef __TARGET_H__
 #define __TARGET_H__
-
+#include "WPILib.h"
 #include "TrackAPI.h"
 
 #define ELIM_VAR_ERRORS 1

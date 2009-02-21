@@ -79,7 +79,7 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 void RobotElevator::Process(bool LauncherStatus)
 {
 	this->LauncherStatus = LauncherStatus;
-    DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
+  //  DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
 	// Common LCD update
 	// AutoMode = MODE_MANUAL;
 	if(AutoMode == MODE_MANUAL){// Put Manual/Auto if condition here. 
@@ -150,6 +150,10 @@ void RobotElevator::Process(bool LauncherStatus)
 					DetectJams();
 					if(isJammed)
 						State = 11;
+					else if(CycleFlag){
+						Cycle(.5);
+						State = 3;
+					}
 					else if(!BusyFlag)
 						State = 13;
 					else
@@ -162,8 +166,6 @@ void RobotElevator::Process(bool LauncherStatus)
 					
 				case 5:
 					if(ElevatorStick->GetRawButton(1)){
-						CycleFlag = true; // Signal to cycle the elevator
-						UntripFlag = true; // must "dehome it" first
 						State = 6;
 					}
 					else
@@ -181,12 +183,10 @@ void RobotElevator::Process(bool LauncherStatus)
 					break;
 					
 				case 8:
-					if(CycleFlag){
-						Cycle(.5);
-						State = 8;
-					}
-					else
-						State = 3;
+					CycleFlag = true; // Signal to cycle the elevator
+					UntripFlag = true; // must "dehome it" first
+					State = 3;
+					break;
 				case 9:
 					if(isJammed){
 						ClearJam(-.5);
@@ -218,18 +218,21 @@ void RobotElevator::Process(bool LauncherStatus)
 		}
 	
 		
-		//DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
+		DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
 		dsLCD->Printf(DriverStationLCD::kUser_Line3, 5, "ES:%2d",State);
 		//dsLCD->Printf(DriverStationLCD::kUser_Line3, 14, "EN:%4d",ElevatorEncoder->Get());
-		//dsLCD->UpdateLCD()
 		dsLCD->UpdateLCD();
+		//dsLCD->UpdateLCD();
 		LastElevatorEncoderValue = CurrentElevatorEncoderValue;
 		CurrentElevatorEncoderValue = ElevatorEncoder->Get();
 		RunStopToggle->UpdateState();
-		if(RunStopToggle->GetOutput())
+		if(RunStopToggle->GetOutput()){
 			RunStop = true;
-		else
+		}
+		else{
 			RunStop = false;
+			State = 0;	
+		}
 }
 bool RobotElevator::IsFull()
 {
@@ -266,11 +269,11 @@ void RobotElevator::Cycle(float motorSpeed)
 			// The encoder reads about 1130 to 1170 counts when a cycle completes.
 			// So...
 			
-			if(ElevatorEncoder->Get()<800)
+			if(ElevatorEncoder->Get()<900)
 				ElevatorMotor->Set(motorSpeed);
 				// If we still have less than  8/11ths of the way to go
 				// set full motor speed
-			else if(ElevatorEncoder->Get()<950)
+			else if(ElevatorEncoder->Get()<1000)
 				ElevatorMotor->Set(motorSpeed/1.5);
 				// when we read greater than 800, but less than 950, we're getting close
 				// so cut speed a little.
@@ -308,7 +311,7 @@ void RobotElevator::DetectJams()
 // Colin: Remind me tonight to change the sign. I thought of an easy way to make it
 // output positive values with going forward. We may need this on others as well.  Hugh
 			//if((CurrentElevatorEncoderValue - LastElevatorEncoderValue)<=7){
-							if(ElevatorMotor->Get()>0){
+							if(ElevatorMotor->Get()>0)
 					
 								// If all the above conditions have been meant then...
 								ElevatorMotor->Set(0.0);
@@ -317,7 +320,6 @@ void RobotElevator::DetectJams()
 								HomeItFlag = false;
 								CycleFlag = false; // stop cycling
 								UntripFlag = true;
-							}
 				//	dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "ERR: Evtr Jammed.");
 				//	dsLCD->UpdateLCD();
 	//		}

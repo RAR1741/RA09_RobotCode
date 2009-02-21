@@ -23,13 +23,13 @@ void Launcher::Update()
 	else
 		motor->Set(0.0);
 	
-	if(launchWheelsCurrent->GetCurrent()>=8)
+	if(launchWheelsCurrent->GetCurrent()>=10)
 		Status = true;
 	else Status = false;
-	/*
+	
 	DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
-    dsLCD->Printf(DriverStationLCD::kUser_Line3, 30, "LC:%2.2f",launchWheelsCurrent->GetCurrent());*/
-  //  dsLCD->UpdateLCD();
+    dsLCD->Printf(DriverStationLCD::kUser_Line3, 12, "LC:%2.2f",launchWheelsCurrent->GetCurrent());
+    dsLCD->UpdateLCD();
 	//DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
 	/*dsLCD->Printf(DriverStationLCD::kUser_Line3, 9, "LEN:%4d",LaunchEncoder->Get());
 	*/
