@@ -72,7 +72,6 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 	HomeSwitch = new LimitSwitch(6,6);
 	CurrentElevatorEncoderValue = 0;
 	LastElevatorEncoderValue = 0;
-	RunStopToggle = new Toggle(ElevatorStick, 11);
 	//IsClearingJam = false;
 }
 
@@ -121,10 +120,9 @@ void RobotElevator::Process(bool LauncherStatus)
 				
 		}/*
 		else{
-			RunStopToggle->UpdateState();
 			switch(State){
 				case 0:
-					if(RunStopToggle->GetOutput())
+					if(RunStop)
 						State = 1;
 					else{
 						State = 0;
@@ -218,12 +216,6 @@ void RobotElevator::Process(bool LauncherStatus)
 			}
 		}*/
 	
-		if(RunStopToggle->GetOutput())
-			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "AUTGL:RUN");
-		else
-			dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "AUTGL:IDL");
-		
-		dsLCD->Printf(DriverStationLCD::kUser_Line3, 30, "STE:%d", State);
 		/*
 		//DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
 		dsLCD->Printf(DriverStationLCD::kUser_Line3, 5, "MC:%2.1f",ElevatorMotorCurrent->GetCurrent());
