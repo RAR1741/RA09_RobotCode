@@ -317,6 +317,9 @@ public:
 //		//TheTurret.RegisterMasterControl(&MasterControlMode);
 
 		GetWatchdog().SetEnabled(true);
+//#warning "The Watchdog NEEDS to be fed."
+		
+		//GetWatchdog().SetEnabled(false);
 		// Launch_Wheels_Motor.Set(0.0);
 	}
 
@@ -402,7 +405,7 @@ public:
 //		}
 
 		//TheTurret.SetMode(MODE_)
-		Elevator.Process(launcher.GetStatus());
+		Elevator.Process(true);
 		// JDM: Use joystick to test, needs to use Elevator Load flag
 		Harvester.Process(turretStick.GetRawButton(3));
 		launcher.Update();
