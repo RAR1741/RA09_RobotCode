@@ -44,6 +44,7 @@ void RobotElevator::SetElevatorControls(Joystick *Stick, UINT32 Button)
 {
 	ElevatorStick = Stick;
 	ElevatorButton = Button;
+	RunStopToggle = new Toggle(ElevatorStick, 11);
 }
 
 void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel)
@@ -224,6 +225,7 @@ void RobotElevator::Process(bool LauncherStatus)
 		dsLCD->UpdateLCD();
 		LastElevatorEncoderValue = CurrentElevatorEncoderValue;
 		CurrentElevatorEncoderValue = ElevatorEncoder->Get();
+		RunStopToggle->UpdateState();
 }
 bool RobotElevator::IsFull()
 {

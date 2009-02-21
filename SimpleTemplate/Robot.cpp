@@ -405,7 +405,7 @@ public:
 //		}
 
 		//TheTurret.SetMode(MODE_)
-		Elevator.Process(true);
+		Elevator.Process(launcher.GetStatus());
 		// JDM: Use joystick to test, needs to use Elevator Load flag
 		Harvester.Process(turretStick.GetRawButton(3));
 		launcher.Update();
