@@ -68,6 +68,7 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 	UntripFlag = false;
 	RunStop = false;
 	BusyFlag = false;
+	LoadHarvesterLoad = false;
 	HomeSwitch = new LimitSwitch(6,6);
 	CurrentElevatorEncoderValue = 0;
 	LastElevatorEncoderValue = 0;
@@ -117,66 +118,102 @@ void RobotElevator::Process()
 				DetectJams();
 				
 		}
-//		else{
-//			
-//			switch(State){
-//				case 0:
-//					if(RunStop)
-//						State = 1;
-//					else{
-//						State = 0;
-//						ElevatorMotor->Set(0);
-//					}
-//					break;
-//					
-//				case 1:
-//					HomeIt();
-//					DetectJams();
-//					break;
-//					
-//				case 2:
-//					DetectJams();
-//					if(isJammed)
-//						State = 10;
-//					else if(!BusyFlag)
-//						State = 3;
-//					else
-//						State = 2;
-//					break;
-//				case 3:
-//					DetectJams();
-//					if(isJammed)
-//						State = 11;
-//					else if(!BusyFlag)
-//						State = 13;
-//					else
-//						State = 3;
-//					break;
-//				case 9:
-//					if(isJammed){
-//						ClearJam(-.5);
-//						State = 9;
-//					}
-//					else if(!BusyFlag){
-//						HomeIt();
-//						State = 9;
-//					}
-//					else
-//						State = 2;
-//					break;
-//				case 10:
-//					State = 9;
-//					break;
-//				case 11:
-//					if(isJammed && !BusyFlag)
-//						ClearJam(-.5);
-//				case 12:
-//					if(!isJammed)
-//						State = 3;
-//					else
-//						State = 12;
-//			}
-//		}
+		else{
+			
+			switch(State){
+				case 0:
+					if(RunStop)
+						State = 1;
+					else{
+						State = 0;
+						ElevatorMotor->Set(0);
+					}
+					break;
+					
+				case 1:
+					HomeItFlag = true;
+					State = 2;
+					break;
+				case 2:
+					DetectJams();
+					if(HomeItFlag)
+						HomeIt();
+					if(isJammed)
+						State = 10;
+					else if(!BusyFlag)
+						State = 3;
+					else
+						State = 2;
+					break;
+				case 3:
+					DetectJams();
+					if(isJammed)
+						State = 11;
+					else if(!BusyFlag)
+						State = 13;
+					else
+						State = 3;
+					break;
+				case 4:
+					LoadHarvesterLoad = true;
+					State = 7;
+					break;
+					
+				case 5:
+					if(ElevatorStick->GetRawButton(1)){
+						CycleFlag = true;
+						UntripFlag = true;
+						State = 6;
+					}
+					else
+						State = 5;
+					break;
+					
+				case 6:
+					LoadHarvesterLoad = false;
+					State = 8;
+					break;
+				case 7:
+					// Imaginary launch motor status code...
+					State = 5;
+					break;
+					
+				case 8:
+					if(CycleFlag){
+						Cycle(.5);
+						State = 8;
+					}
+					else
+						State = 3;
+				case 9:
+					if(isJammed){
+						ClearJam(-.5);
+						State = 9;
+					}
+					else if(!isJammed){
+						State = 1;
+					}
+					break;
+				case 10:
+					State = 9;
+					break;
+				case 11:
+					if(isJammed){
+						ClearJam(-.5);
+						State = 11;
+					}
+					else
+						State = 12;
+					break;
+				case 12:
+					State = 3;
+					break;
+				case 13:
+					isFull = false;
+					State = 4;
+					break;
+			}
+		}
 		dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "IJ:%1d",isJammed);
 		//DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
 		dsLCD->Printf(DriverStationLCD::kUser_Line3, 5, "MC:%2.1f",ElevatorMotorCurrent->GetCurrent());
@@ -242,6 +279,8 @@ void RobotElevator::Cycle(float motorSpeed)
 		}
 	}
 }
+
+
 void RobotElevator::DetectJams()
 {
 	bool controlFlag;
@@ -304,4 +343,9 @@ void RobotElevator::DetectJams()
 			ElevatorEncoder->Reset();// Encoder must reset for another possible cycle.
 		}
 	}
+}
+
+bool RobotElevator::GetHarvesterLoad()
+{
+	return LoadHarvesterLoad;
 }

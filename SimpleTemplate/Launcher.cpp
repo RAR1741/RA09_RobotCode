@@ -26,3 +26,8 @@ void Launcher::SetRun(bool runManrun)
 {
 	shouldRun=runManrun;
 }
+
+bool Launcher::GetStatus()
+{
+	return Status;
+}

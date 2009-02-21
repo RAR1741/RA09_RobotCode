@@ -29,6 +29,7 @@ public:
 	void Cycle(float MotorSpeed);
 	void DetectJams();
 	void ClearJam(float MotorSpeed);
+	bool GetHarvesterLoad();
 private:
 	////////////////////////////////////////////////////////
 	// HARDWARE
@@ -54,6 +55,7 @@ private:
 	bool isFull;
 	bool isJammed;
 	bool BusyFlag;
+	bool LoadHarvesterLoad;
 	// flag for homing function
 	bool HomeItFlag;
 	// flag for regular cycle
