@@ -308,7 +308,7 @@ public:
 
 	bool CheckMode(void)
 	{
-		int DSMode;
+		int DSMode = 0;
 		bool ModeChanged;
 		DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 
@@ -342,7 +342,7 @@ public:
 		default:
 			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual (Error)");
 		}
-		
+		dsLCD->UpdateLCD();
 		return ModeChanged;
 	}
 	

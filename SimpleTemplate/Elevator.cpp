@@ -76,7 +76,8 @@ void RobotElevator::Process()
 {
 	DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
 	// Common LCD update
-	if(AutoMode==MODE_MANUAL){// Put Manual/Auto if condition here. 
+	// AutoMode = MODE_MANUAL;
+	if(AutoMode == MODE_MANUAL){// Put Manual/Auto if condition here. 
 			// Manual Mode
 		if (ElevatorStick != NULL && theToggle != NULL){
 					theToggle->UpdateState();
@@ -84,11 +85,12 @@ void RobotElevator::Process()
 					if (ElevatorStick->GetRawButton(1) && !isJammed)
 						ElevatorMotor->Set(.5);
 					else if(!isJammed){
-						DetectJams();
 						ElevatorMotor->Set(0);
 					}
 					if(isJammed)
 						ClearJam(-.5);
+					else
+						DetectJams();
 		}
 	}
 		else{
@@ -106,24 +108,21 @@ void RobotElevator::Process()
 			if(CycleFlag){ // if we are cycling
 					Cycle(.5);
 			}
-			DetectJams();
+			//DetectJams();
 			if(isJammed)
 				ClearJam(-.5);
-			
-			
-				LastElevatorEncoderValue = CurrentElevatorEncoderValue;
-				CurrentElevatorEncoderValue = ElevatorEncoder->Get();
+			else
+				DetectJams();
+				
 		}
 		dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "IJ:%1d",isJammed);
 		//DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
-		dsLCD->Printf(DriverStationLCD::kUser_Line3, 5, "MC:%1.1f",ElevatorMotorCurrent->GetCurrent());
-		dsLCD->Printf(DriverStationLCD::kUser_Line3, 14, "EN:%2d",(CurrentElevatorEncoderValue));
+		dsLCD->Printf(DriverStationLCD::kUser_Line3, 5, "MC:%2.1f",ElevatorMotorCurrent->GetCurrent());
+		dsLCD->Printf(DriverStationLCD::kUser_Line3, 14, "EN:%2d",(CurrentElevatorEncoderValue-LastElevatorEncoderValue));
 		dsLCD->UpdateLCD();
 						//dsLCD->UpdateLCD();
-	// Anti Jamming Code.
-#if ANTI_JAM
-
-#endif
+		LastElevatorEncoderValue = CurrentElevatorEncoderValue;
+		CurrentElevatorEncoderValue = ElevatorEncoder->Get();
 }
 bool RobotElevator::IsFull()
 {
@@ -180,25 +179,38 @@ void RobotElevator::Cycle(float motorSpeed)
 }
 void RobotElevator::DetectJams()
 {
+	bool controlFlag;
+	if(AutoMode==MODE_MANUAL){
+		if(ElevatorStick->GetRawButton(1))
+			controlFlag = true;
+		else controlFlag = false;
+	}
+	else{
+		if(CycleFlag)
+			controlFlag = true;
+		else controlFlag = false;
+	}
+	if(controlFlag){
 	if(ElevatorEncoder!=NULL && ElevatorMotorCurrent!=NULL){ // Do we have valid ptrs to use?
-		if(ElevatorMotorCurrent->GetVoltage() <=2.4){ // Is the motor voltage on?
+		if(ElevatorMotorCurrent->GetCurrent() >= 14){ // Is the motor voltage on?
 // Colin: Remind me tonight to change the sign. I thought of an easy way to make it
 // output positive values with going forward. We may need this on others as well.  Hugh
-			if((CurrentElevatorEncoderValue - LastElevatorEncoderValue)<=50 &&
-						(CurrentElevatorEncoderValue - LastElevatorEncoderValue) >= 0){
+			//if((CurrentElevatorEncoderValue - LastElevatorEncoderValue)<=7){
 							if(ElevatorMotor->Get()>0){
 					
 								// If all the above conditions have been meant then...
 								ElevatorMotor->Set(0.0);
 								//Cycle(-.5);
 								isJammed = true;
+								HomeItFlag = false;
 								CycleFlag = false; // stop cycling
 								UntripFlag = true;
 							}
 				//	dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "ERR: Evtr Jammed.");
 				//	dsLCD->UpdateLCD();
-			}
+	//		}
 		}
+	}
 	}
 	else isJammed = false;	
 }
