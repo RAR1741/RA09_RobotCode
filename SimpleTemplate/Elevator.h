@@ -53,6 +53,7 @@ private:
 	bool ElevatorAutoMode;
 	bool isFull;
 	bool isJammed;
+	bool BusyFlag;
 	// flag for homing function
 	bool HomeItFlag;
 	// flag for regular cycle

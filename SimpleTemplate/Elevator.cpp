@@ -66,6 +66,8 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 	HomeItFlag = false;
 	CycleFlag = false;
 	UntripFlag = false;
+	RunStop = false;
+	BusyFlag = false;
 	HomeSwitch = new LimitSwitch(6,6);
 	CurrentElevatorEncoderValue = 0;
 	LastElevatorEncoderValue = 0;
@@ -93,7 +95,7 @@ void RobotElevator::Process()
 						DetectJams();
 		}
 	}
-		else{
+		else if(AutoMode == MODE_SEMI_AUTO){
 			// Auto mode code should be here.
 			if(ElevatorStick->GetRawButton(6))
 				ElevatorEncoder->Reset();
@@ -115,6 +117,66 @@ void RobotElevator::Process()
 				DetectJams();
 				
 		}
+//		else{
+//			
+//			switch(State){
+//				case 0:
+//					if(RunStop)
+//						State = 1;
+//					else{
+//						State = 0;
+//						ElevatorMotor->Set(0);
+//					}
+//					break;
+//					
+//				case 1:
+//					HomeIt();
+//					DetectJams();
+//					break;
+//					
+//				case 2:
+//					DetectJams();
+//					if(isJammed)
+//						State = 10;
+//					else if(!BusyFlag)
+//						State = 3;
+//					else
+//						State = 2;
+//					break;
+//				case 3:
+//					DetectJams();
+//					if(isJammed)
+//						State = 11;
+//					else if(!BusyFlag)
+//						State = 13;
+//					else
+//						State = 3;
+//					break;
+//				case 9:
+//					if(isJammed){
+//						ClearJam(-.5);
+//						State = 9;
+//					}
+//					else if(!BusyFlag){
+//						HomeIt();
+//						State = 9;
+//					}
+//					else
+//						State = 2;
+//					break;
+//				case 10:
+//					State = 9;
+//					break;
+//				case 11:
+//					if(isJammed && !BusyFlag)
+//						ClearJam(-.5);
+//				case 12:
+//					if(!isJammed)
+//						State = 3;
+//					else
+//						State = 12;
+//			}
+//		}
 		dsLCD->Printf(DriverStationLCD::kUser_Line3, 1, "IJ:%1d",isJammed);
 		//DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
 		dsLCD->Printf(DriverStationLCD::kUser_Line3, 5, "MC:%2.1f",ElevatorMotorCurrent->GetCurrent());
@@ -133,16 +195,18 @@ bool RobotElevator::IsFull()
 void RobotElevator::HomeIt()
 {
 		ElevatorMotor->Set(.25);
-		
+		BusyFlag = true;
 		if(!HomeSwitch->IsTripped()){
 			ElevatorMotor->Set(0);
 			HomeItFlag=false;
+			BusyFlag = false;
 			ElevatorEncoder->Reset();
 		}
 }
 
 void RobotElevator::Cycle(float motorSpeed)
 {
+		BusyFlag = true;
 		if(UntripFlag){// Do we need to untrip the switch?
 			// Then set motor and wait until it's untripped.
 			ElevatorMotor->Set(motorSpeed);
@@ -172,6 +236,7 @@ void RobotElevator::Cycle(float motorSpeed)
 			if(!HomeSwitch->IsTripped()){// If this goes, then the limit switch is tripped.
 				CycleFlag=false;// Set false so not called again.
 				ElevatorMotor->Set(0);
+				BusyFlag = false;
 				ElevatorEncoder->Reset();// Encoder must reset for another possible cycle.
 			}
 		}
@@ -217,7 +282,7 @@ void RobotElevator::DetectJams()
 
 	void RobotElevator::ClearJam(float motorSpeed)
 	{
-
+		BusyFlag = true;
 		// Cycle Bacckwords code.
 		if(UntripFlag){// Do we need to untrip the switch?
 			// Then set motor and wait until it's untripped.
@@ -234,6 +299,7 @@ void RobotElevator::DetectJams()
 		ElevatorMotor->Set(motorSpeed/2.0);
 		if(!HomeSwitch->IsTripped()) {// If this goes, then the limit switch is tripped.
 			isJammed=false;// Set false so not called again.
+			BusyFlag = false;
 			ElevatorMotor->Set(0);
 			ElevatorEncoder->Reset();// Encoder must reset for another possible cycle.
 		}
