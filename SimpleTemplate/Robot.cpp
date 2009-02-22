@@ -431,7 +431,8 @@ public:
 		Harvester.Process(Elevator.GetHarvesterLoad(), AutoModeRunStop);
 		launcher.Update();
 
-		TheGate.Set(GateToggle.GetOutput());
+		if(MasterControlMode == MODE_MANUAL)
+			TheGate.Set(GateToggle.GetOutput());
 
 		DriverStationLCD * dlcd = DriverStationLCD::GetInstance();
 		dlcd->Printf(DriverStationLCD::kUser_Line4, 5, "%1d",

@@ -21,12 +21,12 @@ GateController::~GateController(void)
 
 void GateController::Open(void)
 {
-	Set(true);
+	Set(false);
 }
 
 void GateController::Close(void)
 {
-	Set(false);
+	Set(true);
 }
 
 /*
