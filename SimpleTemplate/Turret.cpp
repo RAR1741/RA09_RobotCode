@@ -160,7 +160,7 @@ void Turret::InitTurret(int motorSlot, int motorChannel,
 	joystickController->SetOutputRange(-1.0, 1.0);
 #endif
 	
-	pid = new PIDController(0.2, 0.0, 0.0, Position_Encoder, Turret_Pos_Motor);
+	pid = new PIDController(0.8, 0.0, 0.0, Position_Encoder, Turret_Pos_Motor);
 	
 	//pid->SetInputRange(0, 5);
 	pid->SetInputRange(-1, 1);
