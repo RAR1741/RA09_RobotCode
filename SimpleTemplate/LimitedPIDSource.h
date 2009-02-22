@@ -10,6 +10,8 @@
  * The forums at ChiefDelphi suggest bringing the logic for limiting into the
  * source of the PID loop, which is pretty stupid, so that the PID loop
  * does not fight conventional code.
+ * 
+ * 
  **************************************************************************/
 #include "PIDSource.h"
 #include "LimitSwitch.h"
@@ -19,7 +21,8 @@ class LimitedPIDSource : PIDSource
 public:
 	LimitedPIDSource();
 	
-	virtual void Init(int cwLimitSlot, int cwLimitChannel, int ccwLimitSlot, int ccwLimitChannel, bool cwPos = false);
+	virtual void InitNew(int cwLimitSlot, int cwLimitChannel, int ccwLimitSlot, int ccwLimitChannel, bool cwPos = false);
+	virtual void InitLimitSwitches(LimitSwitch *cw, LimitSwitch *ccw, bool cwPos = false);
 	
 	virtual double PIDGet();
 	

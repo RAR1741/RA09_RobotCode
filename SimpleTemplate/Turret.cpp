@@ -139,6 +139,24 @@ void Turret::InitTurret(int motorSlot, int motorChannel,
 	
 	this->m_goggleLightPin = gogglePin;
 	this->m_iff_module = m_iff_module;
+
+#if 0
+	this->joystickController = new PIDController(0.2,	// P
+												 0.0,	// I
+												 0.0,	// D
+												 stSrc,	// Stick
+												 Turret_Pos_Motor);	// Turret motor
+	
+	this->cameraController = new PIDController(0.2,
+											   0.0,
+											   0.0,
+											   caSrc,	// Camera stick
+											   Turret_Pos_Motor);
+	
+	
+	joystickController->SetInputRange(-1.0, 1.0);
+	joystickController->SetOutputRange(-1.0, 1.0);
+#endif
 	
 }
 Turret::~Turret()
@@ -167,8 +185,9 @@ void Turret::TurretControl(Joystick * turretStick)
 		break;
 	case MODE_SEMI_AUTO: // Semi-Automatic (BANG! BANG!)
 		//ManualPositionMode(turretStick);
-		Auto();
+		//Auto();
 		//ManualPositionMode(turretStick);
+		ServoPositionMode(turretStick);
 		break;
 	case MODE_AUTO:	// Fully automatic AEGIS-style, full robot control
 		//Auto();

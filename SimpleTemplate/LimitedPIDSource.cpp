@@ -9,12 +9,19 @@ LimitedPIDSource::LimitedPIDSource()
 	m_ClockwiseIsPositive = false;	// Default for a worm-gear setup
 }
 
-void LimitedPIDSource::Init(int cwLimitSlot, int cwLimitChannel,
+void LimitedPIDSource::InitNew(int cwLimitSlot, int cwLimitChannel,
 							int ccwLimitSlot, int ccwLimitChannel,
 							bool cwPos)
 {
 	Clockwise_Limit = new LimitSwitch(cwLimitSlot, cwLimitChannel);
 	CounterClockwise_Limit = new LimitSwitch(ccwLimitSlot, ccwLimitChannel);
+	m_ClockwiseIsPositive = cwPos;
+}
+
+void LimitedPIDSource::InitLimitSwitches(LimitSwitch *cw, LimitSwitch *ccw, bool cwPos)
+{
+	Clockwise_Limit = cw;
+	CounterClockwise_Limit = ccw;
 	m_ClockwiseIsPositive = cwPos;
 }
 

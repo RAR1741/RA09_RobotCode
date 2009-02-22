@@ -6,6 +6,8 @@
 #include "LimitSwitch.h"
 #include "IFF.h"
 
+#include "JoystickPIDSource.h"
+#include "CameraPIDSource.h"
 
 #define ENABLE_TURRET 0
 
@@ -60,6 +62,8 @@ private:
 	
 	void Manual(Joystick *turretStick);
 	void ManualPositionMode(Joystick *turretStick);
+	
+	void ServoPositionMode(Joystick *turretStick);
 	void Auto(void); // Autonomous does not need joystick, neither should auto
 	
 	void Track(void);
@@ -90,6 +94,15 @@ private:
 	Jaguar *Turret_Pos_Motor;
 	LimitSwitch *Clockwise_Limit, *CounterClockwise_Limit;
 	AnalogChannel *Position_Encoder;
+
+#if 0
+	JoystickPIDSource *stSrc;
+	CameraPIDSource *caSrc;
+	
+	
+	PIDController *joystickController;
+	PIDController *cameraController;
+#endif
 	
 	int m_goggleLightPin;
 	
