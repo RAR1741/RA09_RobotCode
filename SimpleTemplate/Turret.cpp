@@ -245,13 +245,14 @@ void Turret::ServoPositionMode(Joystick *turretStick)
 	if (turretStick->GetX() < 0) {
 		if (CounterClockwise_Limit->IsTripped()) {
 			pid->SetSetpoint(Position_Encoder->GetVoltage());
+			return;
 		}
 	} else {
 		if (Clockwise_Limit->IsTripped()) {
 			pid->SetSetpoint(Position_Encoder->GetVoltage());
+			return;
 		}
 	}
-	pid->SetSetpoint(ServoToEncoderUnits((turretStick->GetX()+1)/2));
 }
 float Turret::CurrentPosition(void)
 {
