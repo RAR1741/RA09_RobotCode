@@ -56,6 +56,7 @@ private:
 	Toggle *CollectEjectToggle;
 	GateController *TheGate;
 	Timer * CurrentPeakIgnoreTimer;
+	Timer * ClearHarvBeltTimer;
 	
 	////////////////////////////////////////////////////////
 	// STATE

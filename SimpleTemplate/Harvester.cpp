@@ -77,6 +77,7 @@ void RobotHarvester::Init(void)
 	AutoMode = MODE_MANUAL;
 	HarvesterMotor->Set(0.0);
 	CurrentPeakIgnoreTimer = new Timer();
+	ClearHarvBeltTimer = new Timer();
 	
 }
 
