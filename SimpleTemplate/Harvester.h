@@ -5,7 +5,8 @@
 #include "Toggle.h"
 #include "Mode.h"
 #include "GateController.h"
- 
+#include "CurrentSensor.h"
+
 // #include "Robot.cpp"
 
 #define HARV_STATE_NOT_FULL 0
@@ -45,7 +46,7 @@ private:
 	////////////////////////////////////////////////////////
 	// HARDWARE
 	Jaguar *HarvesterMotor;
-	AnalogChannel *HarvesterMotorCurrent;
+	CurrentSensor *HarvesterMotorCurrent;
 	Joystick *RunStopStick;
 	UINT32 RunStopButton;
 	Joystick *CollectEjectStick;
@@ -59,7 +60,7 @@ private:
 	UINT32 State;
 	UINT32 AutoMode;
 	bool HarvesterFull;
-	float HarvesterMotorVoltage;
+	float HarvesterMotorCurrentVal;
 	UINT32 HarvesterMode;
 };
 

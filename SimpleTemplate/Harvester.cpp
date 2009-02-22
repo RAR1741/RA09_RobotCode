@@ -1,17 +1,19 @@
 #include "Harvester.h"
 #include "DriverStationLCD.h"
 
+
 RobotHarvester::RobotHarvester(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel)
 {
 	HarvesterMotor = new Jaguar(MotorSlot, MotorChannel);
-	HarvesterMotorCurrent = new AnalogChannel(CurrentSlot, CurrentChannel);
+	HarvesterMotorCurrent = new CurrentSensor();
+	HarvesterMotorCurrent->Init(CurrentSlot, CurrentChannel, 2.6, CurrentSensor::m_30Amp);
 	RunStopButton = 0;
 	CollectEjectButton = 0;
 	State = 0;
 	AutoMode = MODE_MANUAL;
 	HarvesterFull = false;
 	HarvesterMode = 0;
-	HarvesterMotorVoltage = 0.0;
+	HarvesterMotorCurrentVal = 0.0;
 }
 
 RobotHarvester::~RobotHarvester()
@@ -47,7 +49,7 @@ void RobotHarvester::SetAutoMode(UINT32 NewAutoMode)
 
 float RobotHarvester::GetHarvesterMotorVoltage(void)
 {
-	return HarvesterMotorVoltage;
+	return HarvesterMotorCurrentVal;
 }
 
 void RobotHarvester::SetCollectEjectControls(Joystick *Stick, UINT32 Button) 
@@ -81,11 +83,11 @@ void RobotHarvester::Process(bool LoadElevator, bool RunStop)
 	RunStopToggle->UpdateState();
 	CollectEjectToggle->UpdateState();
 
-	HarvesterMotorVoltage = HarvesterMotorCurrent->GetVoltage();
-	HarvesterFull = HarvesterMotorVoltage > 4.5;
+	HarvesterMotorCurrentVal = HarvesterMotorCurrent->GetCurrent();
+	HarvesterFull = HarvesterMotorCurrentVal > 4.5;
 	DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 	
-	dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "HC:%3.1f", HarvesterMotorVoltage);
+	dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "HC:%3.1f", HarvesterMotorCurrentVal);
 //	dsLCD->Printf(DriverStationLCD::kUser_Line2, 8, ":%7.1f", GetClock());
 //	dsLCD->Printf(DriverStationLCD::kUser_Line3, 17, "%7.1f", GetClock());
 //	dsLCD->Printf(DriverStationLCD::kUser_Line4, 7, "%7.1f", GetClock());
