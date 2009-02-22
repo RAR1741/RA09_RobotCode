@@ -10,6 +10,8 @@ public:
 	PotentiometerEncoder(UINT32 slot, UINT32 channel);
 	virtual ~PotentiometerEncoder() {}
 	
+	static const float kEncoderRange = 1.9;
+	
 	float GetVoltage() { return encoder.GetVoltage(); }
 protected:
 	

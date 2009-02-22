@@ -7,5 +7,5 @@ PotentiometerEncoder::PotentiometerEncoder(UINT32 slot, UINT32 channel) : encode
 
 void PotentiometerEncoder::Poll()
 {
-	SetPIDGet((encoder.GetVoltage() - 2.5) / 2.5);
+	SetPIDGet((encoder.GetVoltage() - 2.5) / PotentiometerEncoder::kEncoderRange);
 }

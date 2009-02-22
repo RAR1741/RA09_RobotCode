@@ -160,7 +160,7 @@ void Turret::InitTurret(int motorSlot, int motorChannel,
 	joystickController->SetOutputRange(-1.0, 1.0);
 #endif
 	
-	pid = new PIDController(2.5, 0, 0, Position_Encoder, Turret_Pos_Motor);
+	pid = new PIDController(1.25, 0, 0, Position_Encoder, Turret_Pos_Motor);
 	
 	//pid->SetInputRange(0, 5);
 	pid->SetInputRange(-1, 1);
@@ -193,9 +193,9 @@ void Turret::TurretControl(Joystick * turretStick)
 	case MODE_SEMI_AUTO: // Semi-Automatic (BANG! BANG!)
 		//ManualPositionMode(turretStick);
 		//Auto();
-		//Manual(turretStick);
+		Manual(turretStick);
 		//ManualPositionMode(turretStick);
-		ServoPositionMode(turretStick);
+		//ServoPositionMode(turretStick);
 		break;
 	case MODE_AUTO:	// Fully automatic AEGIS-style, full robot control
 		//Auto();

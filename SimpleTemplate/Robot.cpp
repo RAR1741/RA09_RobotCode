@@ -299,10 +299,10 @@ public:
 		TheTurret.TurretControl(); // This updates the Target in Sight member variable;
 
 		if (TheTurret.TargetInSight()) {
-			GetTheDashboard().Printf("TARGET IN SIGHT!");
+			//GetTheDashboard().Printf("TARGET IN SIGHT!");
 			FetchBoy(TheTurret.GetTarget_X());
 		} else {
-			GetTheDashboard().Printf("WHERE?!");
+			//GetTheDashboard().Printf("WHERE?!");
 			myRobot.Drive(0.0, 0.0);
 		}
 		UpdateDashboard();
@@ -521,12 +521,13 @@ public:
 		dashboardDataFormat.m_TurretPotentEncoderVoltage
 				= TheTurret.EncoderVoltage();
 
+		/*
 		GetTheDashboard().Printf(
 				"Encoder Counts: %d, Distance: %f, Gyro Angle: %f, Left Motor Voltage: %d",
 				dashboardDataFormat.m_RM_QuadEncoder,
 				LMQuadEncoder.GetDistance(), testGyro->GetAngle(),
 				dashboardDataFormat.m_LeftMotorVoltage);
-		
+		*/
 		GetTheDashboard().Printf("*");
 		num += 0.01;
 		if (num > 5.0)
