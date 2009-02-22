@@ -4,6 +4,7 @@
 IFF::IFF()
 {
 	m_ds = DriverStation::GetInstance();
+	ResetToFieldControl();
 }
 
 void IFF::DebugSetAlliance(DriverStation::Alliance al)

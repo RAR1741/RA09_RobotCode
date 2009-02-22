@@ -6,6 +6,7 @@
 #include "LimitSwitch.h"
 #include "IFF.h"
 
+#include "PotentiometerEncoder.h"
 #include "JoystickPIDSource.h"
 #include "CameraPIDSource.h"
 
@@ -93,7 +94,8 @@ private:
 	
 	Jaguar *Turret_Pos_Motor;
 	LimitSwitch *Clockwise_Limit, *CounterClockwise_Limit;
-	AnalogChannel *Position_Encoder;
+	// AnalogChannel *Position_Encoder;
+	PotentiometerEncoder *Position_Encoder;
 
 #if 0
 	JoystickPIDSource *stSrc;
@@ -103,6 +105,8 @@ private:
 	PIDController *joystickController;
 	PIDController *cameraController;
 #endif
+	
+//	PIDController *pid;
 	
 	int m_goggleLightPin;
 	

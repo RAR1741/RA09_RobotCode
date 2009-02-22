@@ -16,7 +16,7 @@
 #include "PIDSource.h"
 #include "LimitSwitch.h"
 
-class LimitedPIDSource : PIDSource
+class LimitedPIDSource : public PIDSource
 {
 public:
 	LimitedPIDSource();

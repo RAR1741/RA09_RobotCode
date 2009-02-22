@@ -135,8 +135,10 @@ void Turret::InitTurret(int motorSlot, int motorChannel,
 	Turret_Pos_Motor = new Jaguar(motorSlot,motorChannel);
 	Clockwise_Limit = new LimitSwitch(cLimitSlot,cLimitChannel);
 	CounterClockwise_Limit = new LimitSwitch(ccLimitSlot,ccLimitChannel);
-	Position_Encoder = new AnalogChannel(poEncoderSlot,poEncoderChannel);
+	//Position_Encoder = new AnalogChannel(poEncoderSlot,poEncoderChannel);
+	Position_Encoder = new PotentiometerEncoder(poEncoderSlot,poEncoderChannel);
 	
+	Position_Encoder->InitLimitSwitches(Clockwise_Limit, CounterClockwise_Limit);
 	this->m_goggleLightPin = gogglePin;
 	this->m_iff_module = m_iff_module;
 
@@ -158,6 +160,10 @@ void Turret::InitTurret(int motorSlot, int motorChannel,
 	joystickController->SetOutputRange(-1.0, 1.0);
 #endif
 	
+	pid = new PIDController(0.2, 0.0, 0.0, Position_Encoder, Turret_Pos_Motor);
+	
+	pid->SetInputRange(0, 5);
+	pid->SetOutputRange(-1, 1);
 }
 Turret::~Turret()
 {
@@ -203,6 +209,7 @@ void Turret::TurretControl(Joystick * turretStick)
 void Turret::Manual(Joystick *turretStick)
 {
 	EndServoish();
+	pid->Disable();
 	// Read Joystick X Axis
 	float x_axis = turretStick->GetX();
 	
@@ -229,6 +236,11 @@ void Turret::Manual(Joystick *turretStick)
 	return; // Guess what? return.
 }
 
+void Turret::ServoPositionMode(Joystick *turretStick)
+{
+	pid->Enable();
+	pid->SetSetpoint(ServoToEncoderUnits((turretStick->GetX()+1)/2));
+}
 float Turret::CurrentPosition(void)
 {
 	// Range: -1 to 1
@@ -359,7 +371,9 @@ void Turret::Track(void)
 					/* ShowActivity ("** %s & %s found: Servo: x: %f  y: %f ** ", 
 							td1.name, td2.name, horizontalDestination, verticalDestination); */	
 					
-				} else { //if (!staleImage) {  // new image, but didn't find two colors
+				} 
+#if 0 
+				else { //if (!staleImage) {  // new image, but didn't find two colors
 					
 					// adjust sine wave for panning based on last movement direction
 					if(horizontalDestination > 0.0)	{ sinStart = PI/2.0; }
@@ -381,7 +395,10 @@ void Turret::Track(void)
 
 					// ShowActivity ("** %s and %s not found                                    ", td1.name, td2.name);
 				}  // end if found color
-
+#endif
+				else {
+					SetTurretPosition(0.5);
+				}
 				// sleep to keep loop at constant rate
 				// this helps keep pan consistant
 				// elapsed time can vary significantly due to debug printout
