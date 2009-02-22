@@ -76,7 +76,7 @@ void RobotHarvester::Init(void)
 	HarvesterMotor->Set(0.0);
 }
 
-void RobotHarvester::Process(bool LoadElevator)
+void RobotHarvester::Process(bool LoadElevator, bool RunStop)
 {
 	RunStopToggle->UpdateState();
 	CollectEjectToggle->UpdateState();
@@ -106,7 +106,7 @@ void RobotHarvester::Process(bool LoadElevator)
 			break;
 			
 		case MODE_AUTO:
-			ProcessAuto(LoadElevator);
+			ProcessAuto(LoadElevator, RunStop);
 			break;
 			
 		default:
@@ -136,13 +136,13 @@ void RobotHarvester::ProcessSemiAuto(bool LoadElevator)
 {
 }
 
-void RobotHarvester::ProcessAuto(bool LoadElevator)
+void RobotHarvester::ProcessAuto(bool LoadElevator, bool RunStop)
 {
 	int OldState = State;
 	int OldHarvesterMode = HarvesterMode;
 	State = HarvesterFull | 
 			(CollectEjectToggle->GetOutput() << 1) |
-			(RunStopToggle->GetOutput() << 2) |
+			(RunStop << 2) |
 			(LoadElevator << 3) |
 			(HarvesterMode << 4);
 	

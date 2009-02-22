@@ -19,7 +19,7 @@ public:
 	
 	void SetElevatorControls(Joystick *Stick, UINT32 Button);
 	void Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel);
-	void Process(bool LauncherStatus);
+	void Process(bool LauncherStatus, bool RunStop);
 	UINT32 GetState(void);
 	void SetState(UINT32 State);
 	UINT32 GetAutoMode(void);
@@ -38,7 +38,7 @@ private:
 	// Jaguar * LaunchMotor;
 	CurrentSensor * ElevatorMotorCurrent;
 	Joystick *ElevatorStick;
-	Toggle * RunStopToggle;
+	// Toggle * RunStopToggle;
 	// Encoder ElevatorEncoder;
 	// Launcher * launcher;
 	UINT32 ElevatorButton;
@@ -50,7 +50,7 @@ private:
 	UINT32 AutoMode;
 	float launchDistance;
 	bool ArmDisarmed;
-	bool RunStop;
+	// bool RunStop;
 	bool ElevatorAutoMode;
 	bool isFull;
 	bool isJammed;

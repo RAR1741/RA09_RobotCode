@@ -30,7 +30,7 @@ public:
 	void SetRunStopControls(Joystick *Stick, UINT32 Button);
 	void SetGateControls(GateController *Gate);
 	void Init(void);
-	void Process(bool LoadElevator);
+	void Process(bool LoadElevator, bool RunStop);
 	UINT32 GetState(void);
 	void SetState(UINT32 State);
 	UINT32 GetAutoMode(void);
@@ -40,7 +40,7 @@ public:
 private:
 	void ProcessManual(void);
 	void ProcessSemiAuto(bool LoadElevator);
-	void ProcessAuto(bool LoadElevator);
+	void ProcessAuto(bool LoadElevator, bool RunStop);
 	
 	////////////////////////////////////////////////////////
 	// HARDWARE

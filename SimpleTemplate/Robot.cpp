@@ -76,6 +76,7 @@ class PurpleMonkeys : public IterativeRobot {
 	Toggle Trigger;
 	Toggle GateToggle;
 	Toggle CellCatcherToggle;
+	Toggle RunStopToggle;
 	Launcher launcher;
 	Compressor TheCompressor; // The air compressor for the robot.
 	Encoder RFollowWheelEncoder;
@@ -96,7 +97,7 @@ class PurpleMonkeys : public IterativeRobot {
 
 	// 
 	int MasterControlMode;
-
+	bool AutoModeRunStop;
 public:
 	PurpleMonkeys(void) :
 				myRobot(4, 5), // these must be initialized in the same order
@@ -135,7 +136,7 @@ public:
 				Trigger(&leftStick, 2), 
 				GateToggle(&turretStick, 2), 
 				CellCatcherToggle(&rightStick, 1),
-
+				RunStopToggle(&turretStick, 11),
 				launcher(),
 				// No furthur control is really necessary.
 				// Pressure switch, slot 6 channel 11
@@ -157,6 +158,8 @@ public:
 		launcher.SetRun(true);
 		launcher.SetJoyStick(&turretStick);
 
+		
+		AutoModeRunStop = false;
 		if (testGyro==NULL)
 			testGyro = new Gyro(1,1);
 		if (testTemp==NULL)
@@ -401,6 +404,12 @@ public:
 		//testMotor.Set(testMotorStick.GetY()); // Set Test Motor based on Y Axis
 
 
+		RunStopToggle.UpdateState();
+		if(RunStopToggle.GetOutput())
+			AutoModeRunStop = true;
+		else
+			AutoModeRunStop = false;
+		
 		if (testMotorStick.GetButton(testMotorStick.kTopButton)) {
 			LMQuadEncoder.Reset();
 			delete testGyro;
@@ -417,9 +426,9 @@ public:
 //		}
 
 		//TheTurret.SetMode(MODE_)
-		Elevator.Process(launcher.GetStatus());
+		Elevator.Process(launcher.GetStatus(), AutoModeRunStop);
 		// JDM: Use joystick to test, needs to use Elevator Load flag
-		Harvester.Process(Elevator.GetHarvesterLoad());
+		Harvester.Process(Elevator.GetHarvesterLoad(), AutoModeRunStop);
 		launcher.Update();
 
 		TheGate.Set(GateToggle.GetOutput());

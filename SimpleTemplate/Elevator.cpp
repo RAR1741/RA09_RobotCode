@@ -44,7 +44,7 @@ void RobotElevator::SetElevatorControls(Joystick *Stick, UINT32 Button)
 {
 	ElevatorStick = Stick;
 	ElevatorButton = Button;
-	RunStopToggle = new Toggle(ElevatorStick, 11);
+//	RunStopToggle = new Toggle(ElevatorStick, 11);
 }
 
 void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel)
@@ -66,7 +66,7 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 	HomeItFlag = false;
 	CycleFlag = false;
 	UntripFlag = false;
-	RunStop = false;
+//	RunStop = false;
 	BusyFlag = false;
 	LoadHarvesterLoad = false;
 	LauncherStatus = false;
@@ -76,7 +76,7 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 	//IsClearingJam = false;
 }
 
-void RobotElevator::Process(bool LauncherStatus)
+void RobotElevator::Process(bool LauncherStatus, bool RunStop)
 {
 	this->LauncherStatus = LauncherStatus;
   //  DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
@@ -225,6 +225,7 @@ void RobotElevator::Process(bool LauncherStatus)
 		//dsLCD->UpdateLCD();
 		LastElevatorEncoderValue = CurrentElevatorEncoderValue;
 		CurrentElevatorEncoderValue = ElevatorEncoder->Get();
+		/*
 		RunStopToggle->UpdateState();
 		if(RunStopToggle->GetOutput()){
 			RunStop = true;
@@ -232,7 +233,9 @@ void RobotElevator::Process(bool LauncherStatus)
 		else{
 			RunStop = false;
 			State = 0;	
-		}
+		}*/
+		if(!RunStop)
+			State = 0;
 }
 bool RobotElevator::IsFull()
 {
