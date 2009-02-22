@@ -18,6 +18,12 @@ public:
 	//TODO Add code to limit motors here
 	void LimitPositive(float &motor) { if (this->IsTripped() && motor > 0) motor = 0; }	
 	void LimitNegative(float &motor) { if (this->IsTripped() && motor < 0) motor = 0; }
+	
+	
+	// Ain't overloadin' grand? :)
+	// Seriously, this is needed for PID loops.
+	void LimitPositive(double &motor) { if (this->IsTripped() && motor > 0) motor = 0; }	
+	void LimitNegative(double &motor) { if (this->IsTripped() && motor < 0) motor = 0; }
 };
 
 #endif

@@ -240,10 +240,10 @@ void Turret::Target(void)
 {
 	// if ( FindTwoColors(td1, td2, BELOW, &par) ){
 	
-	SecondColorPosition pos = this->m_iff_module->GetTargetConfiguration();
+	//SecondColorPosition pos = this->m_iff_module->GetTargetConfiguration();
 	
-	//if ( FindTwoColorsRGB(custom1, custom2, BELOW, &par) ){
-	if ( FindTwoColorsRGB(custom1, custom2, pos, &par) ){
+	if ( FindTwoColorsRGB(custom1, custom2, BELOW, &par) ){
+	//if ( FindTwoColorsRGB(custom1, custom2, pos, &par) ){
 			// We found a target
 			
 			//theRobot->GetTheDashboard().Printf("Target found-- (%d %d) h: %d w: %d", par.boundingRect.top, par.boundingRect.left,
@@ -257,6 +257,38 @@ void Turret::Target(void)
 	}
 }
 
+// This algorithm is my own. Use at own risk.
+#if 0
+void Turret::AltTrack(void)
+{
+	Target();
+	
+	if ( this->TargetInSight() ) {
+		// Target is visible, our task should be to home in on it.
+		
+		// Determine the relative angle to us
+		float rel_pos_raw = TargetData().center_mass_x_normalized;
+		
+		float error = EncoderVoltage() - RelativeToEncoderUnits(rel_pos_raw);
+		
+		float output = 1.0 / Turret::kEncoderRange * error;
+		
+		float x_axis = output * 1.0;
+		
+		if (x_axis < 0) {
+			Clockwise_Limit->LimitNegative(x_axis);
+		}
+		else {
+			CounterClockwise_Limit->LimitPositive(x_axis);
+		}
+		
+		
+	} else {
+		// Target is not visible, we should re-center the turret
+		SetTurretPosition(0.5);
+	}
+}
+#endif
 void Turret::Track(void)
 {
 	Target();

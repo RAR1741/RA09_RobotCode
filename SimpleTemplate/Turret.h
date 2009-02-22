@@ -64,6 +64,9 @@ private:
 	
 	void Track(void);
 	
+	// Use motor framework instead of servo
+	void TrackAlt(void);
+	
 	void UpdateState(void);
 	
 	void InitServoish(void);
@@ -72,6 +75,7 @@ private:
 	
 	float ServoToEncoderUnits(float servo);
 	float EncoderUnitsToServo(float volts);
+	float RelativeToEncoderUnits(float rel);
 	
 	// This will notify the other modules and/or drivers that
 	// the turret is a happenin' place. This notably includes the
@@ -93,6 +97,7 @@ private:
 	static const float kCWVoltage = 3.6;
 	static const float kEncoderRange = 1.9;
 	
+	static const float kVisibleRange = 0.5;	// Range in encoder volt units
 	static const int kGoggleLightPin = 5;
 	
 	////////////////////////////////////////////////////////
