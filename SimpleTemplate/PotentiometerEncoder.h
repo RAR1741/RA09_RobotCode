@@ -2,9 +2,10 @@
 #define POT_ENCODER_H__
 
 #include "AnalogChannel.h"
-#include "LimitedPIDSource.h"
+//#include "LimitedPIDSource.h"
+#include "CustomPIDSource.h"
 
-class PotentiometerEncoder : public LimitedPIDSource {
+class PotentiometerEncoder : public CustomPIDSource {
 public:
 	PotentiometerEncoder(UINT32 slot, UINT32 channel);
 	virtual ~PotentiometerEncoder() {}

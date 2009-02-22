@@ -135,8 +135,8 @@ void Turret::InitTurret(int motorSlot, int motorChannel,
 	Turret_Pos_Motor = new Jaguar(motorSlot,motorChannel);
 	Clockwise_Limit = new LimitSwitch(cLimitSlot,cLimitChannel);
 	CounterClockwise_Limit = new LimitSwitch(ccLimitSlot,ccLimitChannel);
-	Position_Encoder = new AnalogChannel(poEncoderSlot,poEncoderChannel);
-	//Position_Encoder = new PotentiometerEncoder(poEncoderSlot,poEncoderChannel);
+	//Position_Encoder = new AnalogChannel(poEncoderSlot,poEncoderChannel);
+	Position_Encoder = new PotentiometerEncoder(poEncoderSlot,poEncoderChannel);
 	
 	//Position_Encoder->InitLimitSwitches(Clockwise_Limit, CounterClockwise_Limit);
 	this->m_goggleLightPin = gogglePin;
@@ -162,7 +162,8 @@ void Turret::InitTurret(int motorSlot, int motorChannel,
 	
 	pid = new PIDController(0.2, 0.0, 0.0, Position_Encoder, Turret_Pos_Motor);
 	
-	pid->SetInputRange(0, 5);
+	//pid->SetInputRange(0, 5);
+	pid->SetInputRange(-1, 1);
 	pid->SetOutputRange(-1, 1);
 }
 Turret::~Turret()
@@ -244,12 +245,12 @@ void Turret::ServoPositionMode(Joystick *turretStick)
 	
 	if (turretStick->GetX() < 0) {
 		if (CounterClockwise_Limit->IsTripped()) {
-			pid->SetSetpoint(Position_Encoder->GetVoltage());
+			pid->SetSetpoint(Position_Encoder->PIDGet());
 			return;
 		}
 	} else {
 		if (Clockwise_Limit->IsTripped()) {
-			pid->SetSetpoint(Position_Encoder->GetVoltage());
+			pid->SetSetpoint(Position_Encoder->PIDGet());
 			return;
 		}
 	}
@@ -508,6 +509,7 @@ float Turret::TurretPosition(void)
 
 void Turret::UpdateState(void)
 {
+#if 0
 	// Update maximum and minimum observed encoder voltages for range
 	if (EncoderVoltage() < min_encoder_voltage) min_encoder_voltage = EncoderVoltage();
 	else if (EncoderVoltage() > max_encoder_voltage) max_encoder_voltage = EncoderVoltage();
@@ -523,7 +525,7 @@ void Turret::UpdateState(void)
 		}
 		
 	Turret_Pos_Motor->Set(x_axis);
-	
+#endif
 }
 
 void Turret::InitServoish(void)

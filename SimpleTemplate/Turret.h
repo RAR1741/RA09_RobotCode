@@ -94,8 +94,8 @@ private:
 	
 	Jaguar *Turret_Pos_Motor;
 	LimitSwitch *Clockwise_Limit, *CounterClockwise_Limit;
-	AnalogChannel *Position_Encoder;
-	//PotentiometerEncoder *Position_Encoder;
+	//AnalogChannel *Position_Encoder;
+	PotentiometerEncoder *Position_Encoder;
 
 #if 0
 	JoystickPIDSource *stSrc;
