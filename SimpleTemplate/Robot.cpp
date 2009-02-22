@@ -194,8 +194,8 @@ public:
 		Elevator.SetAutoMode(MasterControlMode);
 
 		TheTurret.InitTurret(4,3,	// Turret jaguar
-							6,10,	// CW Limit Switch
-							6,9,	// CCW Limit Switch
+							6,9,	// CW Limit Switch
+							6,10,	// CCW Limit Switch
 							1,7,	// Potentiometer Encoder
 							IdentFriendFoe,	// IFF
 							8);		// DS IO pin for Goggle

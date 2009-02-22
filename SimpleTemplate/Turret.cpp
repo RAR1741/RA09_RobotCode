@@ -222,10 +222,10 @@ void Turret::Manual(Joystick *turretStick)
 	
 	// Set motor to scaled value
 	if (x_axis < 0) {
-		Clockwise_Limit->LimitNegative(x_axis);
+		CounterClockwise_Limit->LimitNegative(x_axis);
 	}
 	else {
-		CounterClockwise_Limit->LimitPositive(x_axis);
+		Clockwise_Limit->LimitPositive(x_axis);
 	}
 	
 	
