@@ -525,6 +525,8 @@ public:
 				dashboardDataFormat.m_RM_QuadEncoder,
 				LMQuadEncoder.GetDistance(), testGyro->GetAngle(),
 				dashboardDataFormat.m_LeftMotorVoltage);
+		
+		GetTheDashboard().Printf("*");
 		num += 0.01;
 		if (num > 5.0)
 			num = 0.0;
