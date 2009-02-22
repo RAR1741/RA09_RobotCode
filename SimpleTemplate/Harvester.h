@@ -6,6 +6,7 @@
 #include "Mode.h"
 #include "GateController.h"
 #include "CurrentSensor.h"
+#include "Timer.h"
 
 // #include "Robot.cpp"
 
@@ -37,7 +38,7 @@ public:
 	UINT32 GetAutoMode(void);
 	void SetAutoMode(UINT32);
 	float GetHarvesterMotorVoltage(void);
-	
+	void SetFull(bool isFull);
 private:
 	void ProcessManual(void);
 	void ProcessSemiAuto(bool LoadElevator);
@@ -54,6 +55,7 @@ private:
 	Toggle *RunStopToggle;
 	Toggle *CollectEjectToggle;
 	GateController *TheGate;
+	Timer * CurrentPeakIgnoreTimer;
 	
 	////////////////////////////////////////////////////////
 	// STATE
@@ -61,7 +63,7 @@ private:
 	UINT32 AutoMode;
 	bool HarvesterFull;
 	float HarvesterMotorCurrentVal;
-	UINT32 HarvesterMode;
+	UINT32 HarvesterMode; 
 };
 
 #endif

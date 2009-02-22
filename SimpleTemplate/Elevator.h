@@ -5,6 +5,7 @@
 #include "toggle.h"
 #include "launcher.h"
 #include "CurrentSensor.h"
+#include "Harvester.h"
 // #include "Robot.cpp"
 
 #define ELEVATOR_STATE_FULL 0
@@ -18,7 +19,7 @@ public:
 	~RobotElevator();
 	
 	void SetElevatorControls(Joystick *Stick, UINT32 Button);
-	void Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel);
+	void Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel, RobotHarvester * pHarvester);
 	void Process(bool LauncherStatus, bool RunStop);
 	UINT32 GetState(void);
 	void SetState(UINT32 State);
@@ -38,6 +39,7 @@ private:
 	// Jaguar * LaunchMotor;
 	CurrentSensor * ElevatorMotorCurrent;
 	Joystick *ElevatorStick;
+	RobotHarvester * theHarvester;
 	// Toggle * RunStopToggle;
 	// Encoder ElevatorEncoder;
 	// Launcher * launcher;

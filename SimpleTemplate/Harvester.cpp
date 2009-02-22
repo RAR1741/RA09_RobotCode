@@ -76,6 +76,13 @@ void RobotHarvester::Init(void)
 	State = 0;
 	AutoMode = MODE_MANUAL;
 	HarvesterMotor->Set(0.0);
+	CurrentPeakIgnoreTimer = new Timer();
+	
+}
+
+void RobotHarvester::SetFull(bool isFull)
+{
+	HarvesterFull = isFull;
 }
 
 void RobotHarvester::Process(bool LoadElevator, bool RunStop)
@@ -83,11 +90,10 @@ void RobotHarvester::Process(bool LoadElevator, bool RunStop)
 	RunStopToggle->UpdateState();
 	CollectEjectToggle->UpdateState();
 
-	HarvesterMotorCurrentVal = HarvesterMotorCurrent->GetCurrent();
-	HarvesterFull = HarvesterMotorCurrentVal > 5;
+
 	DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 	
-	dsLCD->Printf(DriverStationLCD::kUser_Line5, 1, "HC:%3.1f", HarvesterMotorCurrentVal);
+	dsLCD->Printf(DriverStationLCD::kUser_Line6, 1, "HC:%3.1f", HarvesterMotorCurrentVal);
 //	dsLCD->Printf(DriverStationLCD::kUser_Line2, 8, ":%7.1f", GetClock());
 //	dsLCD->Printf(DriverStationLCD::kUser_Line3, 17, "%7.1f", GetClock());
 //	dsLCD->Printf(DriverStationLCD::kUser_Line4, 7, "%7.1f", GetClock());
@@ -166,11 +172,13 @@ void RobotHarvester::ProcessAuto(bool LoadElevator, bool RunStop)
 		case 17:
 		case 18:
 		case 19:
+		
 		case 21:
 		case 24:
 		case 25:
 		case 26:
 		case 27:
+		case 29:
 		case 32:
 		case 33:
 		case 34:
@@ -181,6 +189,7 @@ void RobotHarvester::ProcessAuto(bool LoadElevator, bool RunStop)
 		case 41:
 		case 42:
 		case 43:
+		case 45:
 		case 48:
 		case 49:
 		case 50:
@@ -190,33 +199,33 @@ void RobotHarvester::ProcessAuto(bool LoadElevator, bool RunStop)
 		case 57:
 		case 58:
 		case 59:
-		case 29:
-		case 45:
 		case 61:
 			HarvesterMode = 0;
 			break;
 		
 		case 4:		// Not Full - In collect mode
-		case 20:	// Not Full - In collect mode
-		case 52:	// Lost load elevator command so default to collect mode;
+		case 20:
+			// Not Full - In collect mode
 		case 36:
+		case 52:	// Lost load elevator command so default to collect mode;
+		
 			HarvesterMode = 1;
 			break;
 			
 		case 6:		// Received Eject signal while running
 		case 7:		// Received Eject signal while running
-		case 22:	// Received Eject signal while running
-		case 23:	// Received Eject signal while running
-		case 38:	// Eject
-		case 39:	// Eject
-		case 54:	// Eject
-		case 55:	// Eject
 		case 14:
 		case 15:
+		case 22:	// Received Eject signal while running
+		case 23:	// Received Eject signal while running
 		case 30:
 		case 31:
+		case 38:	// Eject
+		case 39:	// Eject
 		case 46:
 		case 47:
+		case 54:	// Eject
+		case 55:	// Eject
 		case 62:
 		case 63:
 			HarvesterMode = 2;
@@ -238,6 +247,7 @@ void RobotHarvester::ProcessAuto(bool LoadElevator, bool RunStop)
 			// Received Load Elevator command
 			// Received Load Elevator command
 			// Received Load Elevator command
+
 			HarvesterMode = 3;
 			break;
 			
@@ -249,22 +259,33 @@ void RobotHarvester::ProcessAuto(bool LoadElevator, bool RunStop)
 	{
 	 case 0:
 		 	TheGate->Close();
-			HarvesterMotor->Set(MOTOR_STOP);	
+			HarvesterMotor->Set(MOTOR_STOP);
+			CurrentPeakIgnoreTimer->Stop();
+			CurrentPeakIgnoreTimer->Reset();
 		 break;
 	
 	 case 1:
 		 	TheGate->Close();
-			HarvesterMotor->Set(COLLECT_MOTOR_SPEED);
-			
+			CurrentPeakIgnoreTimer->Start();
+		 	if(CurrentPeakIgnoreTimer->Get()>.5){
+			HarvesterMotorCurrentVal = HarvesterMotorCurrent->GetCurrent();
+			HarvesterFull = HarvesterMotorCurrentVal > 12;
+		 	}
 		 break;
 	 case 2:
 		 	TheGate->Close();
 			HarvesterMotor->Set(EJECT_MOTOR_SPEED);
-			
+
 		 break;
 	 case 3:
 		 	TheGate->Open();
 			HarvesterMotor->Set(COLLECT_MOTOR_SPEED);
+			
+			CurrentPeakIgnoreTimer->Start();
+		 	if(CurrentPeakIgnoreTimer->Get()>.5){
+			HarvesterMotorCurrentVal = HarvesterMotorCurrent->GetCurrent();
+			HarvesterFull = HarvesterMotorCurrentVal > 12;
+		 	}
 //			if(HarvesterMotorCurrent->GetCurrent())
 		 break;
 		 
@@ -274,8 +295,8 @@ void RobotHarvester::ProcessAuto(bool LoadElevator, bool RunStop)
 		
 	}
 	dsLCD->Printf(DriverStationLCD::kUser_Line4, 10, "H1:%d  H2:%d", OldHarvesterMode, HarvesterMode);
-	dsLCD->Printf(DriverStationLCD::kUser_Line5, 10, "S1:%d  S2:%d", OldState, State);
-	dsLCD->Printf(DriverStationLCD::kUser_Line6, 5, "HMC: %d",HarvesterFull);
+	dsLCD->Printf(DriverStationLCD::kUser_Line5, 10, "S1:%2d  S2:%2d", OldState, State);
+	dsLCD->Printf(DriverStationLCD::kUser_Line6, 5, "HMC: %2.2f", HarvesterMotorCurrent->GetCurrent());
 //	dsLCD->Printf(DriverStationLCD::kUser_Line2, 8, ":%7.1f", GetClock());
 //	dsLCD->Printf(DriverStationLCD::kUser_Line3, 17, "%7.1f", GetClock());
 //	dsLCD->Printf(DriverStationLCD::kUser_Line4, 7, "%7.1f", GetClock());

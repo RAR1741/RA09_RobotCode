@@ -188,7 +188,7 @@ public:
 		//Harvester.SetAutoMode(MODE_AUTO);
 
 		// Initiallize the Elevator class
-		Elevator.Init(4, 1, 2, 1);
+		Elevator.Init(4, 1, 2, 1, &Harvester);
 		//JDM: Set the joystick and button to use to test the elevator
 		Elevator.SetElevatorControls(&turretStick, 1);
 		Elevator.SetAutoMode(MasterControlMode);
@@ -428,6 +428,7 @@ public:
 		//TheTurret.SetMode(MODE_)
 		Elevator.Process(launcher.GetStatus(), AutoModeRunStop);
 		// JDM: Use joystick to test, needs to use Elevator Load flag
+		
 		Harvester.Process(Elevator.GetHarvesterLoad(), AutoModeRunStop);
 		launcher.Update();
 

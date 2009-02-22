@@ -47,7 +47,7 @@ void RobotElevator::SetElevatorControls(Joystick *Stick, UINT32 Button)
 //	RunStopToggle = new Toggle(ElevatorStick, 11);
 }
 
-void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel)
+void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel, RobotHarvester * pHarvester)
 {
 	State = 0;
 	AutoMode = 0;
@@ -73,6 +73,7 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 	HomeSwitch = new LimitSwitch(6,6);
 	CurrentElevatorEncoderValue = 0;
 	LastElevatorEncoderValue = 0;
+	theHarvester = pHarvester;
 	//IsClearingJam = false;
 }
 
@@ -212,6 +213,7 @@ void RobotElevator::Process(bool LauncherStatus, bool RunStop)
 					break;
 				case 13:
 					isFull = false;
+					theHarvester->SetFull(false);
 					State = 4;
 					break;
 			}
