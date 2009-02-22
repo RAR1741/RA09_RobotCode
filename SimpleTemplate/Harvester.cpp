@@ -262,6 +262,15 @@ void RobotHarvester::ProcessAuto(bool LoadElevator, bool RunStop)
 		 	TheGate->Close();
 			HarvesterMotor->Set(MOTOR_STOP);
 			CurrentPeakIgnoreTimer->Stop();
+			if(CurrentPeakIgnoreTimer->Get()>.5){
+				ClearHarvBeltTimer->Start();
+				HarvesterMotor->Set(EJECT_MOTOR_SPEED);
+			}
+			if(ClearHarvBeltTimer->Get()>.1){
+				HarvesterMotor->Set(MOTOR_STOP);
+				ClearHarvBeltTimer->Stop();
+				ClearHarvBeltTimer->Reset();
+			}
 			CurrentPeakIgnoreTimer->Reset();
 		 break;
 	
