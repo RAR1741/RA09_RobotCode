@@ -260,7 +260,7 @@ public:
 //		default:
 //			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual (Error)");
 //		}
-		//Squeeky->RPTCommandProccessor();
+		Squeeky->RPTCommandProccessor();
 	}
 
 	void DisabledContinuous(void) {
@@ -330,7 +330,7 @@ public:
 		TheTurret.SetMode(MasterControlMode);
 //		TheTurret.SetMode(MODE_MANUAL);
 //		//TheTurret.RegisterMasterControl(&MasterControlMode);
-
+		Squeeky->Close();
 		GetWatchdog().SetEnabled(true);
 //#warning "The Watchdog NEEDS to be fed."
 		
