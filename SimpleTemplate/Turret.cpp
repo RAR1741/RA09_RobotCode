@@ -254,6 +254,7 @@ void Turret::ServoPositionMode(Joystick *turretStick)
 			return;
 		}
 	}
+	pid->SetSetpoint(turretStick->GetX());
 }
 float Turret::CurrentPosition(void)
 {
