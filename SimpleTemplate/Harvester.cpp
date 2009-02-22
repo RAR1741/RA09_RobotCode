@@ -187,16 +187,12 @@ void RobotHarvester::ProcessAuto(bool LoadElevator, bool RunStop)
 		case 57:
 		case 58:
 		case 59:
-			HarvesterMotor->Set(MOTOR_STOP);
-			TheGate->Close();
 			HarvesterMode = 0;
 			break;
 		
 		case 4:		// Not Full - In collect mode
 		case 20:	// Not Full - In collect mode
-		case 52:	// Lost load elevator command so default to collect mode
-			HarvesterMotor->Set(COLLECT_MOTOR_SPEED);
-			TheGate->Close();
+		case 52:	// Lost load elevator command so default to collect mode;
 			HarvesterMode = 1;
 			break;
 			
@@ -208,8 +204,6 @@ void RobotHarvester::ProcessAuto(bool LoadElevator, bool RunStop)
 		case 39:	// Eject
 		case 54:	// Eject
 		case 55:	// Eject
-			HarvesterMotor->Set(EJECT_MOTOR_SPEED);
-			TheGate->Close();
 			HarvesterMode = 2;
 			break;
 			
@@ -229,13 +223,36 @@ void RobotHarvester::ProcessAuto(bool LoadElevator, bool RunStop)
 		case 61:	// Received Load Elevator command
 		case 62:	// Received Load Elevator command
 		case 63:	// Received Load Elevator command
-			HarvesterMotor->Set(COLLECT_MOTOR_SPEED);
-			TheGate->Open();
 			HarvesterMode = 3;
 			break;
 			
 		default:
 			break;
+	}
+	
+	switch(HarvesterMode)
+	{
+	 case 0:
+		 	TheGate->Close();
+			HarvesterMotor->Set(MOTOR_STOP);	
+		 break;
+	
+	 case 1:
+		 	TheGate->Close();
+			HarvesterMotor->Set(COLLECT_MOTOR_SPEED);
+		 break;
+	 case 2:
+		 	TheGate->Close();
+			HarvesterMotor->Set(EJECT_MOTOR_SPEED);
+			
+		 break;
+	 case 3:
+			TheGate->Open();
+			HarvesterMotor->Set(COLLECT_MOTOR_SPEED);
+		 break;
+		 
+	 default:
+		 break;
 	}
 	dsLCD->Printf(DriverStationLCD::kUser_Line4, 10, "H1:%d  H2:%d", OldHarvesterMode, HarvesterMode);
 	dsLCD->Printf(DriverStationLCD::kUser_Line5, 10, "S1:%d  S2:%d", OldState, State);
