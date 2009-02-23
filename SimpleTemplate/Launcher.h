@@ -16,7 +16,7 @@ public:
 	INT32 GetEncoderVal();
 	
 	
-	static const double kCorrectionFactor = - 1.0 / 5.0;
+	static const double kCorrectionFactor = - 1.0 / 15.0;
 private:
 	UINT32 slot;
 	UINT32 channel;

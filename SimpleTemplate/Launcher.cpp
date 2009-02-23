@@ -37,9 +37,9 @@ void Launcher::Update()
     
     double amps = launchWheelsCurrent->GetCurrent();
     //if(launchWheelsCurrent->GetCurrent()>=30)
-    if (amps>=30)
+    if (amps>=20)
     {
-    	double overage = amps - 30;
+    	double overage = amps - 20;
     	// This assumes that the current sensor clips at 35 amps.
     	// Therefore the overage must be in range [0,5]
     	
