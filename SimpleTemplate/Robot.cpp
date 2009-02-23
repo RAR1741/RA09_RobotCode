@@ -260,7 +260,7 @@ public:
 //		default:
 //			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual (Error)");
 //		}
-		Squeeky->RPTCommandProccessor();
+		//Squeeky->RPTCommandProccessor();
 	}
 
 	void DisabledContinuous(void) {

@@ -59,8 +59,10 @@ char Personality::GetKeyPress (void)
 void Personality::RPTCommandProccessor()
 {
 	char Command = GetKeyPress();  // Try to get a keypress from keyboard
-	if(Command == 0)               // Test for a character present
+	if(Command == 0)  {              // Test for a character present
+		DisplayText("Oooh, don't wanna talk, eh?");
 	  return;                      // If none ready then just return from command processor
+	}
 	switch(SubMenuSelector)
 	{
 	 case 0:                                         

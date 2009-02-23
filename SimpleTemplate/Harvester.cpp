@@ -111,7 +111,8 @@ void RobotHarvester::Process(bool LoadElevator, bool RunStop)
 			break;
 			
 		case MODE_SEMI_AUTO:
-			ProcessSemiAuto(LoadElevator);
+			//ProcessSemiAuto(LoadElevator);
+			ProcessManual();
 			break;
 			
 		case MODE_AUTO:
@@ -139,10 +140,20 @@ void RobotHarvester::ProcessManual(void)
 			}
 		}
 	}
+	DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
+	dsLCD->Printf(DriverStationLCD::kUser_Line6, 5, "HMC: %2.2f", HarvesterMotorCurrent->GetCurrent());
+//	dsLCD->Printf(DriverStationLCD::kUser_Line2, 8, ":%7.1f", GetClock());
+//	dsLCD->Printf(DriverStationLCD::kUser_Line3, 17, "%7.1f", GetClock());
+//	dsLCD->Printf(DriverStationLCD::kUser_Line4, 7, "%7.1f", GetClock());
+//	dsLCD->Printf(DriverStationLCD::kUser_Line5, 4, "%7.1f", GetClock());
+//	dsLCD->Printf(DriverStationLCD::kUser_Line6, 10, "%7.1f", GetClock());
+//	dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "%-7.1f", GetClock());
+	dsLCD->UpdateLCD();
 }
 
 void RobotHarvester::ProcessSemiAuto(bool LoadElevator)
 {
+	
 }
 
 void RobotHarvester::ProcessAuto(bool LoadElevator, bool RunStop)
@@ -262,16 +273,17 @@ void RobotHarvester::ProcessAuto(bool LoadElevator, bool RunStop)
 		 	TheGate->Close();
 			HarvesterMotor->Set(MOTOR_STOP);
 			CurrentPeakIgnoreTimer->Stop();
-			if(CurrentPeakIgnoreTimer->Get()>.5){
-				ClearHarvBeltTimer->Start();
-				HarvesterMotor->Set(EJECT_MOTOR_SPEED);
-			}
-			if(ClearHarvBeltTimer->Get()>.1){
-				HarvesterMotor->Set(MOTOR_STOP);
-				ClearHarvBeltTimer->Stop();
-				ClearHarvBeltTimer->Reset();
-			}
 			CurrentPeakIgnoreTimer->Reset();
+			//if(CurrentPeakIgnoreTimer->Get()>.5){
+				//ClearHarvBeltTimer->Start();
+				//HarvesterMotor->Set(EJECT_MOTOR_SPEED);
+			//}
+			//if(ClearHarvBeltTimer->Get()>1){
+				//HarvesterMotor->Set(MOTOR_STOP);
+				//ClearHarvBeltTimer->Stop();
+				//ClearHarvBeltTimer->Reset();
+			//}
+			
 		 break;
 	
 	 case 1:
@@ -279,7 +291,7 @@ void RobotHarvester::ProcessAuto(bool LoadElevator, bool RunStop)
 			CurrentPeakIgnoreTimer->Start();
 		 	if(CurrentPeakIgnoreTimer->Get()>.5){
 			HarvesterMotorCurrentVal = HarvesterMotorCurrent->GetCurrent();
-			HarvesterFull = HarvesterMotorCurrentVal > 12;
+			HarvesterFull = HarvesterMotorCurrentVal > 11.5;
 		 	}
 		 break;
 	 case 2:
@@ -294,7 +306,7 @@ void RobotHarvester::ProcessAuto(bool LoadElevator, bool RunStop)
 			CurrentPeakIgnoreTimer->Start();
 		 	if(CurrentPeakIgnoreTimer->Get()>.5){
 			HarvesterMotorCurrentVal = HarvesterMotorCurrent->GetCurrent();
-			HarvesterFull = HarvesterMotorCurrentVal > 12;
+			HarvesterFull = HarvesterMotorCurrentVal > 11.5;
 		 	}
 //			if(HarvesterMotorCurrent->GetCurrent())
 		 break;

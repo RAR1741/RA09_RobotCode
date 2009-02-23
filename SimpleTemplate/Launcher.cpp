@@ -37,20 +37,24 @@ void Launcher::Update()
     
     double amps = launchWheelsCurrent->GetCurrent();
     //if(launchWheelsCurrent->GetCurrent()>=30)
-    if (amps>=20)
+    if (amps>=Launcher::kThreshold)
     {
-    	double overage = amps - 20;
+#if 1
+    	double overage = amps - Launcher::kThreshold;
     	// This assumes that the current sensor clips at 35 amps.
     	// Therefore the overage must be in range [0,5]
     	
-    	double correction = overage * Launcher::kCorrectionFactor;
+    	double correction = overage * Launcher::kCorrectionFactor * input;
     	
-    	if (overage > 5) {	// If we're this high up, cut out completely!
+    	if (overage > Launcher::kClipPoint - Launcher::kThreshold) {	// If we're this high up, cut out completely!
     		motor->Set(0.0);
     		return;
     	} else {
     		motor->Set(input + correction);
     	}
+#else
+    	motor->Set(0);
+#endif
     } else {
     	motor->Set(input);
     }
