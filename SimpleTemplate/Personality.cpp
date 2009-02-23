@@ -17,12 +17,14 @@ Personality::Personality()
 
 void Personality::Open(void)
 {
-	fdSerialPort = fopen ("/tyCo/0", "r+");           // Open the serial port for reading and writing
+// Don't open we are using stdin and stdout - HAM 2-23-2009
+	//	fdSerialPort = fopen ("/tyCo/0", "r+");           // Open the serial port for reading and writing
 }
 
 void Personality::Close(void)
 {
-	fclose (fdSerialPort);                            // Close the port
+// Don't close we are using stdin and stdout - HAM 2-23-2009
+//	fclose (fdSerialPort);                            // Close the port
 }
 
 Personality::~Personality()
@@ -44,14 +46,16 @@ void Personality::SqueekySayHello(void)
 
 void Personality::DisplayText (const char *TxtAdd)
 {
-  do {fputc(*TxtAdd, fdSerialPort);}  // Send byte to serial port
+//  do {fputc(*TxtAdd, fdSerialPort);}  // Send byte to serial port
+  do {fputc(*TxtAdd, 1);}  // Try using stdout - HAM 2-23-2009
   while(*TxtAdd++);                   // Until we reach end of string
 }
 
 char Personality::GetKeyPress (void)
 {
 	//int result = fgetc(fdSerialPort);      // If character is ready then return the character
-	int result = getc(fdSerialPort);
+//	int result = getc(fdSerialPort);
+	int result = getc(0);  // Try using stdin - HAM 2-23-2009
 	if (result == EOF) return 0;
 	return result;
 }
