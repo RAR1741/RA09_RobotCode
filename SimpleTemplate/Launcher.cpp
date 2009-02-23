@@ -18,10 +18,14 @@ void Launcher::Init(UINT32 Slot, UINT32 Channel)
 
 void Launcher::Update()
 {
-	if(stick!=NULL && shouldRun)
-		motor->Set(-((-stick->GetZ()+1.0)/2.0));
-	else
+	double input = 0.0;
+	if(stick!=NULL && shouldRun) {	
+		input = -((-stick->GetZ()+1.0)/2.0);
+	}
+	else {
 		motor->Set(0.0);
+		return;
+	}
 	
 	if(launchWheelsCurrent->GetCurrent()>=10)
 		Status = true;
@@ -30,6 +34,26 @@ void Launcher::Update()
 	DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
     dsLCD->Printf(DriverStationLCD::kUser_Line3, 12, "LC:%2.2f",launchWheelsCurrent->GetCurrent());
     dsLCD->UpdateLCD();
+    
+    double amps = launchWheelsCurrent->GetCurrent();
+    //if(launchWheelsCurrent->GetCurrent()>=30)
+    if (amps>=30)
+    {
+    	double overage = amps - 30;
+    	// This assumes that the current sensor clips at 35 amps.
+    	// Therefore the overage must be in range [0,5]
+    	
+    	double correction = overage * Launcher::kCorrectionFactor;
+    	
+    	if (overage > 5) {	// If we're this high up, cut out completely!
+    		motor->Set(0.0);
+    		return;
+    	} else {
+    		motor->Set(input + correction);
+    	}
+    } else {
+    	motor->Set(input);
+    }
 	//DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
 	/*dsLCD->Printf(DriverStationLCD::kUser_Line3, 9, "LEN:%4d",LaunchEncoder->Get());
 	*/

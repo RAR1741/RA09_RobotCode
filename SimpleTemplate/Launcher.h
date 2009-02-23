@@ -14,6 +14,9 @@ public:
 	bool GetStatus();
 	double GetCurrentVal();
 	INT32 GetEncoderVal();
+	
+	
+	static const double kCorrectionFactor = - 1.0 / 5.0;
 private:
 	UINT32 slot;
 	UINT32 channel;
