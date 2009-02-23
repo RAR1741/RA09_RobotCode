@@ -41,46 +41,46 @@ using ::floor;
  */
 
 class PurpleMonkeys : public IterativeRobot {
-	RobotDrive myRobot; // robot drive system
-	Joystick leftStick;
-	Joystick rightStick;
-	Joystick turretStick;
-	Joystick testMotorStick; // For the Test Motor Encoder
-	DigitalOutput light;
+	RobotDrive *myRobot; // robot drive system
+	Joystick *leftStick;
+	Joystick *rightStick;
+	Joystick *turretStick;
+	Joystick *testMotorStick; // For the Test Motor Encoder
+	DigitalOutput *light;
 	// Logger logger;
-	CameraControl theCamera;
-	DashboardDataFormat dashboardDataFormat;
-	Encoder LMQuadEncoder;
-	Encoder RMQuadEncoder;
-	Encoder LMWheelEncoder;
-	Encoder RMWheelEncoder;
-	Encoder TurretEncoder;
+	CameraControl *theCamera;
+	DashboardDataFormat *dashboardDataFormat;
+	Encoder *LMQuadEncoder;
+	Encoder *RMQuadEncoder;
+	Encoder *LMWheelEncoder;
+	Encoder *RMWheelEncoder;
+	//Encoder *TurretEncoder;
 
 	int counter;
 	Gyro * testGyro;
 	Gyro * testTemp;
 	Personality * Squeeky;
-	Turret TheTurret;
-	AnalogChannel leftCurrent;
-	AnalogChannel rightCurrent;
+	Turret *TheTurret;
+	AnalogChannel *leftCurrent;
+	AnalogChannel *rightCurrent;
 
-	AnalogChannel turretPositionCurrent;
+	AnalogChannel *turretPositionCurrent;
 
-	Accelerometer testAccel_X, testAccel_Y, testAccel_Z;
+	Accelerometer *testAccel_X, *testAccel_Y, *testAccel_Z;
 	//Solenoid Gate;
-	RobotHarvester Harvester;
-	RobotElevator Elevator;
-	GateController TheGate;
-	CellCatcher ECellCatcher;
+	RobotHarvester *Harvester;
+	RobotElevator *Elevator;
+	GateController *TheGate;
+	CellCatcher *ECellCatcher;
 	// Solenoid Collector;
-	Toggle Trigger;
-	Toggle GateToggle;
-	Toggle CellCatcherToggle;
-	Toggle RunStopToggle;
-	Launcher launcher;
-	Compressor TheCompressor; // The air compressor for the robot.
-	Encoder RFollowWheelEncoder;
-	Encoder LFollowWheelEncoder;
+	Toggle *Trigger;
+	Toggle *GateToggle;
+	Toggle *CellCatcherToggle;
+	Toggle *RunStopToggle;
+	Launcher *launcher;
+	Compressor *TheCompressor; // The air compressor for the robot.
+	Encoder *RFollowWheelEncoder;
+	Encoder *LFollowWheelEncoder;
 	IFF *IdentFriendFoe;
 	// State Variables for toggle code.
 
@@ -99,7 +99,9 @@ class PurpleMonkeys : public IterativeRobot {
 	int MasterControlMode;
 	bool AutoModeRunStop;
 public:
-	PurpleMonkeys(void) :
+	PurpleMonkeys(void)
+#if 0
+	:
 				myRobot(4, 5), // these must be initialized in the same order
 				leftStick(1), 
 				rightStick(2), 
@@ -144,75 +146,262 @@ public:
 				TheCompressor(6, 11, 4, 1), 
 				RFollowWheelEncoder(4, 7, 4, 8,false),
 				LFollowWheelEncoder(4, 5, 4, 6, false)
+#endif
 				{
 		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
+		myRobot = NULL;
+		//myRobot(4, 5), // these must be initialized in the same order
+		leftStick = NULL; //		leftStick(1), 
+		rightStick = NULL; //		rightStick(2), 
+		turretStick = NULL; //		turretStick(3), 
+		testMotorStick = NULL; //		testMotorStick(4),
 
+		light = NULL; //		light(4, 14), 
+		theCamera = NULL; //		theCamera(),
+		dashboardDataFormat = NULL; //		dashboardDataFormat(),
+		LMQuadEncoder = NULL;	//	LMQuadEncoder(4, 1, 4, 2, false),
+		RMQuadEncoder = NULL; //		RMQuadEncoder(4, 3, 4, 4,false),
+		LMWheelEncoder = NULL;  //		LMWheelEncoder(4, 5, 4, 6, false),
+		RMWheelEncoder = NULL; //		RMWheelEncoder(4, 7, 4, 8, false),
+				//ElevatorEncoder(4,11,4,12,false),
+		//TurretEncoder = NULL;		// TurretEncoder(4, 13, 4, 14, false),
+
+		counter = 0;
+		//		counter(0),
+		
+		testGyro = NULL;
+				//testGyro(NULL),
+		
+		testTemp = NULL;
+				//testTemp(NULL),
+		
+		Squeeky = NULL;
+				//Squeeky(NULL),
+		
+		TheTurret = NULL;
+				//TheTurret(), 
+		
+		leftCurrent = NULL;
+				//leftCurrent(2, 4), 
+		
+		rightCurrent = NULL;
+				//rightCurrent(2, 5),
+		
+		turretPositionCurrent = NULL;
+		
+				//turretPositionCurrent(2, 3),
+		
+		testAccel_X = NULL;
+		
+		//		testAccel_X(1, 3), 
+		testAccel_Y = NULL;	//		testAccel_Y(1, 4),
+		testAccel_Z = NULL;	//		testAccel_Z(1, 5),
+				//				Gate(8,1),
+		Harvester = NULL; //Harvester(4, 6, 2, 6), 
+		Elevator = NULL;			//Elevator(),
+		//Collector = NULL;		// Collector(8,1),
+		TheGate = NULL;	//		TheGate(),
+		ECellCatcher = NULL; //		ECellCatcher(), 
+		Trigger = NULL;	//		Trigger(&leftStick, 2), 
+		GateToggle = NULL; //		GateToggle(&turretStick, 2), 
+		CellCatcherToggle = NULL; //		CellCatcherToggle(&rightStick, 1),
+		RunStopToggle = NULL; //		RunStopToggle(&turretStick, 11),
+		launcher = NULL;	//		launcher(),
+				// No furthur control is really necessary.
+				// Pressure switch, slot 6 channel 11
+				// Spike relay, slot 4 channel 1
+		TheCompressor = NULL;		//TheCompressor(6, 11, 4, 1), 
+		RFollowWheelEncoder = NULL;	//		RFollowWheelEncoder(4, 7, 4, 8,false),
+		LFollowWheelEncoder = NULL; 	//		LFollowWheelEncoder(4, 5, 4, 6, false)
 		MasterControlMode = 0; // Manual mode
 
+		SetDebugFlag(DEBUG_SCREEN_ONLY);
 	}
 	// One time initialization of the robot
 	void RobotInit(void) {
-		MasterControlMode = MODE_MANUAL;
-		GetWatchdog().SetExpiration(100);
-		launcher.Init(4, 2);
-		launcher.SetRun(true);
-		launcher.SetJoyStick(&turretStick);
-
 		
+		// GetTrackingData(YELLOW, PASSIVE_LIGHT);
+		dprintf(LOG_INFO,"================================================");
+		dprintf(LOG_INFO,"               INITIALIZING");
+		dprintf(LOG_INFO,"================================================");
+		dprintf(LOG_INFO,"RedAlert: Initializing Robot Drive");
+				myRobot = new RobotDrive(4,5);
+		dprintf(LOG_INFO,"RedAlert: Robot Drive Initialized.");
+		dprintf(LOG_INFO,"RedAlert: Initializing Joysticks");
+				//myRobot(4, 5), // these must be initialized in the same order
+				leftStick = new Joystick(1); //		leftStick(1), 
+				rightStick = new Joystick(2); //		rightStick(2), 
+				turretStick = new Joystick(3); //		turretStick(3), 
+				testMotorStick = new Joystick(4); //		testMotorStick(4),
+		dprintf(LOG_INFO,"RedAlert: Joysticks Initialized.");
+		dprintf(LOG_INFO,"RedAlert: Initializing Autonomous Light");
+				light = new DigitalOutput(4,14); //		light(4, 14),
+		dprintf(LOG_INFO,"RedAlert: Autonomous Light Initialized.");
+		dprintf(LOG_INFO,"RedAlert: Initializing Camera Control");
+				theCamera = new CameraControl(); //		theCamera(),
+		dprintf(LOG_INFO,"RedAlert: Camera Control Initialized.");
+		dprintf(LOG_INFO,"RedAlert: Initializing DashboardDataFormat");
+				dashboardDataFormat = new DashboardDataFormat(); //		dashboardDataFormat(),
+		dprintf(LOG_INFO,"RedAlert: DashboardDataFormat Initialized.");
+		dprintf(LOG_INFO,"RedAlert: Initializing Drive Encoders");
+				LMQuadEncoder = new Encoder(4, 1, 4, 2, false);	//	LMQuadEncoder(4, 1, 4, 2, false),
+				RMQuadEncoder = new Encoder(4, 3, 4, 4,false); //		RMQuadEncoder(4, 3, 4, 4,false),
+				LMWheelEncoder = new Encoder(4, 5, 4, 6, false);  //		LMWheelEncoder(4, 5, 4, 6, false),
+				RMWheelEncoder = new Encoder(4, 7, 4, 8, false); //		RMWheelEncoder(4, 7, 4, 8, false),
+						//ElevatorEncoder(4,11,4,12,false),
+				//TurretEncoder = new Encoder(4, 13, 4, 14, false);		// TurretEncoder(4, 13, 4, 14, false),
+		dprintf(LOG_INFO,"RedAlert: Drive Encoders Initialized.");
+				counter = 0;
+				//		counter(0),
+		dprintf(LOG_INFO,"RedAlert: Initializing Gyroscope");		
+				testGyro = NULL;
+						//testGyro(NULL),
+		
+		dprintf(LOG_INFO,"RedAlert: Gyroscope Initialized.");
+		dprintf(LOG_INFO,"RedAlert: Initializing Gyroscope Temperature Sensor");		
+				testTemp = NULL;
+						//testTemp(NULL),
+		dprintf(LOG_INFO,"RedAlert: Gyroscope Temperature Sensor Initialized.");
+		dprintf(LOG_INFO,"RedAlert: Initializing Personality");
+				Squeeky = NULL;
+						//Squeeky(NULL),
+		dprintf(LOG_INFO,"RedAlert: Personality Initialized");
+		dprintf(LOG_INFO,"RedAlert: Initializing Turret");
+				TheTurret = new Turret();
+						//TheTurret(), 
+				dprintf(LOG_INFO,"RedAlert: Turret Initialized");		
+				// TODO SHould these be CurrentSensors?
+				dprintf(LOG_INFO,"RedAlert: Initializing Current Sensors");
+				leftCurrent = new AnalogChannel(2,4);
+						//leftCurrent(2, 4), 
+				
+				rightCurrent = new AnalogChannel(2,5);
+						//rightCurrent(2, 5),
+				
+				turretPositionCurrent = new AnalogChannel(2,3);
+				
+						//turretPositionCurrent(2, 3),
+				dprintf(LOG_INFO,"RedAlert: Current Sensors Initialized");
+				dprintf(LOG_INFO,"RedAlert: Initializing Accelerometers");
+				testAccel_X = new Accelerometer(1,3);
+				
+				//		testAccel_X(1, 3), 
+				testAccel_Y = new Accelerometer(1,4);	//		testAccel_Y(1, 4),
+				testAccel_Z = new Accelerometer(1,5);	//		testAccel_Z(1, 5),
+						//				Gate(8,1),
+				dprintf(LOG_INFO,"RedAlert: Accelerometers Initialized");
+				dprintf(LOG_INFO,"RedAlert: Initializing Harvester");
+				Harvester = new RobotHarvester(4,6,2,6); //Harvester(4, 6, 2, 6),
+				dprintf(LOG_INFO,"RedAlert: Harvester Initialized");
+				dprintf(LOG_INFO,"RedAlert: Initializing Elevator");
+				Elevator = new RobotElevator();			//Elevator(),
+				dprintf(LOG_INFO,"RedAlert: Elevator Initialized");
+				//Collector = NULL;		// Collector(8,1),
+				dprintf(LOG_INFO,"RedAlert: Initializing Gate Controller");
+				TheGate = new GateController();	//		TheGate(),
+				dprintf(LOG_INFO,"RedAlert: Gate Controller Initialized");
+				dprintf(LOG_INFO,"RedAlert: Initializing Cell Catcher");
+				ECellCatcher = new CellCatcher; //		ECellCatcher(),
+				dprintf(LOG_INFO,"RedAlert: Cell Catcher Initialized");
+				dprintf(LOG_INFO,"RedAlert: Initializing Toggles");
+				Trigger = new Toggle(leftStick, 2);	//		Trigger(&leftStick, 2), 
+				GateToggle = new Toggle(turretStick, 2); //		GateToggle(&turretStick, 2), 
+				CellCatcherToggle = new Toggle(rightStick, 1); //		CellCatcherToggle(&rightStick, 1),
+				RunStopToggle = new Toggle(turretStick, 11); //		RunStopToggle(&turretStick, 11),
+				dprintf(LOG_INFO,"RedAlert: Toggles Initialized");
+				dprintf(LOG_INFO,"RedAlert: Initializing Launcher");
+				launcher = new Launcher();	//		launcher(),
+						// No furthur control is really necessary.
+						// Pressure switch, slot 6 channel 11
+						// Spike relay, slot 4 channel 1
+				dprintf(LOG_INFO,"RedAlert: Launcher Initialized");
+				//TheCompressor = new Compressor(6, 11, 4, 1);		//TheCompressor(6, 11, 4, 1),
+				dprintf(LOG_INFO,"RedAlert: Compressor Initialized");
+				//RFollowWheelEncoder = new Encoder(4, 7, 4, 8,false);	//		RFollowWheelEncoder(4, 7, 4, 8,false),
+				//LFollowWheelEncoder = new Encoder(4, 5, 4, 6, false); 	//		LFollowWheelEncoder(4, 5, 4, 6, false)
+				dprintf(LOG_INFO,"RedAlert: FollowWheelEncoders Initialized");
+		
+		dprintf(LOG_INFO, "RedAlert: ////// Initializing Initializing //////");
+		///////////////////////////////////////////////////////////
+		// ROBOT "GOOD STATE" INITIALIZATION
+		MasterControlMode = MODE_MANUAL;
+		dprintf(LOG_INFO, "RedAlert: Mode set to Manual");
+		GetWatchdog().SetExpiration(100);
+		dprintf(LOG_INFO, "RedAlert: Watchdog started, 100 mseconds. Grrr!");
+		dprintf(LOG_INFO, "RedAlert: Starting launcher module...");
+		launcher->Init(4, 2);
+		launcher->SetRun(true);
+		launcher->SetJoyStick(turretStick);
+
+		dprintf(LOG_INFO, "RedAlert: Launcher module started.");
 		AutoModeRunStop = false;
+		dprintf(LOG_INFO, "RedAlert: Starting Gyros... DO NOT MOVE THE ROBOT");
 		if (testGyro==NULL)
 			testGyro = new Gyro(1,1);
 		if (testTemp==NULL)
 			testTemp = new Gyro(1,2);
+		dprintf(LOG_INFO, "RedAlert: Gyros started.");
 		if (StartCameraTask(13, 0, k320x240, ROT_0)==-1) {
-			dprintf("Things screwed up with camera.\n");
+			dprintf(LOG_INFO,"Things screwed up with camera.\n");
 		}
 
-		if (theCamera.StatusIsFatal()) {
-			dprintf("PCVideoServer is mortally wounded.\n");
+		if (theCamera->StatusIsFatal()) {
+			dprintf(LOG_INFO,"PCVideoServer is mortally wounded.\n");
 		}
 		
-		dprintf("Initializing IFF module...");
+		dprintf(LOG_INFO,"RedAlert: Initializing IFF module...");
 		IdentFriendFoe = new IFF();
-		dprintf("IFF complete.");
+		dprintf(LOG_INFO,"RedAlert: IFF complete.");
 		// This should probably be in the Elevator code
 
 		//if(!Gate.Get()) // Is the gate open?
 		//	Gate.Set(false); // Yes? Then close it.
 
-		Harvester.Init();
-		Harvester.SetCollectEjectControls(&rightStick, 4);
-		Harvester.SetRunStopControls(&rightStick, 3);
-		Harvester.SetGateControls(&TheGate);
-		Harvester.SetAutoMode(MasterControlMode);
+		dprintf(LOG_INFO,"RedAlert: Starting Harvester module...");
+		Harvester->Init();
+		Harvester->SetCollectEjectControls(rightStick, 4);
+		Harvester->SetRunStopControls(rightStick, 3);
+		Harvester->SetGateControls(TheGate);
+		Harvester->SetAutoMode(MasterControlMode);
+		dprintf(LOG_INFO,"RedAlert: Harvester module started.");
 		//Harvester.SetAutoMode(MODE_AUTO);
 
 		// Initiallize the Elevator class
-		Elevator.Init(4, 1, 2, 1, &Harvester);
+		dprintf(LOG_INFO,"RedAlert: Starting Elevator module...");
+		Elevator->Init(4, 1, 2, 1, Harvester);
 		//JDM: Set the joystick and button to use to test the elevator
-		Elevator.SetElevatorControls(&turretStick, 1);
-		Elevator.SetAutoMode(MasterControlMode);
-
-		TheTurret.InitTurret(4,3,	// Turret jaguar
+		Elevator->SetElevatorControls(turretStick, 1);
+		Elevator->SetAutoMode(MasterControlMode);
+		dprintf(LOG_INFO,"RedAlert: Elevator module started.");
+		dprintf(LOG_INFO,"RedAlert: Turret module starting.");
+		TheTurret->InitTurret(4,3,	// Turret jaguar
 							6,9,	// CW Limit Switch
 							6,10,	// CCW Limit Switch
 							1,7,	// Potentiometer Encoder
 							IdentFriendFoe,	// IFF
 							8);		// DS IO pin for Goggle
-		ECellCatcher.Init(8, 3, 8, 4);
-		Squeeky = new Personality();
-
-		TheCompressor.Start();
-		// LaunchEncoder.Start();
-		TurretEncoder.Start();
-		RMQuadEncoder.Start();
-		LMQuadEncoder.Start();
-		RMWheelEncoder.Start();
-		LMWheelEncoder.Start();
-		RFollowWheelEncoder.Start();
-		LFollowWheelEncoder.Start();
+		dprintf(LOG_INFO,"RedAlert: Turret module started. I got you suckas'!");
+		dprintf(LOG_INFO,"RedAlert: ECellCatcher module starting.");
+		ECellCatcher->Init(8, 3, 8, 4);
+		dprintf(LOG_INFO,"RedAlert: ECellCatcher module started.");
 		
-		dprintf("Robot initialized.");
+		dprintf(LOG_INFO,"RedAlert: Squeeky initializing...");
+		Squeeky = new Personality();
+		dprintf(LOG_INFO,"RedAlert: Squeeky is alive. And kicking.");
+		dprintf(LOG_INFO,"RedAlert: Starting Compressor task...");
+		//TheCompressor->Start();
+		dprintf(LOG_INFO,"RedAlert: Starting all them encoders...");
+		// LaunchEncoder.Start();
+//		TurretEncoder->Start();
+		RMQuadEncoder->Start();
+		LMQuadEncoder->Start();
+		RMWheelEncoder->Start();
+		LMWheelEncoder->Start();
+		//RFollowWheelEncoder->Start();
+		//LFollowWheelEncoder->Start();
+		
+		dprintf(LOG_INFO,"RedAlert: ////// DONE //////");
+		dprintf(LOG_INFO,"Robot initialized.");
 	}
 
 	// Disabled state methods
@@ -269,13 +458,13 @@ public:
 	// Autonomous state methods
 	void AutonomousInit(void) {
 		Squeeky->Close();
-		LMQuadEncoder.Stop();
+		LMQuadEncoder->Stop();
 		GetWatchdog().SetEnabled(false);
 		// logger.OpenFile("log.log");
 		// logger.Debug("Entering teleop mode...");
 		// logger.CloseFile();
 
-		light.Set(0);
+		light->Set(0);
 		// Auto.Init();
 	}
 
@@ -296,14 +485,14 @@ public:
 		// if (counter>=400)
 		//	myRobot.Drive(0.0, 0.0);
 		// Auto.Periodic();
-		TheTurret.TurretControl(); // This updates the Target in Sight member variable;
+		TheTurret->TurretControl(); // This updates the Target in Sight member variable;
 
-		if (TheTurret.TargetInSight()) {
+		if (TheTurret->TargetInSight()) {
 			//GetTheDashboard().Printf("TARGET IN SIGHT!");
-			FetchBoy(TheTurret.GetTarget_X());
+			FetchBoy(TheTurret->GetTarget_X());
 		} else {
 			//GetTheDashboard().Printf("WHERE?!");
-			myRobot.Drive(0.0, 0.0);
+			myRobot->Drive(0.0, 0.0);
 		}
 		UpdateDashboard();
 	}
@@ -318,17 +507,17 @@ public:
 		
 		//		testEncoder.SetDistancePerTick(300.0);
 		//		LMQuadEncoder.SetDistancePerPulse(300.0);
-		LMQuadEncoder.Start();
+		LMQuadEncoder->Start();
 		if (testGyro==NULL)
 			testGyro = new Gyro(1,1);
-		light.Set(1);
+		light->Set(1);
 		// myRobot.Drive(0.0, 0.0); // stop robot
 		// myRobot.Drive(0.5, 0.0); // Go Straight Forward!
 
-		Harvester.SetAutoMode(MasterControlMode);
-		Elevator.SetAutoMode(MasterControlMode);
-		TheTurret.SetMode(MasterControlMode);
-//		TheTurret.SetMode(MODE_MANUAL);
+		Harvester->SetAutoMode(MasterControlMode);
+		Elevator->SetAutoMode(MasterControlMode);
+		TheTurret->SetMode(MasterControlMode);
+//		TheTurretSetMode(MODE_MANUAL);
 //		//TheTurret.RegisterMasterControl(&MasterControlMode);
 		Squeeky->Close();
 		GetWatchdog().SetEnabled(true);
@@ -395,23 +584,23 @@ public:
 			// This is a quick temporary for the inverted Y axis Mr. Meyer,
 			// but I think the issue with the inverted joysticks is with the motors...
 			// they may need to have the wires on their polarity switched.
-			myRobot.TankDrive(-leftStick.GetY(), -rightStick.GetY());
+			myRobot->TankDrive(-leftStick->GetY(), -rightStick->GetY());
 		} else {
-			myRobot.ArcadeDrive(-rightStick.GetY(), -rightStick.GetX()); // drive with arcade style (use right stick)
+			myRobot->ArcadeDrive(-rightStick->GetY(), -rightStick->GetX()); // drive with arcade style (use right stick)
 		}
 
 		// Just for testing, comment if you don't want it.
 		//testMotor.Set(testMotorStick.GetY()); // Set Test Motor based on Y Axis
 
 
-		RunStopToggle.UpdateState();
-		if(RunStopToggle.GetOutput())
+		RunStopToggle->UpdateState();
+		if(RunStopToggle->GetOutput())
 			AutoModeRunStop = true;
 		else
 			AutoModeRunStop = false;
 		
-		if (testMotorStick.GetButton(testMotorStick.kTopButton)) {
-			LMQuadEncoder.Reset();
+		if (testMotorStick->GetButton(testMotorStick->kTopButton)) {
+			LMQuadEncoder->Reset();
 			delete testGyro;
 			testGyro = new Gyro(1,1);
 		}
@@ -426,28 +615,28 @@ public:
 //		}
 
 		//TheTurret.SetMode(MODE_)
-		Elevator.Process(launcher.GetStatus(), AutoModeRunStop);
+		Elevator->Process(launcher->GetStatus(), AutoModeRunStop);
 		// JDM: Use joystick to test, needs to use Elevator Load flag
 		
-		Harvester.Process(Elevator.GetHarvesterLoad(), AutoModeRunStop);
-		launcher.Update();
+		Harvester->Process(Elevator->GetHarvesterLoad(), AutoModeRunStop);
+		launcher->Update();
 
-		if(MasterControlMode == MODE_MANUAL)
-			TheGate.Set(GateToggle.GetOutput());
+		if(MasterControlMode == MODE_MANUAL || MasterControlMode == MODE_SEMI_AUTO)
+			TheGate->Set(GateToggle->GetOutput());
 
 		DriverStationLCD * dlcd = DriverStationLCD::GetInstance();
 		dlcd->Printf(DriverStationLCD::kUser_Line4, 5, "%1d",
-				GateToggle.GetOutput());
+				GateToggle->GetOutput());
 
-		ECellCatcher.Set(CellCatcherToggle.GetOutput());
-		GateToggle.UpdateState();
-		CellCatcherToggle.UpdateState();
+		ECellCatcher->Set(CellCatcherToggle->GetOutput());
+		GateToggle->UpdateState();
+		CellCatcherToggle->UpdateState();
 
 		//#warning "THIS IS TEST CODE. DON'T SEND THE ROBOT INTO COMPETITION"
 
 		// Map X-Axis of joystick to turret position
 		//Turret_Pos_Motor.Set(turretStick.GetX());
-		TheTurret.TurretControl(&turretStick);
+		TheTurret->TurretControl(turretStick);
 
 		// Moved to elevator code.
 		// Launch_Wheels_Motor.Set(-((-turretStick.GetZ()+1.0)/2.0));
@@ -473,53 +662,53 @@ public:
 		//dashboardDataFormat.m_AnalogChannels[0][0] = stick.GetY(); 
 		// dashboardDataFormat.m_AnalogChannels[0][1] = test.GetY();
 
-		if (!TheTurret.TargetInSight()) {
-			dashboardDataFormat.m_TopBoundRect = 1;
-			dashboardDataFormat.m_BottomBoundRect = 2;
-			dashboardDataFormat.m_LeftBoundRect = 1;
-			dashboardDataFormat.m_RightBoundRect = 2;
+		if (!TheTurret->TargetInSight()) {
+			dashboardDataFormat->m_TopBoundRect = 1;
+			dashboardDataFormat->m_BottomBoundRect = 2;
+			dashboardDataFormat->m_LeftBoundRect = 1;
+			dashboardDataFormat->m_RightBoundRect = 2;
 		} else {
-			dashboardDataFormat.m_TopBoundRect = TheTurret.TargetData().boundingRect.top;
-			dashboardDataFormat.m_LeftBoundRect = TheTurret.TargetData().boundingRect.left;
-			dashboardDataFormat.m_BottomBoundRect = TheTurret.TargetData().boundingRect.top + TheTurret.TargetData().boundingRect.height;
-			dashboardDataFormat.m_RightBoundRect = TheTurret.TargetData().boundingRect.left + TheTurret.TargetData().boundingRect.width;
+			dashboardDataFormat->m_TopBoundRect = TheTurret->TargetData().boundingRect.top;
+			dashboardDataFormat->m_LeftBoundRect = TheTurret->TargetData().boundingRect.left;
+			dashboardDataFormat->m_BottomBoundRect = TheTurret->TargetData().boundingRect.top + TheTurret->TargetData().boundingRect.height;
+			dashboardDataFormat->m_RightBoundRect = TheTurret->TargetData().boundingRect.left + TheTurret->TargetData().boundingRect.width;
 		}
 		//dashboardDataFormat.m_AnalogChannels[0][4] = testMotor.Get();
-		dashboardDataFormat.m_DIOChannels[0]++;
-		dashboardDataFormat.m_DIOChannelsOutputEnable[0]--;
-		dashboardDataFormat.m_RM_QuadEncoder = RMQuadEncoder.Get();
-		dashboardDataFormat.m_LM_QuadEncoder = LMQuadEncoder.Get();
-		dashboardDataFormat.m_RMWheelEncoder = RMWheelEncoder.Get();
-		dashboardDataFormat.m_LMWheelEncoder = LMWheelEncoder.Get();
-		dashboardDataFormat.m_LeftMotorVoltage = leftCurrent.GetValue();
-		dashboardDataFormat.m_RightMotorVoltage = rightCurrent.GetValue();
-		dashboardDataFormat.m_launchWheelsCurrent
-				= (INT16)(launcher.GetCurrentVal());
-		dashboardDataFormat.m_turretPositionCurrent
-				= turretPositionCurrent.GetValue();
+		dashboardDataFormat->m_DIOChannels[0]++;
+		dashboardDataFormat->m_DIOChannelsOutputEnable[0]--;
+		dashboardDataFormat->m_RM_QuadEncoder = RMQuadEncoder->Get();
+		dashboardDataFormat->m_LM_QuadEncoder = LMQuadEncoder->Get();
+		dashboardDataFormat->m_RMWheelEncoder = RMWheelEncoder->Get();
+		dashboardDataFormat->m_LMWheelEncoder = LMWheelEncoder->Get();
+		dashboardDataFormat->m_LeftMotorVoltage = leftCurrent->GetValue();
+		dashboardDataFormat->m_RightMotorVoltage = rightCurrent->GetValue();
+		dashboardDataFormat->m_launchWheelsCurrent
+				= (INT16)(launcher->GetCurrentVal());
+		dashboardDataFormat->m_turretPositionCurrent
+				= turretPositionCurrent->GetValue();
 
-		dashboardDataFormat.m_LaunchEncoder = launcher.GetEncoderVal();
-		dashboardDataFormat.m_TurretEncoder = TurretEncoder.Get();
+		dashboardDataFormat->m_LaunchEncoder = launcher->GetEncoderVal();
+		//dashboardDataFormat->m_TurretEncoder = TurretEncoder->Get();
 
-		dashboardDataFormat.m_accelX = testAccel_X.GetAcceleration();
-		dashboardDataFormat.m_accelY = testAccel_Y.GetAcceleration();
-		dashboardDataFormat.m_accelZ = testAccel_Z.GetAcceleration();
-		dashboardDataFormat.m_gyroTemp = testTemp->GetAngle();
+		dashboardDataFormat->m_accelX = testAccel_X->GetAcceleration();
+		dashboardDataFormat->m_accelY = testAccel_Y->GetAcceleration();
+		dashboardDataFormat->m_accelZ = testAccel_Z->GetAcceleration();
+		dashboardDataFormat->m_gyroTemp = testTemp->GetAngle();
 
 		if (testGyro == NULL) {
-			dashboardDataFormat.m_gyroAngle = -42.0001;
+			dashboardDataFormat->m_gyroAngle = -42.0001;
 		} else {
-			dashboardDataFormat.m_gyroAngle = testGyro->GetAngle();
+			dashboardDataFormat->m_gyroAngle = testGyro->GetAngle();
 			//dashboardDataFormat.m_gyroAngle = 589.7;
 		}
 		//  dashboardDataFormat.m_accelX = 84.0;
 
-		dashboardDataFormat.m_TurretState = 0;
-		dashboardDataFormat.m_LeftState = 0;
-		dashboardDataFormat.m_RightState = 0;
+		dashboardDataFormat->m_TurretState = 0;
+		dashboardDataFormat->m_LeftState = 0;
+		dashboardDataFormat->m_RightState = 0;
 
-		dashboardDataFormat.m_TurretPotentEncoderVoltage
-				= TheTurret.EncoderVoltage();
+		dashboardDataFormat->m_TurretPotentEncoderVoltage
+				= TheTurret->EncoderVoltage();
 
 		/*
 		GetTheDashboard().Printf(
@@ -532,7 +721,7 @@ public:
 		num += 0.01;
 		if (num > 5.0)
 			num = 0.0;
-		dashboardDataFormat.PackAndSend();
+		dashboardDataFormat->PackAndSend();
 	}
 
 	Dashboard& GetTheDashboard() {

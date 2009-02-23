@@ -81,7 +81,7 @@ void DashboardDataFormat::PackAndSend(void)
 	// Add target data
 
 	// Add color target code
-	
+	/*
 	dashboardPacker.AddI32(m_PrimaryMinHue);
 	dashboardPacker.AddI32(m_PrimaryMinSat);
 	dashboardPacker.AddI32(m_PrimaryMinLum);
@@ -95,7 +95,7 @@ void DashboardDataFormat::PackAndSend(void)
 	dashboardPacker.AddI32(m_SecondaryMaxHue);
 	dashboardPacker.AddI32(m_SecondaryMaxSat);
 	dashboardPacker.AddI32(m_SecondaryMaxLum);
-	
+	*/
 	dashboardPacker.AddU16(this->m_LeftState);
 	dashboardPacker.AddU16(this->m_RightState);
 	dashboardPacker.AddU16(this->m_TurretState);
