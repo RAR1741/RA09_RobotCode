@@ -315,7 +315,7 @@ public:
 						// Pressure switch, slot 6 channel 11
 						// Spike relay, slot 4 channel 1
 				dprintf(LOG_INFO,"RedAlert: Launcher Initialized");
-				//TheCompressor = new Compressor(6, 11, 4, 1);		//TheCompressor(6, 11, 4, 1),
+				TheCompressor = new Compressor(6, 11, 4, 1);		//TheCompressor(6, 11, 4, 1),
 				dprintf(LOG_INFO,"RedAlert: Compressor Initialized");
 				//RFollowWheelEncoder = new Encoder(4, 7, 4, 8,false);	//		RFollowWheelEncoder(4, 7, 4, 8,false),
 				//LFollowWheelEncoder = new Encoder(4, 5, 4, 6, false); 	//		LFollowWheelEncoder(4, 5, 4, 6, false)
@@ -389,7 +389,7 @@ public:
 		Squeeky = new Personality();
 		dprintf(LOG_INFO,"RedAlert: Squeeky is alive. And kicking.");
 		dprintf(LOG_INFO,"RedAlert: Starting Compressor task...");
-		//TheCompressor->Start();
+		TheCompressor->Start();
 		dprintf(LOG_INFO,"RedAlert: Starting all them encoders...");
 		// LaunchEncoder.Start();
 //		TurretEncoder->Start();

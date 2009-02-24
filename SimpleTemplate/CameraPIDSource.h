@@ -2,8 +2,9 @@
 #define CAMERA_PID_SOURCE_H__
 
 #include "LimitedPIDSource.h"
+#include "CustomPIDSource.h"
 
-class CameraPIDSource : public LimitedPIDSource
+class CameraPIDSource : public CustomPIDSource
 {
 public:
 	CameraPIDSource();

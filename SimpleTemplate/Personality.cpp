@@ -46,16 +46,16 @@ void Personality::SqueekySayHello(void)
 
 void Personality::DisplayText (const char *TxtAdd)
 {
-//  do {fputc(*TxtAdd, fdSerialPort);}  // Send byte to serial port
-  do {fputc(*TxtAdd, 1);}  // Try using stdout - HAM 2-23-2009
+  do {fputc(*TxtAdd, fdSerialPort);}  // Send byte to serial port
+//  do {fputc(*TxtAdd, 1);}  // Try using stdout - HAM 2-23-2009
   while(*TxtAdd++);                   // Until we reach end of string
 }
 
 char Personality::GetKeyPress (void)
 {
 	//int result = fgetc(fdSerialPort);      // If character is ready then return the character
-//	int result = getc(fdSerialPort);
-	int result = getc(0);  // Try using stdin - HAM 2-23-2009
+	int result = getc(fdSerialPort);
+//	int result = getc(0);  // Try using stdin - HAM 2-23-2009
 	if (result == EOF) return 0;
 	return result;
 }
