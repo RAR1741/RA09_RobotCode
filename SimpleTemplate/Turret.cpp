@@ -165,6 +165,11 @@ void Turret::InitTurret(int motorSlot, int motorChannel,
 	//pid->SetInputRange(0, 5);
 	pid->SetInputRange(-1, 1);
 	pid->SetOutputRange(-1, 1);
+	
+	targetTrack = new PIDController(0.5, 0, 0, theCam,Turret_Pos_Motor);
+	
+	targetTrack->SetInputRange(-1, 1);
+	targetTrack->SetOutputRange(-1,1);
 }
 Turret::~Turret()
 {
@@ -193,9 +198,9 @@ void Turret::TurretControl(Joystick * turretStick)
 	case MODE_SEMI_AUTO: // Semi-Automatic (BANG! BANG!)
 		//ManualPositionMode(turretStick);
 		//Auto();
-		Manual(turretStick);
+		//Manual(turretStick);
 		//ManualPositionMode(turretStick);
-		//ServoPositionMode(turretStick);
+		ServoPositionMode(turretStick);
 		break;
 	case MODE_AUTO:	// Fully automatic AEGIS-style, full robot control
 		//Auto();
@@ -239,10 +244,28 @@ void Turret::Manual(Joystick *turretStick)
 	return; // Guess what? return.
 }
 
-void Turret::ServoPositionMode(Joystick *turretStick)
+void Turret::GoToPos(float input)
 {
 	pid->Enable();
 	
+	if (input < 0) {
+		if (CounterClockwise_Limit->IsTripped()) {
+			pid->SetSetpoint(Position_Encoder->PIDGet());
+			return;
+		}
+	} else {
+		if (Clockwise_Limit->IsTripped()) {
+			pid->SetSetpoint(Position_Encoder->PIDGet());
+			return;
+		}
+	}
+	pid->SetSetpoint(input);
+}
+
+void Turret::ServoPositionMode(Joystick *turretStick)
+{
+	//pid->Enable();
+#if 0
 	if (turretStick->GetX() < 0) {
 		if (CounterClockwise_Limit->IsTripped()) {
 			pid->SetSetpoint(Position_Encoder->PIDGet());
@@ -255,6 +278,9 @@ void Turret::ServoPositionMode(Joystick *turretStick)
 		}
 	}
 	pid->SetSetpoint(turretStick->GetX());
+#else
+	GoToPos(turretStick->GetX());
+#endif
 }
 float Turret::CurrentPosition(void)
 {
@@ -276,10 +302,49 @@ void Turret::ManualPositionMode(Joystick *turretStick)
 }
 void Turret::Auto(void)
 {
-	InitServoish();
+	//InitServoish();
 	//Target();
-	Track();
-	UpdateState();
+	//Track();
+	//UpdateState();
+	
+	pid->Disable();
+	//targetTrack->Enable();
+	
+	if (!this->TargetInSight()) {
+		targetTrack->Disable();
+		
+	} else {
+		targetTrack->Enable();
+		
+		float x_offset = this->TargetData().center_mass_x_normalized;
+		
+		
+		if (x_offset < 0) {
+				if (CounterClockwise_Limit->IsTripped()) {
+					//pid->SetSetpoint(Position_Encoder->PIDGet());
+					//targetTrack->Reset();
+					GoToPos(0);
+					return;
+				}
+			} else {
+				if (Clockwise_Limit->IsTripped()) {
+					//targetTrack->Reset();
+					//pid->SetSetpoint(Position_Encoder->PIDGet());
+					GoToPos(0);
+					return;
+				}
+			}
+		
+		theCam->SetRelativePosition(x_offset);
+	
+		
+		//TODO: This would be where we could "lead" the target
+		// Place crosshairs directly on the target
+		targetTrack->SetSetpoint(0);
+	}
+	
+	//pid->SetSetpoint(turretStick->GetX());
+	
 }
 
 void Turret::Target(void)

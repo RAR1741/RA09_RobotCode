@@ -77,6 +77,7 @@ private:
 	void InitServoish(void);
 	
 	void EndServoish(void);
+	void GoToPos(float input);
 	
 	float ServoToEncoderUnits(float servo);
 	float EncoderUnitsToServo(float volts);
@@ -131,7 +132,11 @@ private:
 	ParticleAnalysisReport par;		// particle analysis report
 	
 	PIDController *pid;
-	PIDSource *pid_src;
+	//PIDSource *pid_src;
+	
+	CameraPIDSource *theCam;
+	PIDController *targetTrack;
+	
 	
 	int *masterControl;
 	
