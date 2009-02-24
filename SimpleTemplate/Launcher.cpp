@@ -19,6 +19,7 @@ void Launcher::Init(UINT32 Slot, UINT32 Channel)
 void Launcher::Update()
 {
 	double input = 0.0;
+	
 	if(stick!=NULL && shouldRun) {	
 		input = -((-stick->GetZ()+1.0)/2.0);
 	}
@@ -56,7 +57,12 @@ void Launcher::Update()
     	motor->Set(0);
 #endif
     } else {
-    	motor->Set(input);
+    	double accel = input - old;
+    	if (abs(accel) > ACCEL_LIMIT)
+    		accel = ACCEL_LIMIT;
+    	// input [0,1]
+    	motor->Set(old + accel);
+    	old += accel;
     }
 	//DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
 	/*dsLCD->Printf(DriverStationLCD::kUser_Line3, 9, "LEN:%4d",LaunchEncoder->Get());

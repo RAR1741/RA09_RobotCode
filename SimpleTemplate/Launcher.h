@@ -29,5 +29,7 @@ private:
 	CurrentSensor * launchWheelsCurrent;
 	bool shouldRun;
 	bool Status;
+	double old;
+	static const double ACCEL_LIMIT = .01;
 };
 #endif
