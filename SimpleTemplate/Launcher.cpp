@@ -1,6 +1,10 @@
 #include "Launcher.h"
 #include "DriverStationLCD.h"
 
+#include <cmath>
+
+#define kAccelLimit 0.01
+using ::fabs;
 void Launcher::Init(UINT32 Slot, UINT32 Channel)
 	{
 		slot = Slot;
@@ -58,8 +62,8 @@ void Launcher::Update()
 #endif
     } else {
     	double accel = input - old;
-    	if (abs(accel) > ACCEL_LIMIT)
-    		accel = ACCEL_LIMIT;
+    	if (fabs(accel) > kAccelLimit)
+    		accel = (accel < 0) ? -kAccelLimit : kAccelLimit;
     	// input [0,1]
     	motor->Set(old + accel);
     	old += accel;

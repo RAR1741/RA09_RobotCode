@@ -19,7 +19,6 @@ public:
 	static const double kThreshold = 32.0;
 	static const double kClipPoint = 35.0;
 	static const double kCorrectionFactor = - 1.0 / 3.0;
-	
 private:
 	UINT32 slot;
 	UINT32 channel;
@@ -30,6 +29,6 @@ private:
 	bool shouldRun;
 	bool Status;
 	double old;
-	static const double ACCEL_LIMIT = .01;
+	
 };
 #endif
