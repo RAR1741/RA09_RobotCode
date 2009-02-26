@@ -218,6 +218,8 @@ void Turret::Manual(Joystick *turretStick)
 {
 	EndServoish();
 	pid->Disable();
+	targetTrack->Disable();
+	
 	// Read Joystick X Axis
 	float x_axis = turretStick->GetX();
 	
@@ -237,9 +239,10 @@ void Turret::Manual(Joystick *turretStick)
 	Turret_Pos_Motor->Set(x_axis);
 	
 	DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
-	dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "TSMAN:%.3f",x_axis);
-	//dsLCD->Printf(DriverStationLCD::kUser_Line6, 2, "Encoder :%7.1f V", this->EncoderVoltage());
+	//dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "TSMAN:%.3f",x_axis);
+	dsLCD->Printf(DriverStationLCD::kUser_Line6, 2, "Turret :%7.1f V", this->EncoderVoltage());
 	
+	Target();	// Get tracking data
 	UpdateState();
 	return; // Guess what? return.
 }
@@ -279,6 +282,7 @@ void Turret::ServoPositionMode(Joystick *turretStick)
 	}
 	pid->SetSetpoint(turretStick->GetX());
 #else
+	Target();
 	GoToPos(turretStick->GetX());
 #endif
 }
