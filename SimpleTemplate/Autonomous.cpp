@@ -23,9 +23,9 @@ void Autonomous::Init() {
 	Program = 0;
 	
 	Program0Stages[0] = 0;
-	Program0StageCounts[0] = 400;
+	Program0StageCounts[0] = 200;
 	Program0Stages[1] = 1;
-	Program0StageCounts[1] = 400;
+	Program0StageCounts[1] = 200;
 	Program0Stages[2] = 2;
 	Program0StageCounts[2] = 400;
 	Program0Stages[3] = 0;
@@ -38,8 +38,8 @@ void Autonomous::Init() {
 	Program0StageCounts[6] = 400;
 	Program0Stages[7] = 1;
 	Program0StageCounts[7] = 400;
-	Program0Stages[8] = 2;
-	Program0StageCounts[8] = 400;
+	Program0Stages[8] = 0;
+	Program0StageCounts[8] = 3000;
 
 #if !EXCLUDE_AUTO
 	/* image data for tracking - override default parameters if needed */
@@ -271,12 +271,12 @@ void Autonomous::AutoProgram0(void){
 
 		// Turn Left
 		case 1:
-			TheRobot->Drive(0.5, -0.5);
+			TheRobot->Drive(0.5, -1.0);
 			break;
 			
 		// Turn Right
 		case 2:
-			TheRobot->Drive(0.5, 0.5);
+			TheRobot->Drive(0.5, 1.0);
 			break;
 			
 		default:
