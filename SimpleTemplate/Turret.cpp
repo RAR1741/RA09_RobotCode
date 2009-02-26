@@ -224,7 +224,7 @@ void Turret::Manual(Joystick *turretStick)
 	float x_axis = turretStick->GetX();
 	
 	// Scale value down 2x?
-	x_axis *= .60;
+	// x_axis *= .60;
 	// Limit x_axis
 	
 	// Set motor to scaled value
@@ -240,7 +240,7 @@ void Turret::Manual(Joystick *turretStick)
 	
 	DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 	//dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "TSMAN:%.3f",x_axis);
-	dsLCD->Printf(DriverStationLCD::kUser_Line6, 2, "Turret :%7.1f V", this->EncoderVoltage());
+	dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Turret :%7.1f V", this->EncoderVoltage());
 	
 	Target();	// Get tracking data
 	UpdateState();
