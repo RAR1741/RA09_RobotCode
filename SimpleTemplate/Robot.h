@@ -52,6 +52,7 @@ public:
 	void TeleopContinuous(void);
 	void UpdateDashboard(void);
 	bool CheckMode(void);
+	bool CheckProgram(void);
 
 	Dashboard& GetTheDashboard();
 };

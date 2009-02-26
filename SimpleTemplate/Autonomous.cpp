@@ -297,6 +297,14 @@ void Autonomous::AutoProgram2(void){
 	
 }
 
+void Autonomous::SetProgramNumber(UINT32 ProgramNum){
+	Program = ProgramNum;
+}
+
+UINT32 Autonomous::GetProgramNumber(void){
+	return Program;
+}
+
 #if !EXCLUDE_AUTO
 void Autonomous::IdentifyFriendOrFoe() {
 	// TODO: Put some actual C++ code in here

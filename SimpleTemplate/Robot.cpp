@@ -94,12 +94,13 @@ class PurpleMonkeys : public IterativeRobot {
 		ENABLE_AUTONOMOUS = 2, // Autonomous/Teleop jumper is on DS Input 2 (Jumper present is autonomous)
 		MODE_SWITCH_1 = 3,
 		MODE_SWITCH_2 = 4,
-		AUTONOMOUS_PROGRAM_DEC = 5,
-		AUTONOMOUS_PROGRAM_ING = 6,
+		AUTONOMOUS_PROGRAM_SWITCH_1 = 7,
+		AUTONOMOUS_PROGRAM_SWITCH_2 = 8,
 	} jumpers;
 
 	// 
 	int MasterControlMode;
+	int MasterProgramNumber;
 	bool AutoModeRunStop;
 public:
 	PurpleMonkeys(void)
@@ -219,6 +220,7 @@ public:
 		RFollowWheelEncoder = NULL;	//		RFollowWheelEncoder(4, 7, 4, 8,false),
 		LFollowWheelEncoder = NULL; 	//		LFollowWheelEncoder(4, 5, 4, 6, false)
 		MasterControlMode = 0; // Manual mode
+		MasterProgramNumber = 0;
 
 		SetDebugFlag(DEBUG_SCREEN_ONLY);
 	}
@@ -333,6 +335,7 @@ public:
 		///////////////////////////////////////////////////////////
 		// ROBOT "GOOD STATE" INITIALIZATION
 		MasterControlMode = MODE_MANUAL;
+		MasterProgramNumber = 0;
 		dprintf(LOG_INFO, "RedAlert: Mode set to Manual");
 		GetWatchdog().SetExpiration(100);
 		dprintf(LOG_INFO, "RedAlert: Watchdog started, 100 mseconds. Grrr!");
@@ -415,6 +418,7 @@ public:
 	// Disabled state methods
 	void DisabledInit(void) {
 		MasterControlMode = MODE_MANUAL;
+		MasterProgramNumber = 0;
 		Squeeky->Open();
 		Squeeky->SqueekySayHello();
 		if (testGyro==NULL)
@@ -426,6 +430,7 @@ public:
 
 	void DisabledPeriodic(void) {
 		CheckMode();
+		CheckProgram();
 //		int DSMode;
 //		DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 //
@@ -473,8 +478,10 @@ public:
 		// logger.CloseFile();
 
 		light->Set(0);
+		CheckProgram();
 		AutoProgram->Init();
 		AutoProgram->SetControls(myRobot);
+		AutoProgram->SetProgramNumber(MasterProgramNumber);
 	}
 
 	// This function is passed a normalized x coordinate value
@@ -561,21 +568,61 @@ public:
 
 		switch (DSMode) {
 		case MODE_MANUAL:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual        ");
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual");
 			break;
 		case MODE_SEMI_AUTO:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Semi-Automatic");
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Semi-A");
 			break;
 		case MODE_AUTO:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Full-Automatic");
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Full-A");
 			break;
 		default:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual (Error)");
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Error ");
 		}
 		dsLCD->UpdateLCD();
 		return ModeChanged;
 	}
 	
+	bool CheckProgram(void)
+	{
+		int ProgramNumber = 0;
+		bool ProgramChanged;
+		DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
+
+		ProgramNumber = m_ds->GetDigitalIn(AUTONOMOUS_PROGRAM_SWITCH_1) * 2 + m_ds->GetDigitalIn(AUTONOMOUS_PROGRAM_SWITCH_2);
+		ProgramChanged = (ProgramNumber == MasterProgramNumber);
+		
+		switch (ProgramNumber) {
+		case 3: //Manual mode
+			MasterProgramNumber = ProgramNumber - 1;
+			break;
+		case 1: //Semi automatic
+			MasterProgramNumber = ProgramNumber - 1;
+			break;
+		case 2: //Full automatic
+			MasterProgramNumber = ProgramNumber - 1;
+			break;
+		default:
+			MasterProgramNumber = 0;
+		}
+
+		switch (ProgramNumber) {
+		case 3:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 2");
+			break;
+		case 1:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 0");
+			break;
+		case 2:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 1");
+			break;
+		default:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: (0)");
+		}
+		dsLCD->UpdateLCD();
+		return ProgramChanged;
+	}
+
 	void TeleopPeriodic(void) {
 
 		GetWatchdog().Feed();

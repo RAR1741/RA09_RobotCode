@@ -28,6 +28,8 @@ public:
 	void Periodic();
 	void Continuous();
 	void IdentifyFriendOrFoe();
+	void SetProgramNumber(UINT32);
+	UINT32 GetProgramNumber(void);
 private:
 	void AutoProgram0();
 	void AutoProgram1();
