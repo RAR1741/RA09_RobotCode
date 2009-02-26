@@ -310,7 +310,7 @@ void Turret::Auto(void)
 	//Target();
 	//Track();
 	//UpdateState();
-	
+	Target();
 	pid->Disable();
 	//targetTrack->Enable();
 	
