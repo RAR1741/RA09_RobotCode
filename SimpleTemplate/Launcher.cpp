@@ -25,7 +25,25 @@ void Launcher::Update()
 	double input = 0.0;
 	
 	if(stick!=NULL && shouldRun) {	
+		//input = (((-stick->GetZ()+1.0) * .35) + .3);
 		input = -((-stick->GetZ()+1.0)/2.0);
+		
+		
+		// Makes sure that the launch motor is always running
+		// at a minimum speed, in case drivers forget to 
+		// throttle up and cause a jam.
+		if (fabs(input) < 0.3) input = (input <= 0) ? -.3 : .3;
+		
+		DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
+		dsLCD->Printf(DriverStationLCD::kUser_Line5, 9, "WHEEL:%1.4f", input);
+		
+		/*
+		if (input  -.3) {
+			input = -.3;
+		}
+		else if (input < .3) {
+			input = .3;
+		}*/
 	}
 	else {
 		motor->Set(0.0);

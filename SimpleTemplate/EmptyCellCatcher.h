@@ -13,6 +13,7 @@ public:
 private:
 	Solenoid * solenoidA;
 	Solenoid * solenoidB;
+	DigitalOutput *light;
 };
 
 #endif

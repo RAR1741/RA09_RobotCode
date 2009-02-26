@@ -166,10 +166,13 @@ void Turret::InitTurret(int motorSlot, int motorChannel,
 	pid->SetInputRange(-1, 1);
 	pid->SetOutputRange(-1, 1);
 	
+	pid->Disable();
 	targetTrack = new PIDController(0.5, 0, 0, theCam,Turret_Pos_Motor);
 	
 	targetTrack->SetInputRange(-1, 1);
 	targetTrack->SetOutputRange(-1,1);
+	
+	targetTrack->Disable();
 }
 Turret::~Turret()
 {
@@ -214,6 +217,8 @@ void Turret::TurretControl(Joystick * turretStick)
 }
 
 
+#define kSlowDownMaxOut	.5
+
 void Turret::Manual(Joystick *turretStick)
 {
 	EndServoish();
@@ -223,15 +228,34 @@ void Turret::Manual(Joystick *turretStick)
 	// Read Joystick X Axis
 	float x_axis = turretStick->GetX();
 	
+	
 	// Scale value down 2x?
-	// x_axis *= .60;
+	x_axis *= .80;
 	// Limit x_axis
 	
 	// Set motor to scaled value
 	if (x_axis < 0) {
+		if (Position_Encoder->GetVoltage() <= Turret::kCCWSlowDownVoltage)
+		{
+			if (x_axis <= - kSlowDownMaxOut) {
+				x_axis = - kSlowDownMaxOut;
+			}
+		}
+		if (Position_Encoder->GetVoltage() <= Turret::kCCWVoltage) {
+			x_axis = 0;
+		}
 		CounterClockwise_Limit->LimitNegative(x_axis);
 	}
 	else {
+		if (Position_Encoder->GetVoltage() >= Turret::kCWSlowDownVoltage)
+		{
+			if (x_axis >= kSlowDownMaxOut) {
+				x_axis = kSlowDownMaxOut;
+			}
+		}
+		if (Position_Encoder->GetVoltage() >= Turret::kCWVoltage) {
+			x_axis = 0;
+		}
 		Clockwise_Limit->LimitPositive(x_axis);
 	}
 	

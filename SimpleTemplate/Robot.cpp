@@ -46,7 +46,7 @@ class PurpleMonkeys : public IterativeRobot {
 	Joystick *rightStick;
 	Joystick *turretStick;
 	Joystick *testMotorStick; // For the Test Motor Encoder
-	DigitalOutput *light;
+
 	// Logger logger;
 	CameraControl *theCamera;
 	DashboardDataFormat *dashboardDataFormat;
@@ -161,7 +161,7 @@ public:
 		turretStick = NULL; //		turretStick(3), 
 		testMotorStick = NULL; //		testMotorStick(4),
 
-		light = NULL; //		light(4, 14), 
+		//light = NULL; //		light(4, 14), 
 		theCamera = NULL; //		theCamera(),
 		dashboardDataFormat = NULL; //		dashboardDataFormat(),
 		LMQuadEncoder = NULL;	//	LMQuadEncoder(4, 1, 4, 2, false),
@@ -242,7 +242,7 @@ public:
 				testMotorStick = new Joystick(4); //		testMotorStick(4),
 		dprintf(LOG_INFO,"RedAlert: Joysticks Initialized.");
 		dprintf(LOG_INFO,"RedAlert: Initializing Autonomous Light");
-				light = new DigitalOutput(4,14); //		light(4, 14),
+				//light = new DigitalOutput(6,14); //		light(4, 14),
 		dprintf(LOG_INFO,"RedAlert: Autonomous Light Initialized.");
 		dprintf(LOG_INFO,"RedAlert: Initializing Camera Control");
 				theCamera = new CameraControl(); //		theCamera(),
@@ -477,7 +477,7 @@ public:
 		// logger.Debug("Entering teleop mode...");
 		// logger.CloseFile();
 
-		light->Set(0);
+//		light->Set(0);
 		CheckProgram();
 		AutoProgram->Init();
 		AutoProgram->SetControls(myRobot);
@@ -526,7 +526,7 @@ public:
 		LMQuadEncoder->Start();
 		if (testGyro==NULL)
 			testGyro = new Gyro(1,1);
-		light->Set(1);
+	//	light->Set(1);
 		// myRobot.Drive(0.0, 0.0); // stop robot
 		// myRobot.Drive(0.5, 0.0); // Go Straight Forward!
 
