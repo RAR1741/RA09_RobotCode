@@ -13,7 +13,34 @@ Autonomous::Autonomous() {
 Autonomous::~Autonomous() {
 }
 
+void Autonomous::SetControls(RobotDrive *myRobot){
+	TheRobot = myRobot;
+}
+
 void Autonomous::Init() {
+	Stage = 0;
+	StageTickCount = 0;
+	Program = 0;
+	
+	Program0Stages[0] = 0;
+	Program0StageCounts[0] = 400;
+	Program0Stages[1] = 1;
+	Program0StageCounts[1] = 400;
+	Program0Stages[2] = 2;
+	Program0StageCounts[2] = 400;
+	Program0Stages[3] = 0;
+	Program0StageCounts[3] = 400;
+	Program0Stages[4] = 1;
+	Program0StageCounts[4] = 400;
+	Program0Stages[5] = 2;
+	Program0StageCounts[5] = 400;
+	Program0Stages[6] = 0;
+	Program0StageCounts[6] = 400;
+	Program0Stages[7] = 1;
+	Program0StageCounts[7] = 400;
+	Program0Stages[8] = 2;
+	Program0StageCounts[8] = 400;
+
 #if !EXCLUDE_AUTO
 	/* image data for tracking - override default parameters if needed */
 	/* recommend making PINK the first color because GREEN is more 
@@ -99,7 +126,7 @@ void Autonomous::Continuous() {
 		float currentH = horizontalServo->Get();
 		float normCurrentH = RangeToNormalized(currentH, 1);
 		float normDestH = normCurrentH + normDeltaHorizontal;	
-		/* narrow range keep servo from going too far */
+		/* narrow range keep servo from goi	ng too far */
 		if (normDestH > 1.0) normDestH = 1.0;
 		if (normDestH < -1.0) normDestH = -1.0;			
 		/* convert input to servo range */
@@ -127,6 +154,25 @@ void Autonomous::Continuous() {
 	}
 #endif
 void Autonomous::Periodic() {
+	StageTickCount++;
+	
+	switch(Program){
+	case 0:
+		AutoProgram0();
+		break;
+		
+	case 1:
+		AutoProgram1();
+		break;
+		
+	case 2:
+		AutoProgram2();
+		break;
+		
+	default:
+		break;
+	}
+	
 #if !EXCLUDE_AUTO
 	
 	if (FindTwoColors(td1, td2, ABOVE, &par) ) {
@@ -214,6 +260,41 @@ void Autonomous::Periodic() {
 		Wait(loopTime - ElapsedTime(lastTime) ); // seconds
 	}
 #endif
+}
+
+void Autonomous::AutoProgram0(void){
+	switch (Program0Stages[Stage]){
+		// Drive Straight
+		case 0:
+			TheRobot->Drive(0.5, 0.0);
+			break;
+
+		// Turn Left
+		case 1:
+			TheRobot->Drive(0.5, -0.5);
+			break;
+			
+		// Turn Right
+		case 2:
+			TheRobot->Drive(0.5, 0.5);
+			break;
+			
+		default:
+			break;
+	}
+	if (StageTickCount > Program0StageCounts[Stage])
+	{
+		Stage++;
+		StageTickCount = 0;
+	}
+}
+
+void Autonomous::AutoProgram1(void){
+	
+}
+
+void Autonomous::AutoProgram2(void){
+	
 }
 
 #if !EXCLUDE_AUTO

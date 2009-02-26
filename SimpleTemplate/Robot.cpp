@@ -68,6 +68,7 @@ class PurpleMonkeys : public IterativeRobot {
 
 	Accelerometer *testAccel_X, *testAccel_Y, *testAccel_Z;
 	//Solenoid Gate;
+	Autonomous *AutoProgram;
 	RobotHarvester *Harvester;
 	RobotElevator *Elevator;
 	GateController *TheGate;
@@ -93,6 +94,8 @@ class PurpleMonkeys : public IterativeRobot {
 		ENABLE_AUTONOMOUS = 2, // Autonomous/Teleop jumper is on DS Input 2 (Jumper present is autonomous)
 		MODE_SWITCH_1 = 3,
 		MODE_SWITCH_2 = 4,
+		AUTONOMOUS_PROGRAM_DEC = 5,
+		AUTONOMOUS_PROGRAM_ING = 6,
 	} jumpers;
 
 	// 
@@ -130,6 +133,7 @@ public:
 				testAccel_Y(1, 4),
 				testAccel_Z(1, 5),
 				//				Gate(8,1),
+				AutoProgram(NULL),
 				Harvester(4, 6, 2, 6), 
 				Elevator(),
 				// Collector(8,1),
@@ -197,6 +201,7 @@ public:
 		testAccel_Y = NULL;	//		testAccel_Y(1, 4),
 		testAccel_Z = NULL;	//		testAccel_Z(1, 5),
 				//				Gate(8,1),
+		AutoProgram = NULL;
 		Harvester = NULL; //Harvester(4, 6, 2, 6), 
 		Elevator = NULL;			//Elevator(),
 		//Collector = NULL;		// Collector(8,1),
@@ -290,6 +295,9 @@ public:
 				testAccel_Z = new Accelerometer(1,5);	//		testAccel_Z(1, 5),
 						//				Gate(8,1),
 				dprintf(LOG_INFO,"RedAlert: Accelerometers Initialized");
+				dprintf(LOG_INFO,"RedAlert: Initializing Autonomous Program");
+				AutoProgram = new Autonomous();
+				dprintf(LOG_INFO,"RedAlert: Autonomous Program Initialized");
 				dprintf(LOG_INFO,"RedAlert: Initializing Harvester");
 				Harvester = new RobotHarvester(4,6,2,6); //Harvester(4, 6, 2, 6),
 				dprintf(LOG_INFO,"RedAlert: Harvester Initialized");
@@ -465,7 +473,8 @@ public:
 		// logger.CloseFile();
 
 		light->Set(0);
-		// Auto.Init();
+		AutoProgram->Init();
+		AutoProgram->SetControls(myRobot);
 	}
 
 	// This function is passed a normalized x coordinate value
@@ -484,7 +493,7 @@ public:
 		// counter++;
 		// if (counter>=400)
 		//	myRobot.Drive(0.0, 0.0);
-		// Auto.Periodic();
+		AutoProgram->Periodic();
 		TheTurret->TurretControl(); // This updates the Target in Sight member variable;
 
 		if (TheTurret->TargetInSight()) {
@@ -499,7 +508,7 @@ public:
 
 	void AutonomousContinuous(void) {
 		// UpdateDashboard();
-		// Auto.Continuous();
+		AutoProgram->Continuous();
 	}
 
 	// Teleop state methods
