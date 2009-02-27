@@ -7,6 +7,7 @@
 #define EXCLUDE_AUTO	1
 
 #include "wpilib.h"
+#include "Timer.h"
 
 #if !EXCLUDE_AUTO
 #include "TrackAPI.h" // TrackAPI depends on wpilib.h DON'T ERASE THAT INCLUDE!
@@ -31,17 +32,15 @@ public:
 	void SetProgramNumber(UINT32);
 	UINT32 GetProgramNumber(void);
 private:
-	void AutoProgram0();
-	void AutoProgram1();
-	void AutoProgram2();
 	////////////////////////////////////////////////////////
 	// STATE
 	UINT32 Stage;
-	UINT32 StageTickCount;
+	UINT32 CurrentStageDuration;
 	UINT32 Program;
 	RobotDrive *TheRobot;
-	UINT32 Program0Stages[9];
-	UINT32 Program0StageCounts[9];
+	UINT32 ProgramStages[3][30];
+	double StageDuration[3][30];
+	Timer StageTimer;
 
 #if !EXCLUDE_AUTO
 	TrackingThreshold td1, td2;		// color thresholds			

@@ -1,6 +1,17 @@
 
 #include "Autonomous.h"
 
+#define ACTION_STOP 0
+#define ACTION_STRAIGHT_QUARTER 1
+#define ACTION_STRAIGHT_HALF 2
+#define ACTION_STRAIGHT_FULL 3
+#define ACTION_LEFT_QUARTER 4 
+#define ACTION_LEFT_HALF 5
+#define ACTION_LEFT_FULL 6
+#define ACTION_RIGHT_QUARTER 7
+#define ACTION_RIGHT_HALF 8
+#define ACTION_RIGHT_FULL 9
+
 #if !EXCLUDE_AUTO
 #include "Target.h"
 #endif
@@ -19,27 +30,36 @@ void Autonomous::SetControls(RobotDrive *myRobot){
 
 void Autonomous::Init() {
 	Stage = 0;
-	StageTickCount = 0;
+	CurrentStageDuration = 0;
 	Program = 0;
 	
-	Program0Stages[0] = 0;
-	Program0StageCounts[0] = 100;
-	Program0Stages[1] = 1;
-	Program0StageCounts[1] = 100;
-	Program0Stages[2] = 2;
-	Program0StageCounts[2] = 200;
-	Program0Stages[3] = 0;
-	Program0StageCounts[3] = 200;
-	Program0Stages[4] = 1;
-	Program0StageCounts[4] = 100;
-	Program0Stages[5] = 2;
-	Program0StageCounts[5] = 100;
-	Program0Stages[6] = 0;
-	Program0StageCounts[6] = 200;
-	Program0Stages[7] = 1;
-	Program0StageCounts[7] = 100;
-	Program0Stages[8] = 0;
-	Program0StageCounts[8] = 3000;
+	ProgramStages[0][0] = ACTION_STRAIGHT_FULL;
+	StageDuration[0][0] = 3.0;
+	ProgramStages[0][1] = ACTION_LEFT_FULL;
+	StageDuration[0][1] = 12.0;
+	ProgramStages[0][2] = ACTION_STOP;
+	StageDuration[0][2] = 100.0;
+	
+//	ProgramStages[0][3] = ACTION_STOP;
+//	StageDuration[0][3] = 100.0;
+	
+	ProgramStages[1][0] = ACTION_STRAIGHT_HALF;
+	StageDuration[1][0] = 0.5;
+	ProgramStages[1][1] = ACTION_LEFT_QUARTER;
+	StageDuration[1][1] = 0.5;
+	ProgramStages[1][2] = ACTION_RIGHT_QUARTER;
+	StageDuration[1][2] = 1.0;
+	ProgramStages[1][3] = ACTION_STRAIGHT_QUARTER;
+	StageDuration[1][3] = 1.0;
+	ProgramStages[1][4] = ACTION_STOP;
+	StageDuration[1][4] = 100.0;
+
+	ProgramStages[2][0] = ACTION_STRAIGHT_FULL;
+	StageDuration[2][0] = 3.0;
+	ProgramStages[2][1] = ACTION_LEFT_FULL;
+	StageDuration[2][1] = 12.0;
+	ProgramStages[2][2] = ACTION_STOP;
+	StageDuration[2][2] = 100.0;
 
 #if !EXCLUDE_AUTO
 	/* image data for tracking - override default parameters if needed */
@@ -154,23 +174,56 @@ void Autonomous::Continuous() {
 	}
 #endif
 void Autonomous::Periodic() {
-	StageTickCount++;
-	
-	switch(Program){
-	case 0:
-		AutoProgram0();
-		break;
-		
-	case 1:
-		AutoProgram1();
-		break;
-		
-	case 2:
-		AutoProgram2();
-		break;
-		
-	default:
-		break;
+	switch (ProgramStages[Program][Stage]){
+		case ACTION_STOP:
+			TheRobot->Drive(0.0, 0.0);
+			break;
+			
+		case ACTION_STRAIGHT_QUARTER:
+			TheRobot->Drive(0.25, 0.0);
+			break;
+			
+		case ACTION_STRAIGHT_HALF:
+			TheRobot->Drive(0.5, 0.0);
+			break;
+			
+		case ACTION_STRAIGHT_FULL:
+			TheRobot->Drive(1.0, 0.0);
+			break;
+			
+		case ACTION_LEFT_QUARTER: 
+			TheRobot->Drive(0.5, -0.25);
+			break;
+			
+		case ACTION_LEFT_HALF:
+			TheRobot->Drive(0.5, -0.5);
+			break;
+			
+		case ACTION_LEFT_FULL:
+			TheRobot->Drive(0.5, -1.0);
+			break;
+			
+		case ACTION_RIGHT_QUARTER:
+			TheRobot->Drive(0.5, 0.25);
+			break;
+			
+		case ACTION_RIGHT_HALF:
+			TheRobot->Drive(0.5, 0.5);
+			break;
+			
+		case ACTION_RIGHT_FULL:
+			TheRobot->Drive(0.5, 1.0);
+			break;
+
+		default:
+			TheRobot->Drive(0.0, 0.0);
+			break;
+	}
+	StageTimer.Start();
+	if (StageTimer.Get() > StageDuration[Program][Stage])
+	{
+		Stage++;
+		StageTimer.Reset();
 	}
 	
 #if !EXCLUDE_AUTO
@@ -260,41 +313,6 @@ void Autonomous::Periodic() {
 		Wait(loopTime - ElapsedTime(lastTime) ); // seconds
 	}
 #endif
-}
-
-void Autonomous::AutoProgram0(void){
-	switch (Program0Stages[Stage]){
-		// Drive Straight
-		case 0:
-			TheRobot->Drive(0.5, 0.0);
-			break;
-
-		// Turn Left
-		case 1:
-			TheRobot->Drive(0.5, -0.5);
-			break;
-			
-		// Turn Right
-		case 2:
-			TheRobot->Drive(0.5, 0.5);
-			break;
-			
-		default:
-			break;
-	}
-	if (StageTickCount > Program0StageCounts[Stage])
-	{
-		Stage++;
-		StageTickCount = 0;
-	}
-}
-
-void Autonomous::AutoProgram1(void){
-	
-}
-
-void Autonomous::AutoProgram2(void){
-	
 }
 
 void Autonomous::SetProgramNumber(UINT32 ProgramNum){
