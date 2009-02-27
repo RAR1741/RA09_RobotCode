@@ -420,8 +420,8 @@ public:
 	void DisabledInit(void) {
 		MasterControlMode = MODE_MANUAL;
 		MasterProgramNumber = 0;
-		Squeeky->Open();
-		Squeeky->SqueekySayHello();
+//		Squeeky->Open();
+//		Squeeky->SqueekySayHello();
 		if (testGyro==NULL)
 			testGyro = new Gyro(1,1);
 
@@ -548,7 +548,7 @@ public:
 	{
 		int DSMode = 0;
 		bool ModeChanged;
-		DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
+//		DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 
 		DSMode = m_ds->GetDigitalIn(MODE_SWITCH_1) * 2 + m_ds->GetDigitalIn(MODE_SWITCH_2);
 		ModeChanged = (DSMode == MasterControlMode);
@@ -567,20 +567,20 @@ public:
 			MasterControlMode = MODE_MANUAL;
 		}
 
-		switch (DSMode) {
-		case MODE_MANUAL:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual");
-			break;
-		case MODE_SEMI_AUTO:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Semi-A");
-			break;
-		case MODE_AUTO:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Full-A");
-			break;
-		default:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Error ");
-		}
-		dsLCD->UpdateLCD();
+//		switch (DSMode) {
+//		case MODE_MANUAL:
+//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual");
+//			break;
+//		case MODE_SEMI_AUTO:
+//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Semi-A");
+//			break;
+//		case MODE_AUTO:
+//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Full-A");
+//			break;
+//		default:
+//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Error ");
+//		}
+//		dsLCD->UpdateLCD();
 		return ModeChanged;
 	}
 	
@@ -588,7 +588,7 @@ public:
 	{
 		int ProgramNumber = 0;
 		bool ProgramChanged;
-		DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
+//		DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 
 		ProgramNumber = m_ds->GetDigitalIn(AUTONOMOUS_PROGRAM_SWITCH_1) * 2 + m_ds->GetDigitalIn(AUTONOMOUS_PROGRAM_SWITCH_2);
 		ProgramChanged = (ProgramNumber == MasterProgramNumber);
@@ -607,20 +607,20 @@ public:
 			MasterProgramNumber = 0;
 		}
 
-		switch (ProgramNumber) {
-		case 3:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 2");
-			break;
-		case 1:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 0");
-			break;
-		case 2:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 1");
-			break;
-		default:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: (0)");
-		}
-		dsLCD->UpdateLCD();
+//		switch (ProgramNumber) {
+//		case 3:
+//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 2");
+//			break;
+//		case 1:
+//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 0");
+//			break;
+//		case 2:
+//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 1");
+//			break;
+//		default:
+//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: (0)");
+//		}
+//		dsLCD->UpdateLCD();
 		return ProgramChanged;
 	}
 
@@ -656,11 +656,11 @@ public:
 		else
 			AutoModeRunStop = false;
 		
-		if (testMotorStick->GetButton(testMotorStick->kTopButton)) {
-			LMQuadEncoder->Reset();
-			delete testGyro;
-			testGyro = new Gyro(1,1);
-		}
+//		if (testMotorStick->GetButton(testMotorStick->kTopButton)) {
+//			LMQuadEncoder->Reset();
+//			delete testGyro;
+//			testGyro = new Gyro(1,1);
+//		}
 
 //		// Check to see if the Master Control Mode has changed
 //		// If so, update the modes for the Harvester, Elevator, and Turret
@@ -707,6 +707,7 @@ public:
 	}
 
 	void TeleopContinuous(void) {
+		GetWatchdog().Feed();
 	}
 
 	void UpdateDashboard(void) {

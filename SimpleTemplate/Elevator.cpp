@@ -89,7 +89,7 @@ void RobotElevator::Process(bool LauncherStatus, bool RunStop)
 					
 					
 					if (ElevatorStick->GetRawButton(1) && !isJammed)
-						ElevatorMotor->Set(.5);
+						ElevatorMotor->Set(ELEVATOR_SPEED);
 					else if(!isJammed){
 						ElevatorMotor->Set(0);
 					}
@@ -112,7 +112,7 @@ void RobotElevator::Process(bool LauncherStatus, bool RunStop)
 				UntripFlag=true;
 			}
 			if(CycleFlag){ // if we are cycling
-					Cycle(.5);
+					Cycle(ELEVATOR_SPEED);
 			}
 			//DetectJams();
 			if(isJammed)
@@ -152,7 +152,7 @@ void RobotElevator::Process(bool LauncherStatus, bool RunStop)
 					if(isJammed)
 						State = 11;
 					else if(CycleFlag){
-						Cycle(.5);
+						Cycle(ELEVATOR_SPEED);
 						State = 3;
 					}
 					else if(!BusyFlag)
@@ -247,7 +247,7 @@ bool RobotElevator::IsFull()
 
 void RobotElevator::HomeIt()
 {
-		ElevatorMotor->Set(.25);
+		ElevatorMotor->Set(HOME_IT_SPEED);
 		BusyFlag = true;
 		if(!HomeSwitch->IsTripped()){
 			ElevatorMotor->Set(0);

@@ -11,6 +11,9 @@
 #define ELEVATOR_STATE_FULL 0
 #define ELEVATOR_STATE_EMPTY 1
 
+#define ELEVATOR_SPEED .45
+#define HOME_IT_SPEED .2
+
 
 class RobotElevator
 {
