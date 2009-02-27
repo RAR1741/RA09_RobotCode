@@ -33,33 +33,28 @@ void Autonomous::Init() {
 	CurrentStageDuration = 0;
 	Program = 0;
 	
-	ProgramStages[0][0] = ACTION_STRAIGHT_FULL;
-	StageDuration[0][0] = 3.0;
-	ProgramStages[0][1] = ACTION_LEFT_FULL;
-	StageDuration[0][1] = 12.0;
-	ProgramStages[0][2] = ACTION_STOP;
-	StageDuration[0][2] = 100.0;
-	
+	ProgramStages[0][0] = ACTION_LEFT_QUARTER;
+	StageDuration[0][0] = 5.5;
+	//ProgramStages[2][1] = ACTION_LEFT_FULL;
+	//StageDuration[2][1] = 12.0;
+	ProgramStages[0][1] = ACTION_STOP;
+	StageDuration[0][1] = 100.0;	
 //	ProgramStages[0][3] = ACTION_STOP;
 //	StageDuration[0][3] = 100.0;
 	
-	ProgramStages[1][0] = ACTION_STRAIGHT_HALF;
-	StageDuration[1][0] = 0.5;
-	ProgramStages[1][1] = ACTION_LEFT_QUARTER;
-	StageDuration[1][1] = 0.5;
-	ProgramStages[1][2] = ACTION_RIGHT_QUARTER;
-	StageDuration[1][2] = 1.0;
-	ProgramStages[1][3] = ACTION_STRAIGHT_QUARTER;
-	StageDuration[1][3] = 1.0;
-	ProgramStages[1][4] = ACTION_STOP;
-	StageDuration[1][4] = 100.0;
+	ProgramStages[1][0] = ACTION_STRAIGHT_FULL;
+	StageDuration[1][0] = 1.5;
+	ProgramStages[1][1] = ACTION_LEFT_FULL;
+	StageDuration[1][1] = 13.5;
+	ProgramStages[1][2] = ACTION_STOP;
+	StageDuration[1][2] = 100.0;
 
-	ProgramStages[2][0] = ACTION_STRAIGHT_FULL;
-	StageDuration[2][0] = 3.0;
-	ProgramStages[2][1] = ACTION_LEFT_FULL;
-	StageDuration[2][1] = 12.0;
-	ProgramStages[2][2] = ACTION_STOP;
-	StageDuration[2][2] = 100.0;
+	ProgramStages[2][0] = ACTION_RIGHT_QUARTER;
+	StageDuration[2][0] = 5.5;
+	//ProgramStages[2][1] = ACTION_LEFT_FULL;
+	//StageDuration[2][1] = 12.0;
+	ProgramStages[2][1] = ACTION_STOP;
+	StageDuration[2][1] = 100.0;
 
 #if !EXCLUDE_AUTO
 	/* image data for tracking - override default parameters if needed */

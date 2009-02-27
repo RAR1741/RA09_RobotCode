@@ -69,28 +69,36 @@ AutoTurret::AutoTurret()
 	//custom2.B.minValue = 133;
 	custom2.B.maxValue = 150;
 #else
-	custom1.R.minValue = 240;
+	
+//	61,131,146	// Dark green
+//	200,230,255	// Light green
+//
+//	230, 140, 160	// Dark Pink
+//	255, 190, 230	// Light Pink
+
+
+	custom1.R.minValue = 230;
 	custom1.R.maxValue = 255;
-	custom1.G.minValue = 90;
+	custom1.G.minValue = 140;
 	//custom1.G.minValue = 70;
-	custom1.G.maxValue = 120;
+	custom1.G.maxValue = 190;
 	//custom1.G.maxValue = 92;
-	custom1.B.minValue = 180;
+	custom1.B.minValue = 160;
 	//custom1.B.minValue = 150;
-	custom1.B.maxValue = 210;
+	custom1.B.maxValue = 230;
 	
 	sprintf(custom2.name, "GREEN");
-	custom2.R.minValue = 90;
+	custom2.R.minValue = 61;
 	//custom2.R.minValue = 80;
-	custom2.R.maxValue = 120;
+	custom2.R.maxValue = 200;
 	//custom2.R.maxValue = 90;
-	custom2.G.minValue = 200;
+	custom2.G.minValue = 131;
 	//custom2.G.minValue = 185;
-	custom2.G.maxValue = 250;
+	custom2.G.maxValue = 230;
 	//custom2.G.maxValue = 215;
-	custom2.B.minValue = 150;
+	custom2.B.minValue = 146;
 	//custom2.B.minValue = 133;
-	custom2.B.maxValue = 190;
+	custom2.B.maxValue = 255;
 #endif
 	masterControl = NULL;
 	
@@ -160,19 +168,19 @@ void AutoTurret::InitTurret(int motorSlot, int motorChannel,
 	joystickController->SetOutputRange(-1.0, 1.0);
 #endif
 	
-	pid = new PIDController(1.25, 0, 0, Position_Encoder, Turret_Pos_Motor);
-	
-	//pid->SetInputRange(0, 5);
-	pid->SetInputRange(-1, 1);
-	pid->SetOutputRange(-1, 1);
-	
-	pid->Disable();
-	targetTrack = new PIDController(0.5, 0, 0, theCam,Turret_Pos_Motor);
-	
-	targetTrack->SetInputRange(-1, 1);
-	targetTrack->SetOutputRange(-1,1);
-	
-	targetTrack->Disable();
+//	pid = new PIDController(1.25, 0, 0, Position_Encoder, Turret_Pos_Motor);
+//	
+//	//pid->SetInputRange(0, 5);
+//	pid->SetInputRange(-1, 1);
+//	pid->SetOutputRange(-1, 1);
+//	
+//	pid->Disable();
+//	targetTrack = new PIDController(0.5, 0, 0, theCam,Turret_Pos_Motor);
+//	
+//	targetTrack->SetInputRange(-1, 1);
+//	targetTrack->SetOutputRange(-1,1);
+//	
+//	targetTrack->Disable();
 }
 AutoTurret::~AutoTurret()
 {
@@ -200,8 +208,8 @@ void AutoTurret::TurretControl(Joystick * turretStick)
 		break;
 	case MODE_SEMI_AUTO: // Semi-Automatic (BANG! BANG!)
 		//ManualPositionMode(turretStick);
-		//Auto();
-		Manual(turretStick);
+		Auto();
+		//Manual(turretStick);
 		//ManualPositionMode(turretStick);
 		//ServoPositionMode(turretStick);
 		break;
@@ -275,54 +283,56 @@ void AutoTurret::Rotate(float input)
 
 void AutoTurret::Manual(Joystick *turretStick)
 {
-	EndServoish();
-	pid->Disable();
-	targetTrack->Disable();
-	
-	// Read Joystick X Axis
-	float x_axis = turretStick->GetX();
-	
-	
-	// Scale value down 2x?
-	x_axis *= .80;
-	// Limit x_axis
-	
-	// Set motor to scaled value
-	if (x_axis < 0) {
-		if (Position_Encoder->GetVoltage() <= AutoTurret::kCCWSlowDownVoltage)
-		{
-			if (x_axis <= - kSlowDownMaxOut) {
-				x_axis = - kSlowDownMaxOut;
-			}
-		}
-		if (Position_Encoder->GetVoltage() <= AutoTurret::kCCWVoltage) {
-			x_axis = 0;
-		}
-		CounterClockwise_Limit->LimitNegative(x_axis);
-	}
-	else {
-		if (Position_Encoder->GetVoltage() >= AutoTurret::kCWSlowDownVoltage)
-		{
-			if (x_axis >= kSlowDownMaxOut) {
-				x_axis = kSlowDownMaxOut;
-			}
-		}
-		if (Position_Encoder->GetVoltage() >= AutoTurret::kCWVoltage) {
-			x_axis = 0;
-		}
-		Clockwise_Limit->LimitPositive(x_axis);
-	}
-	
-	
-	Turret_Pos_Motor->Set(x_axis);
-	
-	DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
-	//dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "TSMAN:%.3f",x_axis);
-	dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Turret :%7.1f V", this->EncoderVoltage());
-	
-	Target();	// Get tracking data
-	UpdateState();
-	return; // Guess what? return.
+	// Use new rotate code
+	Rotate(turretStick->GetX());
+//	/*EndServoish();
+//	pid->Disable();
+//	targetTrack->Disable();
+//	
+//	// Read Joystick X Axis
+//	float x_axis = turretStick->GetX();
+//	
+//	
+//	// Scale value down 2x?
+//	x_axis *= .80;
+//	// Limit x_axis
+//	
+//	// Set motor to scaled value
+//	if (x_axis < 0) {
+//		if (Position_Encoder->GetVoltage() <= AutoTurret::kCCWSlowDownVoltage)
+//		{
+//			if (x_axis <= - kSlowDownMaxOut) {
+//				x_axis = - kSlowDownMaxOut;
+//			}
+//		}
+//		if (Position_Encoder->GetVoltage() <= AutoTurret::kCCWVoltage) {
+//			x_axis = 0;
+//		}
+//		CounterClockwise_Limit->LimitNegative(x_axis);
+//	}
+//	else {
+//		if (Position_Encoder->GetVoltage() >= AutoTurret::kCWSlowDownVoltage)
+//		{
+//			if (x_axis >= kSlowDownMaxOut) {
+//				x_axis = kSlowDownMaxOut;
+//			}
+//		}
+//		if (Position_Encoder->GetVoltage() >= AutoTurret::kCWVoltage) {
+//			x_axis = 0;
+//		}
+//		Clockwise_Limit->LimitPositive(x_axis);
+//	}
+//	
+//	
+//	Turret_Pos_Motor->Set(x_axis);
+//	
+//	DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
+//	//dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "TSMAN:%.3f",x_axis);
+//	dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Turret :%7.1f V", this->EncoderVoltage());
+//	
+//	Target();	// Get tracking data
+//	UpdateState();
+//	return; // Guess what? return.
 }
 
 void AutoTurret::GoToPos(float input)
@@ -384,48 +394,51 @@ void AutoTurret::ManualPositionMode(Joystick *turretStick)
 }
 void AutoTurret::Auto(void)
 {
-	//InitServoish();
-	//Target();
-	//Track();
-	//UpdateState();
-	Target();
 	pid->Disable();
-	//targetTrack->Enable();
-	
-	if (!this->TargetInSight()) {
-		targetTrack->Disable();
-		
-	} else {
-		targetTrack->Enable();
-		
-		float x_offset = this->TargetData().center_mass_x_normalized;
-		
-		
-		if (x_offset < 0) {
-				if (CounterClockwise_Limit->IsTripped()) {
-					//pid->SetSetpoint(Position_Encoder->PIDGet());
-					//targetTrack->Reset();
-					GoToPos(0);
-					return;
-				}
-			} else {
-				if (Clockwise_Limit->IsTripped()) {
-					//targetTrack->Reset();
-					//pid->SetSetpoint(Position_Encoder->PIDGet());
-					GoToPos(0);
-					return;
-				}
-			}
-		
-		theCam->SetRelativePosition(x_offset);
-	
-		
-		//TODO: This would be where we could "lead" the target
-		// Place crosshairs directly on the target
-		targetTrack->SetSetpoint(0);
-	}
-	
-	//pid->SetSetpoint(turretStick->GetX());
+	targetTrack->Disable();
+	AltTrack();
+//	//InitServoish();
+//	//Target();
+//	//Track();
+//	//UpdateState();
+//	Target();
+//	pid->Disable();
+//	//targetTrack->Enable();
+//	
+//	if (!this->TargetInSight()) {
+//		targetTrack->Disable();
+//		
+//	} else {
+//		targetTrack->Enable();
+//		
+//		float x_offset = this->TargetData().center_mass_x_normalized;
+//		
+//		
+//		if (x_offset < 0) {
+//				if (CounterClockwise_Limit->IsTripped()) {
+//					//pid->SetSetpoint(Position_Encoder->PIDGet());
+//					//targetTrack->Reset();
+//					GoToPos(0);
+//					return;
+//				}
+//			} else {
+//				if (Clockwise_Limit->IsTripped()) {
+//					//targetTrack->Reset();
+//					//pid->SetSetpoint(Position_Encoder->PIDGet());
+//					GoToPos(0);
+//					return;
+//				}
+//			}
+//		
+//		theCam->SetRelativePosition(x_offset);
+//	
+//		
+//		//TODO: This would be where we could "lead" the target
+//		// Place crosshairs directly on the target
+//		targetTrack->SetSetpoint(0);
+//	}
+//	
+//	//pid->SetSetpoint(turretStick->GetX());
 	
 }
 

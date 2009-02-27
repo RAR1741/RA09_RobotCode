@@ -18,6 +18,7 @@ using ::floor;
 #include "WPILib.h"
 #include "Personality.h"
 #include "Turret.h"
+#include "AutoTurret.h"
 #include "Toggle.h"
 #include "Harvester.h"
 #include "Elevator.h"
