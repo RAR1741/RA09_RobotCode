@@ -34,7 +34,7 @@ void Autonomous::Init() {
 	Program = 0;
 	
 	ProgramStages[0][0] = ACTION_LEFT_QUARTER;
-	StageDuration[0][0] = 5.5;
+	StageDuration[0][0] = 8;
 	//ProgramStages[2][1] = ACTION_LEFT_FULL;
 	//StageDuration[2][1] = 12.0;
 	ProgramStages[0][1] = ACTION_STOP;
@@ -50,7 +50,7 @@ void Autonomous::Init() {
 	StageDuration[1][2] = 100.0;
 
 	ProgramStages[2][0] = ACTION_RIGHT_QUARTER;
-	StageDuration[2][0] = 5.5;
+	StageDuration[2][0] = 8;
 	//ProgramStages[2][1] = ACTION_LEFT_FULL;
 	//StageDuration[2][1] = 12.0;
 	ProgramStages[2][1] = ACTION_STOP;
