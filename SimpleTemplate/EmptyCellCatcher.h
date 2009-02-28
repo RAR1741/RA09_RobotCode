@@ -11,6 +11,9 @@ public:
 	void Set(bool theBoolean);
 	void Init(UINT32 slotA, UINT32 channelA, UINT32 slotB, UINT32 channelB);
 private:
+	
+	void TurnOnGoggles(void);
+	void TurnOffGoggles(void);
 	Solenoid * solenoidA;
 	Solenoid * solenoidB;
 	DigitalOutput *light;

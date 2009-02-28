@@ -13,6 +13,8 @@ void CellCatcher::Set(bool theBoolean)
 	solenoidA->Set(theBoolean);
 	solenoidB->Set(!theBoolean);
 	light->Set(!theBoolean);
+	
+	
 	// this is actually correct.
 }
 
@@ -28,4 +30,8 @@ void CellCatcher::Init(UINT32 slotA, UINT32 channelA, UINT32 slotB, UINT32 chann
 	solenoidB = new Solenoid(slotB, channelB);
 	light = new DigitalOutput(6,13);
 	light->Set(1);
+	//TurnOffGoggles();
 }
+
+
+

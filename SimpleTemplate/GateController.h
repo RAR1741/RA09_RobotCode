@@ -17,6 +17,10 @@ public:
 	void Close(void);
 	
 	private:
+		
+		void TurnOnGoggles(void);
+		void TurnOffGoggles(void);
+		
 		Solenoid * solenoidA;
 		Solenoid * solenoidB;
 };
