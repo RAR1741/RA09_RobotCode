@@ -13,33 +13,53 @@ public:
 	
 	// Log ALL sensors. That's right. ALL of them.
 	// These enumerate the different sensors of each type.
-	enum Encoders { LeftMotor = 0, RightMotor, LeftFollow, RightFollow };
-	enum AccelAxis { XAxis = 0, YAxis, ZAxis };
-	enum CurrentSensor { ElevatorCurrent = 0, LaunchWheelsCurrent, 
+	enum RobotEncoder { LeftMotor = 0, RightMotor, LeftFollow, RightFollow };
+	static const int kNumEncoders = 4;
+	enum RobotAccelAxis { XAxis = 0, YAxis, ZAxis };
+	static const int kNumAccelAxis = 3;
+	enum RobotCurrentSensor { ElevatorCurrent = 0, LaunchWheelsCurrent, 
 		TurretPositioningCurrent, LeftSideDriverCurrent, RightSideDriverCurrent,
 		HarvesterCurrent};
+	static const int kNumCurrentSensors = 6;
 	enum RobotOutput { ElevatorOutput = 0, LaunchWheelsOutput, TurretPositioningOutput,
 		LeftSideDriveOutput, RightSideDriveOutput, HarvesterOutput };
-	};
+	static const int kNumOutputs = 6;
+
 	
 	
-	void SetQuadEncoder(enum Encoder encoder, UINT32 count);
-	void SetAccelerometerAxis(enum AccelAxis axis, UINT32 count);
+	void SetQuadEncoder(RobotEncoder encoder, UINT32 count);
+	void SetAccelerometerAxis(enum RobotAccelAxis axis, float x);
 	void SetGyroData(float rate, float temp, float I_angle);
 	void SetTurretPosition(float volts);
 	void SetBatteryVoltage(float volts);
 	
-	void SetCurrent(enum CurrentSensor cs, float amps);
+	void SetCurrent(enum RobotCurrentSensor cs, float amps);
 	
 	void SetPWMOutput(enum RobotOutput output, float power);
 	
-	void SetPneumaticData(bool solA, bool solB);
+	void SetPneumaticDataGate(bool solA, bool solB);
+	
+	void SetPneumaticDataGrabber(bool solA, bool solB);
 	
 	void SetAirCompressorData(bool currentlyCompressing);
 	
 	/////////////////////////////////////////////////////////////////////
 private:
+	UINT32 quad_encoder_counts[4];
+	float accel_inputs[3];
+	float gyro_rate;
+	float gyro_temp;
+	float gyro_integrated_angle;
+	float turret_potentiometer;
+	float battery_voltage;
+	float current_sensor_amps[6];
+	float pwm_outputs[6];
+	bool sol_A_Gate;
+	bool sol_B_Gate;
+	bool sol_A_Grabber;
+	bool sol_B_Grabber;
 	
+	bool air_compressing;
 };
 
 #endif
