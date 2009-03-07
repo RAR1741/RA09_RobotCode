@@ -22,39 +22,43 @@ void DashboardDataFormat::PackAndSend(void)
 	UINT32 module;
 	UINT32 channel;
 
-	// Pack identification junk
+	// Pack identification handshake flag header thingy
+	// Useful for picking out where "our" data begins.
+	// See Mr. Meyer's Packet Buffer Inspector Utility Thingamajig.
 	dashboardPacker.AddU8('*');
 	dashboardPacker.AddU8('=');
 	dashboardPacker.AddU8('=');
 	dashboardPacker.AddU8('*');
 	
 	// Pack the analog modules
-	for (module = 0; module < kAnalogModules; module++)
-	{
-		dashboardPacker.AddCluster();
-		for (channel = 0; channel < kAnalogChannels; channel++)
-		{
-			dashboardPacker.AddFloat(m_AnalogChannels[module][channel]);
-		}
-		dashboardPacker.FinalizeCluster();
-	}
-	// Pack the digital modules
-	for (module = 0; module < kDigitalModules; module++)
-	{
-		dashboardPacker.AddCluster();
-		dashboardPacker.AddU8(m_RelayFwd[module]);
-		dashboardPacker.AddU8(m_RelayRev[module]);
-		dashboardPacker.AddU16(m_DIOChannels[module]);
-		dashboardPacker.AddU16(m_DIOChannelsOutputEnable[module]);
-		dashboardPacker.AddCluster();
-		for(channel = 0; channel < kPwmChannels; channel++)
-		{
-			dashboardPacker.AddU8(m_PWMChannels[module][channel]);
-		}
-		dashboardPacker.FinalizeCluster();
-		dashboardPacker.FinalizeCluster();
-	}
+	// Don't pack them anymore. They're stupid.
+//	for (module = 0; module < kAnalogModules; module++)
+//	{
+//		dashboardPacker.AddCluster();
+//		for (channel = 0; channel < kAnalogChannels; channel++)
+//		{
+//			dashboardPacker.AddFloat(m_AnalogChannels[module][channel]);
+//		}
+//		dashboardPacker.FinalizeCluster();
+//	}
+//	// Pack the digital modules
+//	for (module = 0; module < kDigitalModules; module++)
+//	{
+//		dashboardPacker.AddCluster();
+//		dashboardPacker.AddU8(m_RelayFwd[module]);
+//		dashboardPacker.AddU8(m_RelayRev[module]);
+//		dashboardPacker.AddU16(m_DIOChannels[module]);
+//		dashboardPacker.AddU16(m_DIOChannelsOutputEnable[module]);
+//		dashboardPacker.AddCluster();
+//		for(channel = 0; channel < kPwmChannels; channel++)
+//		{
+//			dashboardPacker.AddU8(m_PWMChannels[module][channel]);
+//		}
+//		dashboardPacker.FinalizeCluster();
+//		dashboardPacker.FinalizeCluster();
+//	}
 	// Pack the solenoid module
+	 
 	dashboardPacker.AddU8(m_SolenoidChannels);
 	
 	// TODO Figure out if U32 and I32 are causing problems together	
@@ -107,8 +111,8 @@ void DashboardDataFormat::PackAndSend(void)
 	dashboardPacker.AddU16(this->m_TurretState);
 	dashboardPacker.AddU8('*');
 	dashboardPacker.AddU8('^');
-	//dashboardPacker.AddFloat(m_TurretPotentEncoderVoltage);
-	dashboardPacker.AddFloat(42.54);
+	dashboardPacker.AddFloat(m_TurretPotentEncoderVoltage);
+	//dashboardPacker.AddFloat(42.54);
 	dashboardPacker.AddU8('^');
 	dashboardPacker.AddU8('*');
 	

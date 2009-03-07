@@ -71,6 +71,26 @@ public:
 	
 	INT32 m_LeftFollowerWheel;
 	INT32 m_RightFollowerWheel;
+	
+	float m_LeftMotorVel;
+	float m_RightMotorVel;
+	
+	float m_LeftFollowVel;
+	float m_RightFollowVel;
+	
+	float m_LaunchVel;
+	float m_TurretRotVel;
+	
+	float m_ElevatorVel;
+	
+	bool m_air_is_compressing;
+	
+	bool m_Gate_SolA;
+	bool m_Gate_SolB;
+	
+	bool m_Grabber_SolA;
+	bool m_Grabber_SolB;
+	
 	void PackAndSend(void);
 private:
 	DISALLOW_COPY_AND_ASSIGN(DashboardDataFormat);

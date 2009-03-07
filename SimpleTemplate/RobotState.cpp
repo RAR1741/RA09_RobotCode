@@ -55,10 +55,13 @@ RobotState::~RobotState()
 	
 }
 
-void RobotState::SetQuadEncoder(enum RobotEncoder encoder, INT32 count)
+void RobotState::SetQuadEncoder(enum RobotEncoder encoder, INT32 count, float velocity)
 {
 	if (encoder < 0 || encoder >= RobotState::kNumEncoders) return;
-	else quad_encoder_counts[encoder] = count;
+	else {
+		quad_encoder_counts[encoder] = count;
+		quad_encoder_vels[encoder] = velocity;
+	}
 }
 
 void RobotState::SetAccelerometerAxis(enum RobotAccelAxis axis, float x)
@@ -75,9 +78,10 @@ void RobotState::SetGyroData(float rate, float temp, float I_angle)
 	
 }
 
-void RobotState::SetTurretPosition(float volts)
+void RobotState::SetTurretPosition(float volts, float velocity)
 {
 	turret_potentiometer = volts;
+	turret_velocity = velocity;
 }
 void RobotState::SetBatteryVoltage(float volts)
 {

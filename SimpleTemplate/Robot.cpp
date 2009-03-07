@@ -256,9 +256,10 @@ public:
 		dprintf(LOG_INFO,"RedAlert: DashboardDataFormat Initialized.");
 		dprintf(LOG_INFO,"RedAlert: Initializing Drive Encoders");
 				LMQuadEncoder = new Encoder(4, 1, 4, 2, false);	//	LMQuadEncoder(4, 1, 4, 2, false),
+		//dprintf(LOG_INFO,"RedAlert: ");
 				RMQuadEncoder = new Encoder(4, 3, 4, 4,false); //		RMQuadEncoder(4, 3, 4, 4,false),
-				LMWheelEncoder = new Encoder(4, 5, 4, 6, false);  //		LMWheelEncoder(4, 5, 4, 6, false),
-				RMWheelEncoder = new Encoder(4, 7, 4, 8, false); //		RMWheelEncoder(4, 7, 4, 8, false),
+				LMWheelEncoder = new Encoder(4, 5, 4, 6, true);  //		LMWheelEncoder(4, 5, 4, 6, false),
+				RMWheelEncoder = new Encoder(4, 7, 4, 8, true); //		RMWheelEncoder(4, 7, 4, 8, false),
 						//ElevatorEncoder(4,11,4,12,false),
 				//TurretEncoder = new Encoder(4, 13, 4, 14, false);		// TurretEncoder(4, 13, 4, 14, false),
 		dprintf(LOG_INFO,"RedAlert: Drive Encoders Initialized.");
@@ -742,6 +743,7 @@ public:
 		dashboardDataFormat->m_DIOChannelsOutputEnable[0]--;
 		dashboardDataFormat->m_RM_QuadEncoder = RMQuadEncoder->Get();
 		dashboardDataFormat->m_LM_QuadEncoder = LMQuadEncoder->Get();
+		//dashboardDataFormat->m_LM_QuadEncoder =  578; //LMQuadEncoder->Get();
 		dashboardDataFormat->m_RMWheelEncoder = RMWheelEncoder->Get();
 		dashboardDataFormat->m_LMWheelEncoder = LMWheelEncoder->Get();
 		dashboardDataFormat->m_LeftMotorVoltage = leftCurrent->GetValue();

@@ -29,10 +29,10 @@ public:
 
 	
 	
-	void SetQuadEncoder(RobotEncoder encoder, INT32 count);
+	void SetQuadEncoder(RobotEncoder encoder, INT32 count, float vel);
 	void SetAccelerometerAxis(enum RobotAccelAxis axis, float x);
 	void SetGyroData(float rate, float temp, float I_angle);
-	void SetTurretPosition(float volts);
+	void SetTurretPosition(float volts, float vel);
 	void SetBatteryVoltage(float volts);
 	
 	void SetCurrent(enum RobotCurrentSensor cs, float amps);
@@ -49,11 +49,13 @@ public:
 	/////////////////////////////////////////////////////////////////////
 private:
 	INT32 quad_encoder_counts[4];
+	float quad_encoder_vels[4];
 	float accel_inputs[3];
 	float gyro_rate;
 	float gyro_temp;
 	float gyro_integrated_angle;
 	float turret_potentiometer;
+	float turret_velocity;
 	float battery_voltage;
 	float current_sensor_amps[6];
 	float pwm_outputs[6];
