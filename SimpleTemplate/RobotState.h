@@ -3,6 +3,8 @@
 
 #include "WPILib.h"
 
+#include "DashboardDataFormat.h"
+
 class RobotState {
 public:
 	RobotState();
@@ -27,7 +29,7 @@ public:
 
 	
 	
-	void SetQuadEncoder(RobotEncoder encoder, UINT32 count);
+	void SetQuadEncoder(RobotEncoder encoder, INT32 count);
 	void SetAccelerometerAxis(enum RobotAccelAxis axis, float x);
 	void SetGyroData(float rate, float temp, float I_angle);
 	void SetTurretPosition(float volts);
@@ -43,9 +45,10 @@ public:
 	
 	void SetAirCompressorData(bool currentlyCompressing);
 	
+	void PackData(DashboardDataFormat *packet);
 	/////////////////////////////////////////////////////////////////////
 private:
-	UINT32 quad_encoder_counts[4];
+	INT32 quad_encoder_counts[4];
 	float accel_inputs[3];
 	float gyro_rate;
 	float gyro_temp;
