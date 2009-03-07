@@ -3,12 +3,12 @@
 RobotState::RobotState()
 {
 	//INT32 quad_encoder_counts[4];
-	for (int i = 0; i < RobotState::kNumEncoders) {
+	for (int i = 0; i < RobotState::kNumEncoders; i++) {
 		quad_encoder_counts[i] = 0;
 	}
 	
 	//float accel_inputs[3];
-	for (int i = 0; i < RobotState::kNumAccelAxis) {
+	for (int i = 0; i < RobotState::kNumAccelAxis; i++) {
 		accel_inputs[i] = 0.0;
 	}
 	
@@ -115,23 +115,42 @@ void RobotState::SetAirCompressorData(bool currentlyCompressing)
 	air_compressing = currentlyCompressing;
 }
 
-void PackData(DashboardDataFormat *packet)
+void RobotState::PackData(DashboardDataFormat *packet)
 {
-	INT32 quad_encoder_counts[4];
-		float accel_inputs[3];
-		float gyro_rate;
-		float gyro_temp;
-		float gyro_integrated_angle;
-		float turret_potentiometer;
-		float battery_voltage;
-		float current_sensor_amps[6];
-		float pwm_outputs[6];
-		bool sol_A_Gate;
-		bool sol_B_Gate;
-		bool sol_A_Grabber;
-		bool sol_B_Grabber;
-		
-		bool air_compressing;
-		
+//	
+//	INT32 quad_encoder_counts[4];
+//			float accel_inputs[3];
+//			float gyro_rate;
+//			float gyro_temp;
+//			float gyro_integrated_angle;
+//			float turret_potentiometer;
+//			float battery_voltage;
+//			float current_sensor_amps[6];
+//			float pwm_outputs[6];
+//			bool sol_A_Gate;
+//			bool sol_B_Gate;
+//			bool sol_A_Grabber;
+//			bool sol_B_Grabber;
+//
+//			bool air_compressing;
+	
+	packet->m_LM_QuadEncoder = quad_encoder_counts[RobotState::LeftMotor];
+	packet->m_LMWheelEncoder = quad_encoder_counts[RobotState::LeftFollow];
+	packet->m_LaunchEncoder = quad_encoder_counts[RobotState::LaunchWheelsOutput];
+	packet->m_RMWheelEncoder = quad_encoder_counts[RobotState::RightFollow];
+	packet->m_RM_QuadEncoder = quad_encoder_counts[RobotState::RightMotor];
+	
+	packet->m_gyroAngle = gyro_integrated_angle;
+	packet->m_gyroTemp = gyro_temp;
+	
+	packet->m_accelX = accel_inputs[RobotState::XAxis];
+	packet->m_accelY = accel_inputs[RobotState::YAxis];
+	packet->m_accelZ = accel_inputs[RobotState::ZAxis];
+	
+	packet->m_TurretPotentEncoderVoltage = turret_potentiometer;
+	
+	//packet->m_RightFollowerWheel = quad_encoder_counts[RobotState::RightFollow];
+	
+	
 	
 }

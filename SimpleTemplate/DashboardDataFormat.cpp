@@ -22,6 +22,12 @@ void DashboardDataFormat::PackAndSend(void)
 	UINT32 module;
 	UINT32 channel;
 
+	// Pack identification junk
+	dashboardPacker.AddU8('*');
+	dashboardPacker.AddU8('=');
+	dashboardPacker.AddU8('=');
+	dashboardPacker.AddU8('*');
+	
 	// Pack the analog modules
 	for (module = 0; module < kAnalogModules; module++)
 	{
@@ -99,7 +105,12 @@ void DashboardDataFormat::PackAndSend(void)
 	dashboardPacker.AddU16(this->m_LeftState);
 	dashboardPacker.AddU16(this->m_RightState);
 	dashboardPacker.AddU16(this->m_TurretState);
-	dashboardPacker.AddFloat(m_TurretPotentEncoderVoltage);
+	dashboardPacker.AddU8('*');
+	dashboardPacker.AddU8('^');
+	//dashboardPacker.AddFloat(m_TurretPotentEncoderVoltage);
+	dashboardPacker.AddFloat(42.54);
+	dashboardPacker.AddU8('^');
+	dashboardPacker.AddU8('*');
 	
 //	dashboardPacker.AddI32(m_LeftFollowerWheel);
 //	dashboardPacker.AddI32(m_RightFollowerWheel);

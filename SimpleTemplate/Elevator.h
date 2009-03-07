@@ -13,7 +13,7 @@
 
 #define ELEVATOR_SPEED .45
 #define HOME_IT_SPEED .2
-#define JAM_CURRENT_THESHOLD 13.5
+#define JAM_CURRENT_THESHOLD 14.5
 
 class RobotElevator
 {

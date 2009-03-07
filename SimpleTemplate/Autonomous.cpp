@@ -42,10 +42,10 @@ void Autonomous::Init() {
 //	ProgramStages[0][3] = ACTION_STOP;
 //	StageDuration[0][3] = 100.0;
 	
-	ProgramStages[1][0] = ACTION_STRAIGHT_FULL;
-	StageDuration[1][0] = 1.5;
-	ProgramStages[1][1] = ACTION_LEFT_FULL;
-	StageDuration[1][1] = 13.5;
+	ProgramStages[1][0] = ACTION_STRAIGHT_HALF;
+	StageDuration[1][0] = 1.0;
+	ProgramStages[1][1] = ACTION_STRAIGHT_FULL;
+	StageDuration[1][1] = 120.0;
 	ProgramStages[1][2] = ACTION_STOP;
 	StageDuration[1][2] = 100.0;
 

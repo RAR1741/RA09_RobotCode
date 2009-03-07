@@ -28,6 +28,8 @@ using ::floor;
 #include "Mode.h"
 #include "DriverStationLCD.h"
 
+#include "RobotState.h"
+
 #define USR_RQ_EJECT 0
 #define USR_RQ_IDLE 1
 
@@ -84,6 +86,7 @@ class PurpleMonkeys : public IterativeRobot {
 	Encoder *RFollowWheelEncoder;
 	Encoder *LFollowWheelEncoder;
 	IFF *IdentFriendFoe;
+	RobotState *r_state;
 	// State Variables for toggle code.
 
 	// Elevator state vars
@@ -222,7 +225,7 @@ public:
 		LFollowWheelEncoder = NULL; 	//		LFollowWheelEncoder(4, 5, 4, 6, false)
 		MasterControlMode = 0; // Manual mode
 		MasterProgramNumber = 0;
-
+		r_state = NULL;
 		SetDebugFlag(DEBUG_SCREEN_ONLY);
 	}
 	// One time initialization of the robot
@@ -331,7 +334,10 @@ public:
 				//RFollowWheelEncoder = new Encoder(4, 7, 4, 8,false);	//		RFollowWheelEncoder(4, 7, 4, 8,false),
 				//LFollowWheelEncoder = new Encoder(4, 5, 4, 6, false); 	//		LFollowWheelEncoder(4, 5, 4, 6, false)
 				dprintf(LOG_INFO,"RedAlert: FollowWheelEncoders Initialized");
-		
+				
+				r_state = new RobotState();
+				dprintf(LOG_INFO,"RedAlert: Robot Logging State Packer Initialized.");
+				
 		dprintf(LOG_INFO, "RedAlert: ////// Initializing Initializing //////");
 		///////////////////////////////////////////////////////////
 		// ROBOT "GOOD STATE" INITIALIZATION
@@ -604,7 +610,7 @@ public:
 			MasterProgramNumber = ProgramNumber - 1;
 			break;
 		default:
-			MasterProgramNumber = 0;
+			MasterProgramNumber = 1;
 		}
 
 //		switch (ProgramNumber) {
