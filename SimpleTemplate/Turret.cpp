@@ -1,7 +1,6 @@
 #include "Turret.h"
 #include "DriverStationLCD.h"
 #include "Mode.h"
-
 #include "DriverStation.h"
 #include <cmath> // For some advanced math that I need. :)
 
@@ -116,11 +115,13 @@ Turret::Turret()
 	panIncrement = 0;
 	staleImage = false;
 	
+	am_homing = false;
+	
 	savedImageTimestamp = 0.0;
 	servoDeadband = 0.01;					// move if > this amount 
 	framesPerSecond = 15;					// number of camera frames to get per second
 	sinStart = 0.0;							// control where to start the sine wave for pan
-	
+	ds = DriverStation::GetInstance();
 	//cameraRotation = ROT_0;					// input parameter for camera orientation
 			
 }
@@ -220,13 +221,20 @@ void Turret::TurretControl(Joystick * turretStick)
 #define kSlowDownMaxOut	.5
 
 void Turret::Manual(Joystick *turretStick)
+{ 
+	
+	if (am_homing || ds->GetDigitalIn(6)) HomeIt();
+	else Rotate(turretStick->GetX());
+}
+
+void Turret::Rotate(float input)
 {
 	EndServoish();
 	pid->Disable();
 	targetTrack->Disable();
 	
 	// Read Joystick X Axis
-	float x_axis = turretStick->GetX();
+	float x_axis = input;
 	
 	
 	// Scale value down 2x?
@@ -270,7 +278,6 @@ void Turret::Manual(Joystick *turretStick)
 	UpdateState();
 	return; // Guess what? return.
 }
-
 void Turret::GoToPos(float input)
 {
 	pid->Enable();
@@ -661,4 +668,27 @@ inline float Turret::EncoderUnitsToServo(float volts)
 {
 	//return (volts - min_encoder_voltage) / (max_encoder_voltage - min_encoder_voltage);
 	return (volts - Turret::kCCWVoltage) / Turret::kEncoderRange;
+}
+
+void Turret::HomeIt(void)
+{
+	am_homing = true;
+	
+	if (fabs(EncoderVoltage() - 2.5) < Turret::kHomeItThreshold) {
+		am_homing = false;
+	} else {
+		float direction = (EncoderVoltage() < 2.5) ? +1 : -1;
+		
+		float error = (fabs(EncoderVoltage() - 2.5));
+		float correction = .5;
+		if (error >= .5) {
+			correction = .5 * direction;
+		} else if (error >= .3) {
+			correction = .3 * direction;
+		} else {
+			correction = .1 * direction;
+		}
+		
+		Rotate(direction);
+	}
 }

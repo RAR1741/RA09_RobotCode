@@ -9,7 +9,7 @@
 #include "PotentiometerEncoder.h"
 #include "JoystickPIDSource.h"
 #include "CameraPIDSource.h"
-
+#include "DriverStation.h"
 #define ENABLE_TURRET 0
 
 // #include "Robot.cpp"
@@ -83,6 +83,14 @@ private:
 	float EncoderUnitsToServo(float volts);
 	float RelativeToEncoderUnits(float rel);
 	
+	bool IsHoming(void) {
+		return am_homing;
+	}
+	
+	void HomeIt(void);
+	
+	
+	
 	// This will notify the other modules and/or drivers that
 	// the turret is a happenin' place. This notably includes the
 	// cool googles.
@@ -90,6 +98,7 @@ private:
 	void NotifySystem(void);
 	void AdjustServoPositions(float dH, float dV);
 	
+	void Rotate(float input);
 	////////////////////////////////////////////////////////
 	// HARDWARE
 	
@@ -97,7 +106,7 @@ private:
 	LimitSwitch *Clockwise_Limit, *CounterClockwise_Limit;
 	//AnalogChannel *Position_Encoder;
 	PotentiometerEncoder *Position_Encoder;
-
+	DriverStation *ds;
 #if 0
 	JoystickPIDSource *stSrc;
 	CameraPIDSource *caSrc;
@@ -122,13 +131,15 @@ private:
 	static const float kVisibleRange = 0.5;	// Range in encoder volt units
 	static const int kGoggleLightPin = 5;
 	
+	static const float kHomeItThreshold = 0.1;
+	
 	////////////////////////////////////////////////////////
 	// STATE
 	
 	float max_encoder_voltage;
 	float min_encoder_voltage;
 	bool tracking;
-	
+	bool am_homing;
 	int mode;
 	TrackingThreshold td1, td2;		// color thresholds	
 	TrackingThresholdRGB custom1, custom2; // Custom color thresholds
