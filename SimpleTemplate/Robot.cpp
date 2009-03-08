@@ -106,6 +106,7 @@ class PurpleMonkeys : public IterativeRobot {
 	int MasterControlMode;
 	int MasterProgramNumber;
 	bool AutoModeRunStop;
+	DriverStationLCD *dsLCD;
 public:
 	PurpleMonkeys(void)
 #if 0
@@ -418,6 +419,8 @@ public:
 		LMWheelEncoder->Start();
 		//RFollowWheelEncoder->Start();
 		//LFollowWheelEncoder->Start();
+
+		dsLCD = DriverStationLCD::GetInstance();
 		
 		dprintf(LOG_INFO,"RedAlert: ////// DONE //////");
 		dprintf(LOG_INFO,"Robot initialized.");
@@ -439,37 +442,6 @@ public:
 	void DisabledPeriodic(void) {
 		CheckMode();
 		CheckProgram();
-//		int DSMode;
-//		DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
-//
-//		DSMode = m_ds->GetDigitalIn(MODE_SWITCH_1) * 2 + m_ds->GetDigitalIn(MODE_SWITCH_2);
-//		switch (DSMode) {
-//		case 0: //Manual mode
-//			MasterControlMode = MODE_MANUAL;
-//			break;
-//		case 1: //Semi automatic
-//			MasterControlMode = MODE_SEMI_AUTO;
-//			break;
-//		case 2: //Full automatic
-//			//MasterControlMode = MODE_AUTO;
-//			break;
-//		default:
-//			MasterControlMode = MODE_MANUAL;
-//		}
-//
-//		switch (DSMode) {
-//		case MODE_MANUAL:
-//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual        ");
-//			break;
-//		case MODE_SEMI_AUTO:
-//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Semi-Automatic");
-//			break;
-//		case MODE_AUTO:
-//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Full-Automatic");
-//			break;
-//		default:
-//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual (Error)");
-//		}
 		//Squeeky->RPTCommandProccessor();
 	}
 
@@ -555,7 +527,6 @@ public:
 	{
 		int DSMode = 0;
 		bool ModeChanged;
-//		DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 
 		DSMode = m_ds->GetDigitalIn(MODE_SWITCH_1) * 2 + m_ds->GetDigitalIn(MODE_SWITCH_2);
 		ModeChanged = (DSMode == MasterControlMode);
@@ -574,20 +545,20 @@ public:
 			MasterControlMode = MODE_MANUAL;
 		}
 
-//		switch (DSMode) {
-//		case MODE_MANUAL:
-//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual");
-//			break;
-//		case MODE_SEMI_AUTO:
-//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Semi-A");
-//			break;
-//		case MODE_AUTO:
-//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Full-A");
-//			break;
-//		default:
-//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Error ");
-//		}
-//		dsLCD->UpdateLCD();
+		switch (DSMode) {
+		case MODE_MANUAL:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Manual");
+			break;
+		case MODE_SEMI_AUTO:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Semi-A");
+			break;
+		case MODE_AUTO:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Full-A");
+			break;
+		default:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Mode: Error ");
+		}
+		dsLCD->UpdateLCD();
 		return ModeChanged;
 	}
 	
@@ -595,7 +566,6 @@ public:
 	{
 		int ProgramNumber = 0;
 		bool ProgramChanged;
-//		DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 
 		ProgramNumber = m_ds->GetDigitalIn(AUTONOMOUS_PROGRAM_SWITCH_1) * 2 + m_ds->GetDigitalIn(AUTONOMOUS_PROGRAM_SWITCH_2);
 		ProgramChanged = (ProgramNumber == MasterProgramNumber);
@@ -614,28 +584,26 @@ public:
 			MasterProgramNumber = 1;
 		}
 
-//		switch (ProgramNumber) {
-//		case 3:
-//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 2");
-//			break;
-//		case 1:
-//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 0");
-//			break;
-//		case 2:
-//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 1");
-//			break;
-//		default:
-//			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: (0)");
-//		}
-//		dsLCD->UpdateLCD();
+		switch (ProgramNumber) {
+		case 3:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 2");
+			break;
+		case 1:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 0");
+			break;
+		case 2:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 1");
+			break;
+		default:
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: (0)");
+		}
+		dsLCD->UpdateLCD();
 		return ProgramChanged;
 	}
 
 	void TeleopPeriodic(void) {
 
 		GetWatchdog().Feed();
-
-		//DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 
 		//myRobot.ArcadeDrive(stick); // drive with arcade style (use right stick)
 
