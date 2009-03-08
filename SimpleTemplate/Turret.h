@@ -10,6 +10,8 @@
 #include "JoystickPIDSource.h"
 #include "CameraPIDSource.h"
 #include "DriverStation.h"
+
+#include "RobotState.h"
 #define ENABLE_TURRET 0
 
 // #include "Robot.cpp"
@@ -53,7 +55,9 @@ public:
 	}
 	
 	ParticleAnalysisReport TargetData() const { return par; }
-
+	
+	// This should be implemented in other modules as well.
+	void ReportState(RobotState *state);
 	
 private:
 	//PurpleMonkeys *theRobot;
@@ -88,6 +92,7 @@ private:
 	}
 	
 	void HomeIt(void);
+	
 	
 	
 	
@@ -131,7 +136,7 @@ private:
 	static const float kVisibleRange = 0.5;	// Range in encoder volt units
 	static const int kGoggleLightPin = 5;
 	
-	static const float kHomeItThreshold = 0.1;
+	static const float kHomeItThreshold = 0.05;	// Has to be +- this threshold to stop.
 	
 	////////////////////////////////////////////////////////
 	// STATE

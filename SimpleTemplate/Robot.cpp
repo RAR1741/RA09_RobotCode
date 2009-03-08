@@ -502,7 +502,7 @@ public:
 		
 		//		testEncoder.SetDistancePerTick(300.0);
 		//		LMQuadEncoder.SetDistancePerPulse(300.0);
-		LMQuadEncoder->Start();
+		//LMQuadEncoder->Start();
 		if (testGyro==NULL)
 			testGyro = new Gyro(1,1);
 	//	light->Set(1);
@@ -696,6 +696,10 @@ public:
 		//dashboardDataFormat.m_AnalogChannels[0][0] = stick.GetY(); 
 		// dashboardDataFormat.m_AnalogChannels[0][1] = test.GetY();
 
+		
+		////UPDATE ROBOT STATE////
+		
+		TheTurret->ReportState(r_state);
 		if (!TheTurret->TargetInSight()) {
 			dashboardDataFormat->m_TopBoundRect = 1;
 			dashboardDataFormat->m_BottomBoundRect = 2;
@@ -756,6 +760,8 @@ public:
 		num += 0.01;
 		if (num > 5.0)
 			num = 0.0;
+		
+		r_state->PackData(dashboardDataFormat);
 		dashboardDataFormat->PackAndSend();
 	}
 

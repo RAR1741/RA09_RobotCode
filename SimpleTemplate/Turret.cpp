@@ -3,7 +3,7 @@
 #include "Mode.h"
 #include "DriverStation.h"
 #include <cmath> // For some advanced math that I need. :)
-
+#include "RobotState.h"
 #define PI 3.14159265358979
 #define USE_PID 0
 Turret::Turret()
@@ -187,6 +187,14 @@ void Turret::RegisterMasterControl(int *ptr)
 {
 	this->masterControl = ptr;
 }
+
+void Turret::ReportState(RobotState *state)
+{
+	// Not yet computing velocity.
+	state->SetTurretPosition(EncoderVoltage(), 0);
+	state->SetPWMOutput(RobotState::TurretPositioningOutput, Turret_Pos_Motor->Get());
+	//state->SetCurrent()
+}
 void Turret::TurretControl(void)
 {
 	Auto();
@@ -222,8 +230,9 @@ void Turret::TurretControl(Joystick * turretStick)
 
 void Turret::Manual(Joystick *turretStick)
 { 
-	
-	if (am_homing || ds->GetDigitalIn(6)) HomeIt();
+	// || ds->GetDigitalIn(6)
+	bool shouldHome = !(ds->GetDigitalIn(6));
+	if (am_homing || shouldHome) HomeIt();
 	else Rotate(turretStick->GetX());
 }
 
@@ -272,7 +281,7 @@ void Turret::Rotate(float input)
 	
 	DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 	//dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "TSMAN:%.3f",x_axis);
-	dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Turret :%7.1f V", this->EncoderVoltage());
+	dsLCD->Printf(DriverStationLCD::kUser_Line2, 1, "Turret :%1.2f V B: %1d", this->EncoderVoltage(), ds->GetDigitalIn(6));
 	
 	Target();	// Get tracking data
 	UpdateState();
@@ -677,7 +686,7 @@ void Turret::HomeIt(void)
 	if (fabs(EncoderVoltage() - 2.5) < Turret::kHomeItThreshold) {
 		am_homing = false;
 	} else {
-		float direction = (EncoderVoltage() < 2.5) ? +1 : -1;
+		float direction = (EncoderVoltage() > 2.5) ? +1 : -1;
 		
 		float error = (fabs(EncoderVoltage() - 2.5));
 		float correction = .5;
@@ -692,3 +701,4 @@ void Turret::HomeIt(void)
 		Rotate(direction);
 	}
 }
+
