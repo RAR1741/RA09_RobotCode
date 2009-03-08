@@ -54,9 +54,9 @@ void Launcher::Update()
 		Status = true;
 	else Status = false;
 	
-	DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
-    dsLCD->Printf(DriverStationLCD::kUser_Line3, 12, "LC:%2.2f",launchWheelsCurrent->GetCurrent());
-    dsLCD->UpdateLCD();
+//	DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
+//    dsLCD->Printf(DriverStationLCD::kUser_Line3, 12, "LC:%2.2f",launchWheelsCurrent->GetCurrent());
+//    dsLCD->UpdateLCD();
     
     double amps = launchWheelsCurrent->GetCurrent();
     //if(launchWheelsCurrent->GetCurrent()>=30)

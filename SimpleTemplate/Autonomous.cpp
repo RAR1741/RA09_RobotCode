@@ -1,5 +1,6 @@
 
 #include "Autonomous.h"
+#include "DriverStationLCD.h"
 
 #define ACTION_STOP 0
 #define ACTION_STRAIGHT_QUARTER 1
@@ -34,7 +35,7 @@ void Autonomous::Init() {
 	Program = 0;
 	
 	ProgramStages[0][0] = ACTION_LEFT_FULL;
-	StageDuration[0][0] = 8;
+	StageDuration[0][0] = 8.0;
 	//ProgramStages[2][1] = ACTION_LEFT_FULL;
 	//StageDuration[2][1] = 12.0;
 	ProgramStages[0][1] = ACTION_STOP;
@@ -50,7 +51,7 @@ void Autonomous::Init() {
 	StageDuration[1][2] = 100.0;
 
 	ProgramStages[2][0] = ACTION_RIGHT_FULL;
-	StageDuration[2][0] = 8;
+	StageDuration[2][0] = 8.0;
 	//ProgramStages[2][1] = ACTION_LEFT_FULL;
 	//StageDuration[2][1] = 12.0;
 	ProgramStages[2][1] = ACTION_STOP;
@@ -215,7 +216,12 @@ void Autonomous::Periodic() {
 			break;
 	}
 	StageTimer.Start();
-	if (StageTimer.Get() > StageDuration[Program][Stage])
+	
+	DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
+    dsLCD->Printf(DriverStationLCD::kUser_Line3, 12, "AS:%1d %3.1f", Stage, StageTimer.Get());
+    dsLCD->UpdateLCD();
+	
+	if (StageTimer.Get() >= StageDuration[Program][Stage])
 	{
 		Stage++;
 		StageTimer.Reset();
