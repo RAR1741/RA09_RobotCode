@@ -420,8 +420,6 @@ public:
 		//RFollowWheelEncoder->Start();
 		//LFollowWheelEncoder->Start();
 
-		dsLCD = DriverStationLCD::GetInstance();
-		
 		dprintf(LOG_INFO,"RedAlert: ////// DONE //////");
 		dprintf(LOG_INFO,"Robot initialized.");
 	}
@@ -430,6 +428,7 @@ public:
 	void DisabledInit(void) {
 		MasterControlMode = MODE_MANUAL;
 		MasterProgramNumber = 0;
+		dsLCD = DriverStationLCD::GetInstance();
 //		Squeeky->Open();
 //		Squeeky->SqueekySayHello();
 		if (testGyro==NULL)
@@ -527,6 +526,7 @@ public:
 	{
 		int DSMode = 0;
 		bool ModeChanged;
+		//DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 
 		DSMode = m_ds->GetDigitalIn(MODE_SWITCH_1) * 2 + m_ds->GetDigitalIn(MODE_SWITCH_2);
 		ModeChanged = (DSMode == MasterControlMode);
@@ -566,6 +566,7 @@ public:
 	{
 		int ProgramNumber = 0;
 		bool ProgramChanged;
+		//DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 
 		ProgramNumber = m_ds->GetDigitalIn(AUTONOMOUS_PROGRAM_SWITCH_1) * 2 + m_ds->GetDigitalIn(AUTONOMOUS_PROGRAM_SWITCH_2);
 		ProgramChanged = (ProgramNumber == MasterProgramNumber);
