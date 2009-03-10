@@ -47,7 +47,8 @@ void RobotElevator::SetElevatorControls(Joystick *Stick, UINT32 Button)
 //	RunStopToggle = new Toggle(ElevatorStick, 11);
 }
 
-void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel, RobotHarvester * pHarvester)
+void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSlot, UINT32 CurrentChannel,
+						 RobotHarvester * pHarvester, GateController * theGate)
 {
 	State = 0;
 	AutoMode = 0;
@@ -74,6 +75,7 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 	CurrentElevatorEncoderValue = 0;
 	LastElevatorEncoderValue = 0;
 	theHarvester = pHarvester;
+	this->theGate = theGate;
 	//IsClearingJam = false;
 }
 
@@ -113,7 +115,10 @@ void RobotElevator::Process(bool LauncherStatus, bool RunStop)
 			}
 			if(CycleFlag){ // if we are cycling
 					Cycle(ELEVATOR_SPEED);
+					theGate->Close();
+					//if()
 			}
+			else theGate->Open();
 			//DetectJams();
 			if(isJammed)
 				ClearJam(-.5);

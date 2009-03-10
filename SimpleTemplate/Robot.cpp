@@ -388,7 +388,7 @@ public:
 
 		// Initiallize the Elevator class
 		dprintf(LOG_INFO,"RedAlert: Starting Elevator module...");
-		Elevator->Init(4, 1, 2, 1, Harvester);
+		Elevator->Init(4, 1, 2, 1, Harvester, TheGate);
 		//JDM: Set the joystick and button to use to test the elevator
 		Elevator->SetElevatorControls(turretStick, 1);
 		Elevator->SetAutoMode(MasterControlMode);
