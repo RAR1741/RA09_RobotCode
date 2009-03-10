@@ -125,12 +125,16 @@ private:
 	
 	int m_goggleLightPin;
 	
-	static const float kCCWVoltage = 1.55;
-	static const float kCWVoltage = 3.35;
-	static const float kEncoderRange = 1.8;
+	//static const float kCCWVoltage = 1.55;
+	//static const float kCWVoltage = 3.35;
+	//static const float kCCWVoltage = 3.35;
+	//static const float kCWVoltage = 1.55;
+	static const float kEncoderRange = 1.63;
+	static const float kCCWVoltage = 3.33;
+	static const float kCWVoltage = 1.70;
 	
-	static const float kCWSlowDownVoltage = 1.65;
-	static const float kCCWSlowDownVoltage = 3.25;
+	static const float kCWSlowDownVoltage = 1.75;
+	static const float kCCWSlowDownVoltage = 3.18;
 	//static const float kSlowDownMaxOut = .5;
 	
 	static const float kVisibleRange = 0.5;	// Range in encoder volt units

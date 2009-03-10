@@ -252,25 +252,25 @@ void Turret::Rotate(float input)
 	
 	// Set motor to scaled value
 	if (x_axis < 0) {
-		if (Position_Encoder->GetVoltage() <= Turret::kCCWSlowDownVoltage)
+		if (Position_Encoder->GetVoltage() >= Turret::kCCWSlowDownVoltage)
 		{
 			if (x_axis <= - kSlowDownMaxOut) {
 				x_axis = - kSlowDownMaxOut;
 			}
 		}
-		if (Position_Encoder->GetVoltage() <= Turret::kCCWVoltage) {
+		if (Position_Encoder->GetVoltage() >= Turret::kCCWVoltage) {
 			x_axis = 0;
 		}
 		CounterClockwise_Limit->LimitNegative(x_axis);
 	}
 	else {
-		if (Position_Encoder->GetVoltage() >= Turret::kCWSlowDownVoltage)
+		if (Position_Encoder->GetVoltage() <= Turret::kCWSlowDownVoltage)
 		{
 			if (x_axis >= kSlowDownMaxOut) {
 				x_axis = kSlowDownMaxOut;
 			}
 		}
-		if (Position_Encoder->GetVoltage() >= Turret::kCWVoltage) {
+		if (Position_Encoder->GetVoltage() <= Turret::kCWVoltage) {
 			x_axis = 0;
 		}
 		Clockwise_Limit->LimitPositive(x_axis);
