@@ -26,8 +26,13 @@ void Launcher::Update()
 	
 	if(stick!=NULL && shouldRun) {	
 		//input = (((-stick->GetZ()+1.0) * .35) + .3);
-		//input = -((-stick->GetZ()+1.0)/2.0);
-		input = -.9;
+		input = -((-stick->GetZ()+1.0)/2.0);
+		//input = -.9;
+		
+		input *=.15;
+		input -=.85;
+		
+		
 		
 		// Makes sure that the launch motor is always running
 		// at a minimum speed, in case drivers forget to 
