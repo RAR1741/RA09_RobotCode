@@ -654,7 +654,7 @@ public:
 		Harvester->Process(Elevator->GetHarvesterLoad(), AutoModeRunStop);
 		launcher->Update();
 
-		if(MasterControlMode == MODE_MANUAL || MasterControlMode == MODE_SEMI_AUTO)
+		if(MasterControlMode == MODE_MANUAL || MasterControlMode == MODE_SEMI_AUTO && !Elevator->IsCycling())
 			TheGate->Set(GateToggle->GetOutput());
 
 		DriverStationLCD * dlcd = DriverStationLCD::GetInstance();

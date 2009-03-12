@@ -36,6 +36,7 @@ public:
 	void DetectJams();
 	void ClearJam(float MotorSpeed);
 	bool GetHarvesterLoad();
+	bool IsCycling();
 private:
 	////////////////////////////////////////////////////////
 	// HARDWARE

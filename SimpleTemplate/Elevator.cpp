@@ -118,7 +118,7 @@ void RobotElevator::Process(bool LauncherStatus, bool RunStop)
 					theGate->Close();
 					//if()
 			}
-			else theGate->Open();
+			// else 
 			//DetectJams();
 			if(isJammed)
 				ClearJam(-.5);
@@ -294,6 +294,7 @@ void RobotElevator::Cycle(float motorSpeed)
 			if(!HomeSwitch->IsTripped()){// If this goes, then the limit switch is tripped.
 				CycleFlag=false;// Set false so not called again.
 				ElevatorMotor->Set(0);
+				theGate->Open(); // I am opening the gate, gwa! ha! ha! ha!
 				BusyFlag = false;
 				ElevatorEncoder->Reset();// Encoder must reset for another possible cycle.
 			}
@@ -369,3 +370,9 @@ bool RobotElevator::GetHarvesterLoad()
 {
 	return LoadHarvesterLoad;
 }
+
+bool RobotElevator::IsCycling()
+{
+	return CycleFlag;
+}
+
