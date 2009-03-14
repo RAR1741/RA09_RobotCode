@@ -332,5 +332,5 @@ void RobotHarvester::ProcessAuto(bool LoadElevator, bool RunStop)
 void RobotHarvester::ReportState(RobotState * state)
 {
 	state->SetCurrent(RobotState::HarvesterCurrent, HarvesterMotorCurrent->GetCurrent());
-	// state->SetPWMOutput()
+	state->SetPWMOutput(RobotState::HarvesterOutput, HarvesterMotor->Get());
 }
