@@ -224,6 +224,7 @@ void RobotState::PackData(DashboardDataFormat *packet)
 	
 	packet->m_ElvCyclingFlag = ElevatorCycling;
 	packet->m_ElvHomingFlag = ElevatorHoming;
+	packet->m_ElvHomeSwitchFlag = ElevatorHomeSwitch;
 }
 
 
