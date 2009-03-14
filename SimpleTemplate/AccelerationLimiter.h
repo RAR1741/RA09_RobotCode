@@ -13,26 +13,24 @@
  * than position, per unit time. The target velocity will still be reached, but
  * possibly more slowly.
  *********************************************************************************/
-//class AccelerationLimiter
-//{
-//public:
-//	AccelerationLimiter(float unitTime, float maxChange);
-//	~AccelerationLimiter();
-//	
-//	void FeedNewInput(float x);
-//	float GetCorrectedVariable(void); // Will continue to return current
-//									  // corrected value until state updated.
-//	
-//	void UpdateState(void);
-//private:
-//	
-//	float maxChange;
-//	float last_x;
-//	float correct_x;
-//	bool updated;
-//	bool dirty;						// Need to update.
-//	
-//	
-//};
+class AccelerationLimiter
+{
+public:
+	AccelerationLimiter(float unitTime, float maxChange);
+	~AccelerationLimiter();
+	
+	// MUST CALL ONLY ONCE PER LOOP PER USAGE
+	void StartNewIteration(float currentInput);
+	
+	float GetCorrectedInput(void);
+	
+private:
+	
+	float m_unitTime;	// Unit time, like 1/200th of a second. Should
+						// be the period that StartNewIteration is called.
+	float m_maxChange;	// The maximum change in the input allowed per unit
+						// time.
+	float m_old;		// Old value used for state.
+};
 
 #endif

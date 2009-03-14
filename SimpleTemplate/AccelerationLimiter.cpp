@@ -1,27 +1,28 @@
 #include "AccelerationLimiter.h"
 
-//AccelerationLimiter::AccelerationLimiter(float maxChange)
-//{
-//	this->maxChange = maxChange;
-//	this->last_x = -50;	// unlikely to occur in real usage, used to flag
-//						// uninitialized state
-//	this->correct_x = -50;	// Ditto.
-//	
-//	this->updated = false;
-//	
-//}
-//
-//AccelerationLimiter::~AccelerationLimiter(void)
-//{
-//	// Don't need to do anything
-//}
-//
-//float AccelerationLimiter::GetCorrectedVariable(void)
-//{
-//}
-//
-//float AccelerationLimiter::FeedNewInput(void)
-//{
-//	
-//}
-//
+#include <cmath> // For handy mathematics functions :)
+
+using ::fabs;
+
+AccelerationLimiter::AccelerationLimiter(float unitTime, float maxChange)
+{
+	this->m_unitTime = unitTime;
+	this->m_maxChange = maxChange;
+	this->m_old = 0.0;	// Motors and stuff are typically initialized to
+						// zero.
+}
+
+AccelerationLimiter::~AccelerationLimiter()
+{
+	// Doesn't need to do anything.
+}
+
+void AccelerationLimiter::StartNewIteration(float currentInput)
+{
+	// Calculate new accepted input.
+	float gross_change = currentInput - this->m_old;
+	
+	float normalized_acceleration = gross_change / this->m_unitTime;
+	
+	
+}
