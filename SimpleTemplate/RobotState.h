@@ -15,8 +15,8 @@ public:
 	
 	// Log ALL sensors. That's right. ALL of them.
 	// These enumerate the different sensors of each type.
-	enum RobotEncoder { LeftMotor = 0, RightMotor, LeftFollow, RightFollow, ElevatorEncoder };
-	static const int kNumEncoders = 5;
+	enum RobotEncoder { LeftMotor = 0, RightMotor, LeftFollow, RightFollow, ElevatorEncoder, LaunchEncoder};
+	static const int kNumEncoders = 6;
 	enum RobotAccelAxis { XAxis = 0, YAxis, ZAxis };
 	static const int kNumAccelAxis = 3;
 	enum RobotCurrentSensor { ElevatorCurrent = 0, LaunchWheelsCurrent, 
@@ -54,8 +54,8 @@ public:
 	void PackData(DashboardDataFormat *packet);
 	/////////////////////////////////////////////////////////////////////
 private:
-	INT32 quad_encoder_counts[5];
-	float quad_encoder_vels[5];
+	INT32 quad_encoder_counts[kNumEncoders];
+	float quad_encoder_vels[kNumEncoders];
 	float accel_inputs[3];
 	float gyro_rate;
 	float gyro_temp;

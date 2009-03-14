@@ -103,6 +103,20 @@ public:
 	bool m_Grabber_SolA;
 	bool m_Grabber_SolB;
 	
+	float m_PWM_Elevator;
+	float m_PWM_Launch;
+	float m_PWM_Turret;
+	float m_PWM_Left_Drive;
+	float m_PWM_Right_Drive;
+	float m_PWM_Harvester_Drive;
+	
+	bool m_ElvHomingFlag;	// Indicates that elevator is homing
+	bool m_ElvCyclingFlag;	// Indicates that elevator is cycling
+	bool m_ElvHomeSwitchFlag;	// Inicates that elevator has homed
+	//bool m_elevator_home_switch;
+	
+	
+	
 	void PackAndSend(void);
 private:
 	DISALLOW_COPY_AND_ASSIGN(DashboardDataFormat);

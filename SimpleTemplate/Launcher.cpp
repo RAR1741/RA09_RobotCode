@@ -120,3 +120,10 @@ double Launcher::GetCurrentVal()
 {
 	return launchWheelsCurrent->GetCurrent();
 }
+
+void Launcher::ReportState(RobotState *state)
+{
+	state->SetCurrent(RobotState::LaunchWheelsCurrent, launchWheelsCurrent->GetCurrent());
+	state->SetPWMOutput(RobotState::LaunchWheelsOutput, motor->Get());
+	state->SetQuadEncoder(RobotState::LaunchEncoder, LaunchEncoder->Get(), 0);
+}

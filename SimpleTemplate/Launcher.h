@@ -2,6 +2,7 @@
 #define __LAUNCHER_H
 #include "WPIlib.h"
 #include "CurrentSensor.h"
+#include "RobotState.h"
 
 class Launcher
 {
@@ -15,6 +16,7 @@ public:
 	double GetCurrentVal();
 	INT32 GetEncoderVal();
 	
+	void ReportState(RobotState *state);
 	
 	static const double kThreshold = 32.0;
 	static const double kClipPoint = 35.0;

@@ -144,6 +144,25 @@ void DashboardDataFormat::PackAndSend(void)
 	dashboardPacker.AddFloat(m_left_drive_amps);// left drive amps
 	dashboardPacker.AddFloat(m_right_drive_amps);// right drive amps
 	dashboardPacker.AddFloat(m_harvester_amps);// harvester amps
+	
+//	float m_PWM_Elevator;
+//	float m_PWM_Launch;
+//	float m_PWM_Turret;
+//	float m_PWM_Left_Drive;
+//	float m_PWM_Right_Drive;
+//	float m_PWM_Harvester_Drive;
+//	
+	dashboardPacker.AddFloat(m_PWM_Elevator);
+	dashboardPacker.AddFloat(m_PWM_Launch);
+	dashboardPacker.AddFloat(m_PWM_Turret);
+	dashboardPacker.AddFloat(m_PWM_Left_Drive);
+	dashboardPacker.AddFloat(m_PWM_Right_Drive);
+	dashboardPacker.AddFloat(m_PWM_Harvester_Drive);
+	
+	dashboardPacker.AddU8(m_ElvHomingFlag);
+	dashboardPacker.AddU8(m_ElvCyclingFlag);
+	dashboardPacker.AddU8(m_ElvHomeSwitchFlag);
+	
 //	dashboardPacker.AddI32(m_LeftFollowerWheel);
 //	dashboardPacker.AddI32(m_RightFollowerWheel);
 	// Flush the data to the driver station.

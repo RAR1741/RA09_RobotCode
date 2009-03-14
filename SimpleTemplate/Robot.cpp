@@ -706,6 +706,9 @@ public:
 		////UPDATE ROBOT STATE////
 		
 		TheTurret->ReportState(r_state);
+		Elevator->ReportState(r_state);
+		launcher->ReportState(r_state);
+		
 		if (!TheTurret->TargetInSight()) {
 			dashboardDataFormat->m_TopBoundRect = 1;
 			dashboardDataFormat->m_BottomBoundRect = 2;
@@ -784,6 +787,7 @@ public:
 		num += 0.01;
 		if (num > 5.0)
 			num = 0.0;
+		
 		
 		r_state->PackData(dashboardDataFormat);
 		//dashboardDataFormat->m_left_drive_amps = 3.14159;

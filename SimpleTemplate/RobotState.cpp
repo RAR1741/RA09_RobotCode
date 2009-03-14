@@ -37,6 +37,8 @@ RobotState::RobotState()
 		pwm_outputs[i] = 0.0;
 	}
 	
+
+	
 	//bool sol_A_Gate;
 	sol_A_Gate = false;
 	//bool sol_B_Gate;
@@ -212,8 +214,16 @@ void RobotState::PackData(DashboardDataFormat *packet)
 			//dashboardPacker.AddFloat();// harvester amps
 	packet->m_harvester_amps = current_sensor_amps[RobotState::HarvesterCurrent];
 	//packet->m_harvester_amps = this->current_sensor_harvester;
+
+	packet->m_PWM_Elevator = this->pwm_outputs[RobotState::ElevatorOutput];
+	packet->m_PWM_Harvester_Drive = this->pwm_outputs[RobotState::ElevatorOutput];
+	packet->m_PWM_Launch = this->pwm_outputs[RobotState::LaunchWheelsOutput];
+	packet->m_PWM_Left_Drive = this->pwm_outputs[RobotState::LeftSideDriveOutput];
+	packet->m_PWM_Right_Drive = this->pwm_outputs[RobotState::RightSideDriveOutput];
+	packet->m_PWM_Turret = this->pwm_outputs[RobotState::TurretPositioningOutput];
 	
-	
+	packet->m_ElvCyclingFlag = ElevatorCycling;
+	packet->m_ElvHomingFlag = ElevatorHoming;
 }
 
 
