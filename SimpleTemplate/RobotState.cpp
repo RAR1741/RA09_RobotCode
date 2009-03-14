@@ -48,6 +48,13 @@ RobotState::RobotState()
 	
 	//bool air_compressing;
 	air_compressing = false;
+	
+	current_sensor_turret = 0.0;
+	current_sensor_harvester = 0.0;
+	current_sensor_elevator = 0.0;
+	current_sensor_launch = 0.0;
+	current_sensor_left = 0.0;
+	current_sensor_right = 0.0;
 }
 
 RobotState::~RobotState()
@@ -88,10 +95,41 @@ void RobotState::SetBatteryVoltage(float volts)
 	battery_voltage = volts;
 }
 
+void RobotState::SetLeftCurrent(float amps)
+{
+	this->current_sensor_left = amps;
+}
 void RobotState::SetCurrent(enum RobotCurrentSensor cs, float amps)
 {
 	if (cs < 0 || cs >= RobotState::kNumCurrentSensors) return;
 	else current_sensor_amps[cs] = amps;
+	
+	/*
+	switch (cs)
+	{
+	case RobotState::ElevatorCurrent:
+		this->current_sensor_elevator = amps;
+		break;
+	case RobotState::HarvesterCurrent:
+		this->current_sensor_harvester = amps;
+		break;
+	case RobotState::LaunchWheelsCurrent:
+		this->current_sensor_launch = amps;
+		break;
+	case RobotState::LeftSideDriverCurrent:
+		this->current_sensor_left = amps;
+		break;
+	case RobotState::RightSideDriverCurrent:
+		this->current_sensor_right = amps;
+		break;
+	case RobotState::TurretPositioningCurrent:
+		this->current_sensor_turret = amps;
+		break;
+	default:
+		// Should not do anything.
+		break;
+	}
+	*/
 }
 
 void RobotState::SetPWMOutput(enum RobotOutput output, float power)
@@ -157,16 +195,23 @@ void RobotState::PackData(DashboardDataFormat *packet)
 	
 	//dashboardPacker.AddFloat();	// Elevator amps
 	packet->m_elevator_amps = current_sensor_amps[RobotState::ElevatorCurrent];
+	//packet->m_elevator_amps = this->current_sensor_elevator;
 			//dashboardPacker.AddFloat();// launch amps
 	packet->m_launch_amps = current_sensor_amps[RobotState::LaunchWheelsCurrent];
+	//packet->m_launch_amps = this->current_sensor_launch;
 			//dashboardPacker.AddFloat();// turret amps
 	packet->m_turret_amps = current_sensor_amps[RobotState::TurretPositioningCurrent];
+	//packet->m_turret_amps = this->current_sensor_turret;
 			//dashboardPacker.AddFloat();// left drive amps
 	packet->m_left_drive_amps = current_sensor_amps[RobotState::LeftSideDriverCurrent];
+	//packet->m_left_drive_amps = this->current_sensor_left;
+	
 			//dashboardPacker.AddFloat();// right drive amps
 	packet->m_right_drive_amps = current_sensor_amps[RobotState::RightSideDriverCurrent];
+	//packet->m_right_drive_amps = this->current_sensor_right;
 			//dashboardPacker.AddFloat();// harvester amps
 	packet->m_harvester_amps = current_sensor_amps[RobotState::HarvesterCurrent];
+	//packet->m_harvester_amps = this->current_sensor_harvester;
 	
 	
 }

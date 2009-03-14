@@ -112,6 +112,7 @@ private:
 	//AnalogChannel *Position_Encoder;
 	PotentiometerEncoder *Position_Encoder;
 	DriverStation *ds;
+	CurrentSensor *turret_current;	// 23 
 #if 0
 	JoystickPIDSource *stSrc;
 	CameraPIDSource *caSrc;

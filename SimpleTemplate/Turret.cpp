@@ -2,6 +2,7 @@
 #include "DriverStationLCD.h"
 #include "Mode.h"
 #include "DriverStation.h"
+#include "CurrentSensor.h"
 #include <cmath> // For some advanced math that I need. :)
 #include "RobotState.h"
 #define PI 3.14159265358979
@@ -174,6 +175,9 @@ void Turret::InitTurret(int motorSlot, int motorChannel,
 	targetTrack->SetOutputRange(-1,1);
 	
 	targetTrack->Disable();
+	
+	turret_current = new CurrentSensor(2,3,0, CurrentSensor::m_20);
+	
 }
 Turret::~Turret()
 {
@@ -193,6 +197,7 @@ void Turret::ReportState(RobotState *state)
 	// Not yet computing velocity.
 	state->SetTurretPosition(EncoderVoltage(), 0);
 	state->SetPWMOutput(RobotState::TurretPositioningOutput, Turret_Pos_Motor->Get());
+	state->SetCurrent(RobotState::TurretPositioningCurrent, turret_current->GetCurrent());
 	//state->SetCurrent()
 }
 void Turret::TurretControl(void)

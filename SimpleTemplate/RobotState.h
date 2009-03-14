@@ -36,6 +36,8 @@ public:
 	void SetTurretPosition(float volts, float vel);
 	void SetBatteryVoltage(float volts);
 	
+	void SetLeftCurrent(float amps);
+	
 	void SetCurrent(enum RobotCurrentSensor cs, float amps);
 	
 	void SetPWMOutput(enum RobotOutput output, float power);
@@ -61,6 +63,12 @@ private:
 	float turret_velocity;
 	float battery_voltage;
 	float current_sensor_amps[6];
+	float current_sensor_left;
+	float current_sensor_right;
+	float current_sensor_harvester;
+	float current_sensor_elevator;
+	float current_sensor_turret;
+	float current_sensor_launch;
 	float pwm_outputs[6];
 	bool sol_A_Gate;
 	bool sol_B_Gate;

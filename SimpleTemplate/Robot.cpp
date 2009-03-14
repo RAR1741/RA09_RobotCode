@@ -27,7 +27,6 @@ using ::floor;
 #include "GateController.h"
 #include "Mode.h"
 #include "DriverStationLCD.h"
-
 #include "CurrentSensor.h"
 #include "RobotState.h"
 
@@ -725,26 +724,27 @@ public:
 		dashboardDataFormat->m_LM_QuadEncoder = LMQuadEncoder->Get();
 		//dashboardDataFormat->m_LM_QuadEncoder =  578; //LMQuadEncoder->Get();
 		
-//		r_state->SetQuadEncoder(RobotState::LeftMotor, LMQuadEncoder->Get(), 0);
+		r_state->SetQuadEncoder(RobotState::LeftMotor, LMQuadEncoder->Get(), 0);
 		r_state->SetQuadEncoder(RobotState::LeftMotor, 0xBAAD, 0);
-		r_state->SetQuadEncoder(RobotState::RightMotor, RMQuadEncoder->Get(), 0);
-//		r_state->SetQuadEncoder(RobotState::LeftFollow, LMWheelEncoder->Get(), 0);
+//		r_state->SetQuadEncoder(RobotState::RightMotor, RMQuadEncoder->Get(), 0);
+		r_state->SetQuadEncoder(RobotState::LeftFollow, LMWheelEncoder->Get(), 0);
 		r_state->SetQuadEncoder(RobotState::LeftFollow, 0xF0BA, 0);
-//		r_state->SetQuadEncoder(RobotState::RightFollow, RMWheelEncoder->Get(), 0);
-		r_state->SetQuadEncoder(RobotState::RightFollow, 0xDEAD, 0);
+		r_state->SetQuadEncoder(RobotState::RightFollow, RMWheelEncoder->Get(), 0);
+//		r_state->SetQuadEncoder(RobotState::RightFollow, 0xDEAD, 0);
 		
 //		r_state->SetCurrent(RobotState::LeftSideDriverCurrent, leftCurrent->GetCurrent());
 //		r_state->SetCurrent(RobotState::RightSideDriverCurrent, rightCurrent->GetCurrent());
-		r_state->SetCurrent(RobotState::LeftSideDriverCurrent, 3.14159);
-		r_state->SetCurrent(RobotState::RightSideDriverCurrent, 2.2718281);
+		r_state->SetCurrent(RobotState::LeftSideDriverCurrent, 777.77);
+		//r_state->SetLeftCurrent(123.456);
+		r_state->SetCurrent(RobotState::RightSideDriverCurrent, -42.993);
 		dashboardDataFormat->m_LM_QuadEncoder = 0xDEAD;
 		dashboardDataFormat->m_RMWheelEncoder = RMWheelEncoder->Get();
 		dashboardDataFormat->m_LMWheelEncoder = LMWheelEncoder->Get();
 		//dashboardDataFormat->m_LeftMotorVoltage = leftCurrent->GetValue();
 		//dashboardDataFormat->m_RightMotorVoltage = rightCurrent->GetValue();
 		
-		r_state->SetCurrent(RobotState::LeftSideDriverCurrent, leftCurrent->GetCurrent());
-		r_state->SetCurrent(RobotState::RightSideDriverCurrent, rightCurrent->GetCurrent());
+		//r_state->SetCurrent(RobotState::LeftSideDriverCurrent, leftCurrent->GetCurrent());
+		//r_state->SetCurrent(RobotState::RightSideDriverCurrent, rightCurrent->GetCurrent());
 		dashboardDataFormat->m_launchWheelsCurrent
 				= (INT16)(launcher->GetCurrentVal());
 		dashboardDataFormat->m_turretPositionCurrent
@@ -786,7 +786,7 @@ public:
 			num = 0.0;
 		
 		r_state->PackData(dashboardDataFormat);
-		dashboardDataFormat->m_left_drive_amps = 3.14159;
+		//dashboardDataFormat->m_left_drive_amps = 3.14159;
 		dashboardDataFormat->PackAndSend();
 	}
 
