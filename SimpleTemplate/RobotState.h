@@ -27,6 +27,7 @@ public:
 		LeftSideDriveOutput, RightSideDriveOutput, HarvesterOutput };
 	static const int kNumOutputs = 6;
 
+	//enum RobotJoystick
 	
 	
 	void SetQuadEncoder(RobotEncoder encoder, INT32 count, float vel);
@@ -44,6 +45,8 @@ public:
 	void SetPneumaticDataGrabber(bool solA, bool solB);
 	
 	void SetAirCompressorData(bool currentlyCompressing);
+	
+	//void SetJoystickState(Joystick *stick);
 	
 	void PackData(DashboardDataFormat *packet);
 	/////////////////////////////////////////////////////////////////////

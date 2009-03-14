@@ -49,6 +49,18 @@ public:
 	float m_accelY;
 	float m_accelZ;
 	
+	//dashboardPacker.AddFloat();	// Elevator amps
+	float m_elevator_amps;
+		//dashboardPacker.AddFloat();// launch amps
+	float m_launch_amps;
+		//dashboardPacker.AddFloat();// turret amps
+	float m_turret_amps;
+		//dashboardPacker.AddFloat();// left drive amps
+	float m_left_drive_amps;
+		//dashboardPacker.AddFloat();// right drive amps
+	float m_right_drive_amps;
+		//dashboardPacker.AddFloat();// harvester amps
+	float m_harvester_amps;
 	INT32 m_PrimaryMinHue;
 	INT32 m_PrimaryMinSat;
 	INT32 m_PrimaryMinLum;

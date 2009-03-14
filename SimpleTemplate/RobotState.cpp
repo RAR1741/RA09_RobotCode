@@ -155,6 +155,18 @@ void RobotState::PackData(DashboardDataFormat *packet)
 	
 	//packet->m_RightFollowerWheel = quad_encoder_counts[RobotState::RightFollow];
 	
+	//dashboardPacker.AddFloat();	// Elevator amps
+	packet->m_elevator_amps = current_sensor_amps[RobotState::ElevatorCurrent];
+			//dashboardPacker.AddFloat();// launch amps
+	packet->m_launch_amps = current_sensor_amps[RobotState::LaunchWheelsCurrent];
+			//dashboardPacker.AddFloat();// turret amps
+	packet->m_turret_amps = current_sensor_amps[RobotState::TurretPositioningCurrent];
+			//dashboardPacker.AddFloat();// left drive amps
+	packet->m_left_drive_amps = current_sensor_amps[RobotState::LeftSideDriverCurrent];
+			//dashboardPacker.AddFloat();// right drive amps
+	packet->m_right_drive_amps = current_sensor_amps[RobotState::RightSideDriverCurrent];
+			//dashboardPacker.AddFloat();// harvester amps
+	packet->m_harvester_amps = current_sensor_amps[RobotState::HarvesterCurrent];
 	
 	
 }

@@ -19,8 +19,8 @@ DashboardDataFormat::~DashboardDataFormat()
 void DashboardDataFormat::PackAndSend(void)
 {
 	Dashboard &dashboardPacker = m_ds->GetDashboardPacker();
-	UINT32 module;
-	UINT32 channel;
+	//UINT32 module;
+	//UINT32 channel;
 
 	// Pack identification handshake flag header thingy
 	// Useful for picking out where "our" data begins.
@@ -59,6 +59,15 @@ void DashboardDataFormat::PackAndSend(void)
 //	}
 	// Pack the solenoid module
 	 
+	// Elevator amps
+	
+	// Lanuch amps
+	// Turret 
+	// LEft drive
+	// Right drive
+	// Harvester
+	
+	
 	dashboardPacker.AddU8(m_SolenoidChannels);
 	
 	// TODO Figure out if U32 and I32 are causing problems together	
@@ -89,7 +98,6 @@ void DashboardDataFormat::PackAndSend(void)
 	dashboardPacker.AddFloat(m_accelZ);
 	
 	// Add target data
-
 	// Add color target code
 	/*
 	dashboardPacker.AddI32(m_PrimaryMinHue);
@@ -116,6 +124,26 @@ void DashboardDataFormat::PackAndSend(void)
 	dashboardPacker.AddU8('^');
 	dashboardPacker.AddU8('*');
 	
+	//dashboardPacker.AddFloat();	// Elevator amps
+	/*
+		float m_elevator_amps;
+			//dashboardPacker.AddFloat();// launch amps
+		float m_launch_amps;
+			//dashboardPacker.AddFloat();// turret amps
+		float m_turret_amps;
+			//dashboardPacker.AddFloat();// left drive amps
+		float m_left_drive_amps;
+			//dashboardPacker.AddFloat();// right drive amps
+		float m_right_drive_amps;
+			//dashboardPacker.AddFloat();// harvester amps
+		float m_harvester_amps;
+	*/
+	dashboardPacker.AddFloat(m_elevator_amps);	// Elevator amps
+	dashboardPacker.AddFloat(m_launch_amps);// launch amps
+	dashboardPacker.AddFloat(m_turret_amps);// turret amps
+	dashboardPacker.AddFloat(m_left_drive_amps);// left drive amps
+	dashboardPacker.AddFloat(m_right_drive_amps);// right drive amps
+	dashboardPacker.AddFloat(m_harvester_amps);// harvester amps
 //	dashboardPacker.AddI32(m_LeftFollowerWheel);
 //	dashboardPacker.AddI32(m_RightFollowerWheel);
 	// Flush the data to the driver station.
