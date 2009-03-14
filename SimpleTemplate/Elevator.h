@@ -7,6 +7,7 @@
 #include "CurrentSensor.h"
 #include "Harvester.h"
 #include "GateController.h"
+#include "RobotState.h"
 // #include "Robot.cpp"
 
 #define ELEVATOR_STATE_FULL 0
@@ -37,6 +38,8 @@ public:
 	void ClearJam(float MotorSpeed);
 	bool GetHarvesterLoad();
 	bool IsCycling();
+	
+	void ReportState(RobotState * state);
 private:
 	////////////////////////////////////////////////////////
 	// HARDWARE

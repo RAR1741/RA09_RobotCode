@@ -10,6 +10,7 @@
 #include "JoystickPIDSource.h"
 #include "CameraPIDSource.h"
 #include "DriverStation.h"
+#include "CurrentSensor.h"
 
 #include "RobotState.h"
 #define ENABLE_TURRET 0

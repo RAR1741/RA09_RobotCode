@@ -15,8 +15,8 @@ public:
 	
 	// Log ALL sensors. That's right. ALL of them.
 	// These enumerate the different sensors of each type.
-	enum RobotEncoder { LeftMotor = 0, RightMotor, LeftFollow, RightFollow };
-	static const int kNumEncoders = 4;
+	enum RobotEncoder { LeftMotor = 0, RightMotor, LeftFollow, RightFollow, ElevatorEncoder };
+	static const int kNumEncoders = 5;
 	enum RobotAccelAxis { XAxis = 0, YAxis, ZAxis };
 	static const int kNumAccelAxis = 3;
 	enum RobotCurrentSensor { ElevatorCurrent = 0, LaunchWheelsCurrent, 
@@ -48,13 +48,14 @@ public:
 	
 	void SetAirCompressorData(bool currentlyCompressing);
 	
+	void ReportElevatorFlags(bool CyclingFlag, bool HomingFlag);
 	//void SetJoystickState(Joystick *stick);
 	
 	void PackData(DashboardDataFormat *packet);
 	/////////////////////////////////////////////////////////////////////
 private:
-	INT32 quad_encoder_counts[4];
-	float quad_encoder_vels[4];
+	INT32 quad_encoder_counts[5];
+	float quad_encoder_vels[5];
 	float accel_inputs[3];
 	float gyro_rate;
 	float gyro_temp;
@@ -76,6 +77,9 @@ private:
 	bool sol_B_Grabber;
 	
 	bool air_compressing;
+	bool ElevatorCycling;
+	bool ElevatorHoming;
+
 };
 
 #endif

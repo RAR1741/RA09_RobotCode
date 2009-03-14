@@ -215,3 +215,10 @@ void RobotState::PackData(DashboardDataFormat *packet)
 	
 	
 }
+
+
+void RobotState::ReportElevatorFlags(bool CyclingFlag, bool HomingFlag)
+{
+	ElevatorCycling = CyclingFlag;
+	ElevatorHoming = HomingFlag;
+}

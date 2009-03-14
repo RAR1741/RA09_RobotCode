@@ -376,3 +376,11 @@ bool RobotElevator::IsCycling()
 	return CycleFlag;
 }
 
+
+void RobotElevator::ReportState(RobotState * state)
+{
+	state->SetCurrent(RobotState::ElevatorCurrent, ElevatorMotorCurrent->GetCurrent());
+	state->SetQuadEncoder(RobotState::ElevatorEncoder, ElevatorEncoder->Get(), 0);
+	state->SetPWMOutput(RobotState::ElevatorOutput, ElevatorMotor->Get());
+	state->ReportElevatorFlags(HomeItFlag, CycleFlag);
+}
