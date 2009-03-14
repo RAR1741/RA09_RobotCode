@@ -48,7 +48,7 @@ public:
 	
 	void SetAirCompressorData(bool currentlyCompressing);
 	
-	void ReportElevatorFlags(bool CyclingFlag, bool HomingFlag);
+	void ReportElevatorFlags(bool CyclingFlag, bool HomingFlag, bool HomeSwitch);
 	//void SetJoystickState(Joystick *stick);
 	
 	void PackData(DashboardDataFormat *packet);
@@ -79,7 +79,7 @@ private:
 	bool air_compressing;
 	bool ElevatorCycling;
 	bool ElevatorHoming;
-
+	bool ElevatorHomeSwitch;
 };
 
 #endif

@@ -7,7 +7,7 @@
 #include "GateController.h"
 #include "CurrentSensor.h"
 #include "Timer.h"
-
+#include "RobotState.h"
 // #include "Robot.cpp"
 
 #define HARV_STATE_NOT_FULL 0
@@ -39,6 +39,8 @@ public:
 	void SetAutoMode(UINT32);
 	float GetHarvesterMotorVoltage(void);
 	void SetFull(bool isFull);
+	void ReportState(RobotState * state);
+	
 private:
 	void ProcessManual(void);
 	void ProcessSemiAuto(bool LoadElevator);
@@ -64,7 +66,7 @@ private:
 	UINT32 AutoMode;
 	bool HarvesterFull;
 	float HarvesterMotorCurrentVal;
-	UINT32 HarvesterMode; 
+	UINT32 HarvesterMode;
 };
 
 #endif

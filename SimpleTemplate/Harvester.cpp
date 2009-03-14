@@ -329,4 +329,7 @@ void RobotHarvester::ProcessAuto(bool LoadElevator, bool RunStop)
 	dsLCD = NULL;
 }
 
-
+void RobotHarvester::ReportState(RobotState * state)
+{
+	//state->SetRobotOutput();
+}

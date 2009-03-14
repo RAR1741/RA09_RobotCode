@@ -81,6 +81,7 @@ void RobotElevator::Init(UINT32 MotorSlot, UINT32 MotorChannel, UINT32 CurrentSl
 
 void RobotElevator::Process(bool LauncherStatus, bool RunStop)
 {
+	//ReportState()
 	this->LauncherStatus = LauncherStatus;
   //  DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
 	// Common LCD update
@@ -382,5 +383,5 @@ void RobotElevator::ReportState(RobotState * state)
 	state->SetCurrent(RobotState::ElevatorCurrent, ElevatorMotorCurrent->GetCurrent());
 	state->SetQuadEncoder(RobotState::ElevatorEncoder, ElevatorEncoder->Get(), 0);
 	state->SetPWMOutput(RobotState::ElevatorOutput, ElevatorMotor->Get());
-	state->ReportElevatorFlags(HomeItFlag, CycleFlag);
+	state->ReportElevatorFlags(HomeItFlag, CycleFlag, !HomeSwitch->IsTripped());
 }
