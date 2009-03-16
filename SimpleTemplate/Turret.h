@@ -142,7 +142,7 @@ private:
 	static const float kVisibleRange = 0.5;	// Range in encoder volt units
 	static const int kGoggleLightPin = 5;
 	
-	static const float kHomeItThreshold = 0.05;	// Has to be +- this threshold to stop.
+	static const float kHomeItThreshold = 0.01;	// Has to be +- this threshold to stop.
 	
 	////////////////////////////////////////////////////////
 	// STATE

@@ -48,6 +48,8 @@ public:
 	
 	void SetAirCompressorData(bool currentlyCompressing);
 	
+	void SetUltrasonicVoltage(float volts);
+	
 	void ReportElevatorFlags(bool CyclingFlag, bool HomingFlag, bool HomeSwitch);
 	//void SetJoystickState(Joystick *stick);
 	
@@ -63,6 +65,7 @@ private:
 	float turret_potentiometer;
 	float turret_velocity;
 	float battery_voltage;
+	float ultra_sensor;
 	float current_sensor_amps[6];
 	float current_sensor_left;
 	float current_sensor_right;

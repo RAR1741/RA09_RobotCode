@@ -177,7 +177,7 @@ void Turret::InitTurret(int motorSlot, int motorChannel,
 	targetTrack->Disable();
 	
 	turret_current = new CurrentSensor();
-	turret_current->Init(2,3,0, CurrentSensor::m_20Amp);
+	turret_current->Init(2,3,2.5, CurrentSensor::m_5Amp);
 }
 Turret::~Turret()
 {

@@ -17,7 +17,7 @@ void Launcher::Init(UINT32 Slot, UINT32 Channel)
 		LaunchEncoder->Start();
 		// LaunchEncoder->Reset();
 		launchWheelsCurrent = new CurrentSensor();
-		launchWheelsCurrent->Init(2, 2, 2.5, CurrentSensor::m_30Amp);
+		launchWheelsCurrent->Init(2, 2, 2.5, CurrentSensor::m_20Amp);
 	}
 
 void Launcher::Update()

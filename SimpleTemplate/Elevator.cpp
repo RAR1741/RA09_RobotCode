@@ -227,7 +227,7 @@ void RobotElevator::Process(bool LauncherStatus, bool RunStop)
 	
 		
 		DriverStationLCD * dsLCD = DriverStationLCD::GetInstance();
-		dsLCD->Printf(DriverStationLCD::kUser_Line3, 5, "ES:%2d",State);
+		dsLCD->Printf(DriverStationLCD::kUser_Line3, 5, "ES:%2d %1.3f",State, ElevatorMotorCurrent->GetCurrent());
 		//dsLCD->Printf(DriverStationLCD::kUser_Line3, 14, "EN:%4d",ElevatorEncoder->Get());
 		dsLCD->UpdateLCD();
 		//dsLCD->UpdateLCD();

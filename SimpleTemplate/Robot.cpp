@@ -61,7 +61,7 @@ class PurpleMonkeys : public IterativeRobot {
 
 	int counter;
 	Gyro * testGyro;
-	Gyro * testTemp;
+	AnalogChannel * testTemp;
 	Personality * Squeeky;
 	Turret *TheTurret;
 	//AnalogChannel *leftCurrent;
@@ -90,6 +90,8 @@ class PurpleMonkeys : public IterativeRobot {
 	Encoder *LFollowWheelEncoder;
 	IFF *IdentFriendFoe;
 	RobotState *r_state;
+	
+	AnalogChannel *ultrasonic;
 	// State Variables for toggle code.
 
 	// Elevator state vars
@@ -230,6 +232,8 @@ public:
 		MasterControlMode = 0; // Manual mode
 		MasterProgramNumber = 0;
 		r_state = NULL;
+		
+		ultrasonic = NULL;
 		SetDebugFlag(DEBUG_SCREEN_ONLY);
 	}
 	// One time initialization of the robot
@@ -291,9 +295,9 @@ public:
 				//leftCurrent = new AnalogChannel(2,4);
 						//leftCurrent(2, 4), 
 				leftCurrent = new CurrentSensor();
-				leftCurrent->Init(2,4,0,CurrentSensor::m_30Amp);
+				leftCurrent->Init(2,4,2.5,CurrentSensor::m_30Amp);
 				rightCurrent = new CurrentSensor();
-				rightCurrent->Init(2,5,0,CurrentSensor::m_30Amp);
+				rightCurrent->Init(2,5,2.5,CurrentSensor::m_30Amp);
 				//rightCurrent = new AnalogChannel(2,5);
 						//rightCurrent(2, 5),
 				
@@ -309,6 +313,8 @@ public:
 				testAccel_Z = new Accelerometer(1,5);	//		testAccel_Z(1, 5),
 						//				Gate(8,1),
 				dprintf(LOG_INFO,"RedAlert: Accelerometers Initialized");
+				dprintf(LOG_INFO,"RedAlert: Initializing Ultrasonic Sensor");
+				dprintf(LOG_INFO,"RedAlert: Ultrasonic Sensor Initialized ... [PONG]");
 				dprintf(LOG_INFO,"RedAlert: Initializing Autonomous Program");
 				AutoProgram = new Autonomous();
 				dprintf(LOG_INFO,"RedAlert: Autonomous Program Initialized");
@@ -365,7 +371,7 @@ public:
 		if (testGyro==NULL)
 			testGyro = new Gyro(1,1);
 		if (testTemp==NULL)
-			testTemp = new Gyro(1,2);
+			testTemp = new AnalogChannel(1,2);
 		dprintf(LOG_INFO, "RedAlert: Gyros started.");
 		if (StartCameraTask(13, 0, k320x240, ROT_0)==-1) {
 			dprintf(LOG_INFO,"Things screwed up with camera.\n");
@@ -708,6 +714,9 @@ public:
 		TheTurret->ReportState(r_state);
 		Elevator->ReportState(r_state);
 		launcher->ReportState(r_state);
+		Harvester->ReportState(r_state);
+		
+		
 		
 		if (!TheTurret->TargetInSight()) {
 			dashboardDataFormat->m_TopBoundRect = 1;
@@ -725,49 +734,37 @@ public:
 		dashboardDataFormat->m_DIOChannelsOutputEnable[0]--;
 		dashboardDataFormat->m_RM_QuadEncoder = RMQuadEncoder->Get();
 		dashboardDataFormat->m_LM_QuadEncoder = LMQuadEncoder->Get();
-		//dashboardDataFormat->m_LM_QuadEncoder =  578; //LMQuadEncoder->Get();
 		
 		r_state->SetQuadEncoder(RobotState::LeftMotor, LMQuadEncoder->Get(), 0);
-		r_state->SetQuadEncoder(RobotState::LeftMotor, 0xBAAD, 0);
-//		r_state->SetQuadEncoder(RobotState::RightMotor, RMQuadEncoder->Get(), 0);
+		r_state->SetQuadEncoder(RobotState::RightMotor, RMQuadEncoder->Get(), 0);
 		r_state->SetQuadEncoder(RobotState::LeftFollow, LMWheelEncoder->Get(), 0);
-		r_state->SetQuadEncoder(RobotState::LeftFollow, 0xF0BA, 0);
 		r_state->SetQuadEncoder(RobotState::RightFollow, RMWheelEncoder->Get(), 0);
-//		r_state->SetQuadEncoder(RobotState::RightFollow, 0xDEAD, 0);
 		
-//		r_state->SetCurrent(RobotState::LeftSideDriverCurrent, leftCurrent->GetCurrent());
-//		r_state->SetCurrent(RobotState::RightSideDriverCurrent, rightCurrent->GetCurrent());
-		r_state->SetCurrent(RobotState::LeftSideDriverCurrent, 777.77);
-		//r_state->SetLeftCurrent(123.456);
-		r_state->SetCurrent(RobotState::RightSideDriverCurrent, -42.993);
-		dashboardDataFormat->m_LM_QuadEncoder = 0xDEAD;
-		dashboardDataFormat->m_RMWheelEncoder = RMWheelEncoder->Get();
-		dashboardDataFormat->m_LMWheelEncoder = LMWheelEncoder->Get();
-		//dashboardDataFormat->m_LeftMotorVoltage = leftCurrent->GetValue();
-		//dashboardDataFormat->m_RightMotorVoltage = rightCurrent->GetValue();
-		
-		//r_state->SetCurrent(RobotState::LeftSideDriverCurrent, leftCurrent->GetCurrent());
-		//r_state->SetCurrent(RobotState::RightSideDriverCurrent, rightCurrent->GetCurrent());
-		dashboardDataFormat->m_launchWheelsCurrent
-				= (INT16)(launcher->GetCurrentVal());
-		dashboardDataFormat->m_turretPositionCurrent
-				= turretPositionCurrent->GetValue();
+		r_state->SetCurrent(RobotState::LeftSideDriverCurrent, leftCurrent->GetCurrent());
+		r_state->SetCurrent(RobotState::RightSideDriverCurrent, rightCurrent->GetCurrent());
 
-		dashboardDataFormat->m_LaunchEncoder = launcher->GetEncoderVal();
+		
 		//dashboardDataFormat->m_TurretEncoder = TurretEncoder->Get();
 
+		r_state->SetAccelerometerAxis(RobotState::XAxis, testAccel_X->GetAcceleration());
+		r_state->SetAccelerometerAxis(RobotState::YAxis, testAccel_X->GetAcceleration());
+		r_state->SetAccelerometerAxis(RobotState::ZAxis, testAccel_X->GetAcceleration());
+		
+		/*
 		dashboardDataFormat->m_accelX = testAccel_X->GetAcceleration();
 		dashboardDataFormat->m_accelY = testAccel_Y->GetAcceleration();
 		dashboardDataFormat->m_accelZ = testAccel_Z->GetAcceleration();
-		dashboardDataFormat->m_gyroTemp = testTemp->GetAngle();
-
-		if (testGyro == NULL) {
-			dashboardDataFormat->m_gyroAngle = -42.0001;
-		} else {
-			dashboardDataFormat->m_gyroAngle = testGyro->GetAngle();
-			//dashboardDataFormat.m_gyroAngle = 589.7;
-		}
-		//  dashboardDataFormat.m_accelX = 84.0;
+		*/
+		//dashboardDataFormat->m_gyroTemp = testTemp->GetAngle();
+		
+		r_state->SetGyroData(0.0, testTemp->GetVoltage() , testGyro->GetAngle());
+//		if (testGyro == NULL) {
+//			dashboardDataFormat->m_gyroAngle = -42.0001;
+//		} else {
+//			dashboardDataFormat->m_gyroAngle = testGyro->GetAngle();
+//			//dashboardDataFormat.m_gyroAngle = 589.7;
+//		}
+//		//  dashboardDataFormat.m_accelX = 84.0;
 
 		dashboardDataFormat->m_TurretState = 0;
 		dashboardDataFormat->m_LeftState = 0;

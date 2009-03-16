@@ -97,6 +97,10 @@ void RobotState::SetBatteryVoltage(float volts)
 	battery_voltage = volts;
 }
 
+void RobotState::SetUltrasonicVoltage(float volts)
+{
+	this->ultra_sensor = volts;
+}
 void RobotState::SetLeftCurrent(float amps)
 {
 	this->current_sensor_left = amps;
@@ -183,7 +187,7 @@ void RobotState::PackData(DashboardDataFormat *packet)
 	packet->m_LaunchEncoder = quad_encoder_counts[RobotState::LaunchWheelsOutput];
 	packet->m_RMWheelEncoder = quad_encoder_counts[RobotState::RightFollow];
 	packet->m_RM_QuadEncoder = quad_encoder_counts[RobotState::RightMotor];
-	
+	packet->m_ElevatorEncoder = quad_encoder_counts[RobotState::ElevatorEncoder];
 	packet->m_gyroAngle = gyro_integrated_angle;
 	packet->m_gyroTemp = gyro_temp;
 	
@@ -216,7 +220,7 @@ void RobotState::PackData(DashboardDataFormat *packet)
 	//packet->m_harvester_amps = this->current_sensor_harvester;
 
 	packet->m_PWM_Elevator = this->pwm_outputs[RobotState::ElevatorOutput];
-	packet->m_PWM_Harvester_Drive = this->pwm_outputs[RobotState::ElevatorOutput];
+	packet->m_PWM_Harvester_Drive = this->pwm_outputs[RobotState::HarvesterOutput];
 	packet->m_PWM_Launch = this->pwm_outputs[RobotState::LaunchWheelsOutput];
 	packet->m_PWM_Left_Drive = this->pwm_outputs[RobotState::LeftSideDriveOutput];
 	packet->m_PWM_Right_Drive = this->pwm_outputs[RobotState::RightSideDriveOutput];
@@ -225,6 +229,8 @@ void RobotState::PackData(DashboardDataFormat *packet)
 	packet->m_ElvCyclingFlag = ElevatorCycling;
 	packet->m_ElvHomingFlag = ElevatorHoming;
 	packet->m_ElvHomeSwitchFlag = ElevatorHomeSwitch;
+	
+	packet->m_ultrasonic = ultra_sensor;
 }
 
 

@@ -95,6 +95,8 @@ public:
 	
 	float m_ElevatorVel;
 	
+	float m_ultrasonic;
+	
 	bool m_air_is_compressing;
 	
 	bool m_Gate_SolA;
