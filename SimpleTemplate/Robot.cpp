@@ -12,6 +12,8 @@
 using std::cout;
 using std::endl;
 using ::floor;
+using ::fabs;
+
 #include "Autonomous.h"
 #include "Logger.h"
 
@@ -634,7 +636,7 @@ public:
 		float left_y =  - leftStick->GetY();
 		float right_y = - rightStick->GetY();
 		
-		if (shouldLimit) {
+		if (shouldLimit && fabs(right_y) >= .3) {
 			//leftstick_limit->StartNewIteration(left_y);
 			//rightstick_limit->StartNewIteration(right_y);
 			
