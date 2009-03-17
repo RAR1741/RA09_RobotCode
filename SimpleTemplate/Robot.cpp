@@ -29,6 +29,7 @@ using ::floor;
 #include "DriverStationLCD.h"
 #include "CurrentSensor.h"
 #include "RobotState.h"
+#include "AccelerationLimiter.h"
 
 #define USR_RQ_EJECT 0
 #define USR_RQ_IDLE 1
@@ -92,6 +93,9 @@ class PurpleMonkeys : public IterativeRobot {
 	RobotState *r_state;
 	
 	AnalogChannel *ultrasonic;
+	
+	AccelerationLimiter *leftstick_limit;
+	AccelerationLimiter *rightstick_limit;
 	// State Variables for toggle code.
 
 	// Elevator state vars
@@ -234,6 +238,9 @@ public:
 		r_state = NULL;
 		
 		ultrasonic = NULL;
+		
+		leftstick_limit = NULL;
+		rightstick_limit = NULL;
 		SetDebugFlag(DEBUG_SCREEN_ONLY);
 	}
 	// One time initialization of the robot
@@ -253,6 +260,10 @@ public:
 				turretStick = new Joystick(3); //		turretStick(3), 
 				testMotorStick = new Joystick(4); //		testMotorStick(4),
 		dprintf(LOG_INFO,"RedAlert: Joysticks Initialized.");
+		dprintf(LOG_INFO,"RedAlert: Initializing Acceleration Control");
+				leftstick_limit = new AccelerationLimiter(1.0 / this->GetLoopsPerSec(), 0.5);
+				rightstick_limit = new AccelerationLimiter(1.0 / this->GetLoopsPerSec(), 0.5);
+		dprintf(LOG_INFO,"RedAlert: AccelerationControl Initialized.");
 		dprintf(LOG_INFO,"RedAlert: Initializing Autonomous Light");
 				//light = new DigitalOutput(6,14); //		light(4, 14),
 		dprintf(LOG_INFO,"RedAlert: Autonomous Light Initialized.");
@@ -618,6 +629,25 @@ public:
 
 		GetWatchdog().Feed();
 
+		bool shouldLimit = rightStick->GetRawButton(2);
+		
+		float left_y =  - leftStick->GetY();
+		float right_y = - rightStick->GetY();
+		
+		if (shouldLimit) {
+			//leftstick_limit->StartNewIteration(left_y);
+			//rightstick_limit->StartNewIteration(right_y);
+			
+		} else {
+			leftstick_limit->NotifyWhileIgnored(left_y);
+			rightstick_limit->NotifyWhileIgnored(right_y);
+		}
+		leftstick_limit->StartNewIteration(left_y);
+		rightstick_limit->StartNewIteration(right_y);
+		
+		float left_y_correct = leftstick_limit->GetCorrectedInput();
+		float right_y_correct = rightstick_limit->GetCorrectedInput();
+		
 		//myRobot.ArcadeDrive(stick); // drive with arcade style (use right stick)
 
 		// testMotor.SetRaw((UINT8)floor(test.GetRawAxis( Joystick::kDefaultYAxis )));
@@ -629,9 +659,10 @@ public:
 			// This is a quick temporary for the inverted Y axis Mr. Meyer,
 			// but I think the issue with the inverted joysticks is with the motors...
 			// they may need to have the wires on their polarity switched.
-			myRobot->TankDrive(-leftStick->GetY(), -rightStick->GetY());
+			//myRobot->TankDrive(-leftStick->GetY(), -rightStick->GetY());
+			myRobot->TankDrive(left_y_correct, right_y_correct);
 		} else {
-			myRobot->ArcadeDrive(-rightStick->GetY(), -rightStick->GetX()); // drive with arcade style (use right stick)
+			myRobot->ArcadeDrive(right_y_correct, -rightStick->GetX()); // drive with arcade style (use right stick)
 		}
 
 		// Just for testing, comment if you don't want it.

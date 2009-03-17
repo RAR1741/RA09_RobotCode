@@ -22,15 +22,18 @@ public:
 	// MUST CALL ONLY ONCE PER LOOP PER USAGE
 	void StartNewIteration(float currentInput);
 	
+	void NotifyWhileIgnored(float currentInput);
+	
 	float GetCorrectedInput(void);
 	
 private:
 	
 	float m_unitTime;	// Unit time, like 1/200th of a second. Should
 						// be the period that StartNewIteration is called.
-	float m_maxChange;	// The maximum change in the input allowed per unit
+	float m_unitChange;	// The maximum change in the input allowed per unit
 						// time.
-	float m_old;		// Old value used for state.
+	float m_last;		// Old value used for state.
 };
 
 #endif
+
