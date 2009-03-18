@@ -38,12 +38,24 @@ void Autonomous::Init() {
 	CurrentStageDuration = 0;
 	Program = 0;
 	
-	ProgramStages[0][0] = ACTION_LEFT_HALF;
-	StageDuration[0][0] = 5.0;
-	ProgramStages[0][1] = ACTION_STOP;
-	StageDuration[0][1] = 100.0;
-	
-	ProgramStages[1][0] = ACTION_ARC_RIGHT;
+	ProgramStages[0][0] = ACTION_ARC_RIGHT;
+	StageDuration[0][0] = 4.0;
+	ProgramStages[0][1] = ACTION_STRAIGHT_HALF;
+	StageDuration[0][1] = 6.0;
+	ProgramStages[0][2] = ACTION_REVERSE_HALF;
+	StageDuration[0][2] = 4;
+	ProgramStages[0][3] = ACTION_STRAIGHT_HALF;
+	StageDuration[0][3] = 1;
+//	ProgramStages[1][3] = ACTION_REVERSE_HALF;
+//	StageDuration[1][3] = 2;
+//	ProgramStages[1][4] = ACTION_STRAIGHT_HALF;
+//	StageDuration[1][4] = 2;
+//	ProgramStages[1][5] = ACTION_REVERSE_HALF;
+//	StageDuration[1][5] = 1.5;
+	ProgramStages[0][4] = ACTION_STOP;
+    StageDuration[0][4] = 100.0;
+    
+	ProgramStages[1][0] = ACTION_ARC_LEFT;
 	StageDuration[1][0] = 4.0;
 	ProgramStages[1][1] = ACTION_STRAIGHT_HALF;
 	StageDuration[1][1] = 6.0;
