@@ -12,6 +12,10 @@
 #define ACTION_RIGHT_QUARTER 7
 #define ACTION_RIGHT_HALF 8
 #define ACTION_RIGHT_FULL 9
+#define ACTION_ARC_RIGHT 10
+#define ACTION_ARC_LEFT 11
+#define ACTION_REVERSE_HALF 12
+#define ACTION_REVERSE_FULL 13
 
 #if !EXCLUDE_AUTO
 #include "Target.h"
@@ -34,28 +38,30 @@ void Autonomous::Init() {
 	CurrentStageDuration = 0;
 	Program = 0;
 	
-	ProgramStages[0][0] = ACTION_LEFT_FULL;
-	StageDuration[0][0] = 8.0;
-	//ProgramStages[2][1] = ACTION_LEFT_FULL;
-	//StageDuration[2][1] = 12.0;
+	ProgramStages[0][0] = ACTION_LEFT_HALF;
+	StageDuration[0][0] = 5.0;
 	ProgramStages[0][1] = ACTION_STOP;
-	StageDuration[0][1] = 100.0;	
-//	ProgramStages[0][3] = ACTION_STOP;
-//	StageDuration[0][3] = 100.0;
+	StageDuration[0][1] = 100.0;
 	
-	ProgramStages[1][0] = ACTION_STRAIGHT_HALF;
-	StageDuration[1][0] = 10.0;
-	ProgramStages[1][1] = ACTION_RIGHT_FULL;
-	StageDuration[1][1] = 10.0;
-	ProgramStages[1][2] = ACTION_LEFT_FULL;
-	StageDuration[1][2] = 10.0;
-	ProgramStages[1][3] = ACTION_STOP;
-	StageDuration[1][3] = 100.0;
+	ProgramStages[1][0] = ACTION_ARC_RIGHT;
+	StageDuration[1][0] = 4.0;
+	ProgramStages[1][1] = ACTION_STRAIGHT_HALF;
+	StageDuration[1][1] = 6.0;
+	ProgramStages[1][2] = ACTION_REVERSE_HALF;
+	StageDuration[1][2] = 4;
+	ProgramStages[1][3] = ACTION_STRAIGHT_HALF;
+	StageDuration[1][3] = 1;
+//	ProgramStages[1][3] = ACTION_REVERSE_HALF;
+//	StageDuration[1][3] = 2;
+//	ProgramStages[1][4] = ACTION_STRAIGHT_HALF;
+//	StageDuration[1][4] = 2;
+//	ProgramStages[1][5] = ACTION_REVERSE_HALF;
+//	StageDuration[1][5] = 1.5;
+	ProgramStages[1][4] = ACTION_STOP;
+    StageDuration[1][4] = 100.0;
 	
-	ProgramStages[2][0] = ACTION_RIGHT_FULL;
-	StageDuration[2][0] = 8.0;
-	//ProgramStages[2][1] = ACTION_LEFT_FULL;
-	//StageDuration[2][1] = 12.0;
+	ProgramStages[2][0] = ACTION_ARC_RIGHT;
+	StageDuration[2][0] = 6.0;
 	ProgramStages[2][1] = ACTION_STOP;
 	StageDuration[2][1] = 100.0;
 
@@ -194,9 +200,10 @@ void Autonomous::Periodic() {
 			break;
 			
 		case ACTION_LEFT_HALF:
-			TheRobot->Drive(0.5, -0.5);
+			//TheRobot->Drive(0.5, -0.5);
+			TheRobot->Drive(0.5, -0.75);
 			break;
-			
+						
 		case ACTION_LEFT_FULL:
 			TheRobot->Drive(0.5, -1.0);
 			break;
@@ -213,6 +220,21 @@ void Autonomous::Periodic() {
 			TheRobot->Drive(0.5, 1.0);
 			break;
 
+		case ACTION_ARC_RIGHT:
+			TheRobot->Drive(0.9, .1);
+			break;
+			
+		case ACTION_ARC_LEFT:
+			TheRobot->Drive(0.9, -.1);
+			break;
+			
+		case ACTION_REVERSE_HALF:
+			TheRobot->Drive(-0.5, 0.0);
+			break;
+			
+		case ACTION_REVERSE_FULL:
+			TheRobot->Drive(-1.0, 0.0);
+			break;
 		default:
 			TheRobot->Drive(0.0, 0.0);
 			break;
