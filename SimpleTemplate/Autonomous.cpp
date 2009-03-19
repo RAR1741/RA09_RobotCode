@@ -16,6 +16,7 @@
 #define ACTION_ARC_LEFT 11
 #define ACTION_REVERSE_HALF 12
 #define ACTION_REVERSE_FULL 13
+#define ACTION_ARC_RIGHT_SHARP 14
 
 #if !EXCLUDE_AUTO
 #include "Target.h"
@@ -38,6 +39,19 @@ void Autonomous::Init() {
 	CurrentStageDuration = 0;
 	Program = 0;
 	
+	
+	// This sets all of the array elements to ACTION_STOP by default,
+	// and the Stage duration to 1000. This eliminates the potential for
+	// a bad autonomous program, but you also do not need to add the stop
+	// part to the end of your programs because they are added by this loop.
+	
+	for(int i = 0; i < 3; i++){
+		for(int j = 0; j < 30; j++){
+			ProgramStages[i][j] = ACTION_STOP;
+			StageDuration[i][j] = 1000;
+		}
+	}
+	
 	ProgramStages[0][0] = ACTION_ARC_RIGHT;
 	StageDuration[0][0] = 4.0;
 	ProgramStages[0][1] = ACTION_STRAIGHT_HALF;
@@ -52,8 +66,6 @@ void Autonomous::Init() {
 //	StageDuration[1][4] = 2;
 //	ProgramStages[1][5] = ACTION_REVERSE_HALF;
 //	StageDuration[1][5] = 1.5;
-	ProgramStages[0][4] = ACTION_STOP;
-    StageDuration[0][4] = 100.0;
     
 	ProgramStages[1][0] = ACTION_ARC_LEFT;
 	StageDuration[1][0] = 4.0;
@@ -69,13 +81,21 @@ void Autonomous::Init() {
 //	StageDuration[1][4] = 2;
 //	ProgramStages[1][5] = ACTION_REVERSE_HALF;
 //	StageDuration[1][5] = 1.5;
-	ProgramStages[1][4] = ACTION_STOP;
-    StageDuration[1][4] = 100.0;
 	
-	ProgramStages[2][0] = ACTION_ARC_RIGHT;
-	StageDuration[2][0] = 6.0;
-	ProgramStages[2][1] = ACTION_STOP;
-	StageDuration[2][1] = 100.0;
+	ProgramStages[2][0] = ACTION_ARC_RIGHT_SHARP;
+	StageDuration[2][0] = 4.0;
+	ProgramStages[2][1] = ACTION_STRAIGHT_HALF;
+	StageDuration[2][1] = 6.0;
+	ProgramStages[2][2] = ACTION_REVERSE_HALF;
+	StageDuration[2][2] = 4;
+	ProgramStages[2][3] = ACTION_STRAIGHT_HALF;
+	StageDuration[2][3] = 1;
+//	ProgramStages[1][3] = ACTION_REVERSE_HALF;
+//	StageDuration[1][3] = 2;
+//	ProgramStages[1][4] = ACTION_STRAIGHT_HALF;
+//	StageDuration[1][4] = 2;
+//	ProgramStages[1][5] = ACTION_REVERSE_HALF;
+//	StageDuration[1][5] = 1.5;
 
 #if !EXCLUDE_AUTO
 	/* image data for tracking - override default parameters if needed */
@@ -246,6 +266,10 @@ void Autonomous::Periodic() {
 			
 		case ACTION_REVERSE_FULL:
 			TheRobot->Drive(-1.0, 0.0);
+			break;
+			
+		case ACTION_ARC_RIGHT_SHARP:
+			TheRobot->Drive(0.9, .2);
 			break;
 		default:
 			TheRobot->Drive(0.0, 0.0);
