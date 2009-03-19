@@ -119,8 +119,8 @@ void Autonomous::Init() {
 		}
 	}
 	
-	// AutonomousStages();
-	AutonomousTestStages();
+	AutonomousStages();
+	// AutonomousTestStages();
 
 #if !EXCLUDE_AUTO
 	/* image data for tracking - override default parameters if needed */

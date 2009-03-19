@@ -486,6 +486,8 @@ public:
 		AutoProgram->Init();
 		AutoProgram->SetControls(myRobot);
 		AutoProgram->SetProgramNumber(MasterProgramNumber);
+		dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: %1d*", MasterProgramNumber);
+		dsLCD->UpdateLCD();
 	}
 
 	// This function is passed a normalized x coordinate value
@@ -598,31 +600,21 @@ public:
 		ProgramChanged = (ProgramNumber == MasterProgramNumber);
 		
 		switch (ProgramNumber) {
-		case 2: //Manual mode
+		case 0:
 			MasterProgramNumber = ProgramNumber;
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 0 ");
 			break;
-		case 0: //Semi automatic
+		case 1:
 			MasterProgramNumber = ProgramNumber;
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 1 ");
 			break;
-		case 1: //Full automatic
+		case 2:
 			MasterProgramNumber = ProgramNumber;
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 2 ");
 			break;
 		default:
 			MasterProgramNumber = 1;
-		}
-
-		switch (ProgramNumber) {
-		case 2:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 2");
-			break;
-		case 0:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 0");
-			break;
-		case 1:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 1");
-			break;
-		default:
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: (0)");
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm:(0)");
 		}
 		dsLCD->UpdateLCD();
 		return ProgramChanged;
