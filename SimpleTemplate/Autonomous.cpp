@@ -120,7 +120,7 @@ void Autonomous::Init() {
 	}
 	
 	AutonomousStages();
-	// AutonomousTestStages();
+	//AutonomousTestStages();
 
 #if !EXCLUDE_AUTO
 	/* image data for tracking - override default parameters if needed */

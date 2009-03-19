@@ -115,7 +115,7 @@ class PurpleMonkeys : public IterativeRobot {
 
 	// 
 	int MasterControlMode;
-	int MasterProgramNumber;
+	UINT32 MasterProgramNumber;
 	bool AutoModeRunStop;
 	DriverStationLCD *dsLCD;
 public:
@@ -482,11 +482,11 @@ public:
 		// logger.CloseFile();
 
 //		light->Set(0);
-		CheckProgram();
+		//CheckProgram();
 		AutoProgram->Init();
 		AutoProgram->SetControls(myRobot);
 		AutoProgram->SetProgramNumber(MasterProgramNumber);
-		dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: %1d*", MasterProgramNumber);
+		dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: %1u*", MasterProgramNumber);
 		dsLCD->UpdateLCD();
 	}
 
@@ -591,31 +591,29 @@ public:
 	
 	bool CheckProgram(void)
 	{
-		int ProgramNumber = 0;
+		UINT32 ProgramNumber = 0;
 		bool ProgramChanged;
 		//DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 
-		ProgramNumber = m_ds->GetDigitalIn(AUTONOMOUS_PROGRAM_SWITCH_1) * 2 + m_ds->GetDigitalIn(AUTONOMOUS_PROGRAM_SWITCH_2);
+		ProgramNumber = (UINT32)(m_ds->GetDigitalIn(AUTONOMOUS_PROGRAM_SWITCH_1) * 2 + m_ds->GetDigitalIn(AUTONOMOUS_PROGRAM_SWITCH_2));
 		ProgramNumber--; // Decrement program number to cooperate with arrays in autonomous.
 		ProgramChanged = (ProgramNumber == MasterProgramNumber);
 		
 		switch (ProgramNumber) {
 		case 0:
 			MasterProgramNumber = ProgramNumber;
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 0 ");
 			break;
 		case 1:
 			MasterProgramNumber = ProgramNumber;
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 1 ");
 			break;
 		case 2:
 			MasterProgramNumber = ProgramNumber;
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 2 ");
 			break;
 		default:
 			MasterProgramNumber = 1;
 			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm:(0)");
 		}
+		dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm:%1u %1u", MasterProgramNumber, ProgramNumber);
 		dsLCD->UpdateLCD();
 		return ProgramChanged;
 	}
