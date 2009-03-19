@@ -467,6 +467,7 @@ public:
 		CheckMode();
 		CheckProgram();
 		//Squeeky->RPTCommandProccessor();
+		UpdateDashboard();
 	}
 
 	void DisabledContinuous(void) {
