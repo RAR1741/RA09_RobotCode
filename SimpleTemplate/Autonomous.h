@@ -31,9 +31,12 @@ public:
 	void IdentifyFriendOrFoe();
 	void SetProgramNumber(UINT32);
 	UINT32 GetProgramNumber(void);
+	
 private:
 	////////////////////////////////////////////////////////
 	// STATE
+	void AutonomousStages();
+	void AutonomousTestStages();
 	UINT32 Stage;
 	UINT32 CurrentStageDuration;
 	UINT32 Program;

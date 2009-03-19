@@ -34,24 +34,9 @@ void Autonomous::SetControls(RobotDrive *myRobot){
 	TheRobot = myRobot;
 }
 
-void Autonomous::Init() {
-	Stage = 0;
-	CurrentStageDuration = 0;
-	Program = 0;
-	
-	
-	// This sets all of the array elements to ACTION_STOP by default,
-	// and the Stage duration to 1000. This eliminates the potential for
-	// a bad autonomous program, but you also do not need to add the stop
-	// part to the end of your programs because they are added by this loop.
-	
-	for(int i = 0; i < 3; i++){
-		for(int j = 0; j < 30; j++){
-			ProgramStages[i][j] = ACTION_STOP;
-			StageDuration[i][j] = 1000;
-		}
-	}
-	
+
+void Autonomous::AutonomousStages()
+{
 	ProgramStages[0][0] = ACTION_ARC_RIGHT;
 	StageDuration[0][0] = 4.0;
 	ProgramStages[0][1] = ACTION_STRAIGHT_HALF;
@@ -96,6 +81,42 @@ void Autonomous::Init() {
 //	StageDuration[1][4] = 2;
 //	ProgramStages[1][5] = ACTION_REVERSE_HALF;
 //	StageDuration[1][5] = 1.5;
+}
+
+void Autonomous::AutonomousTestStages()
+{
+	ProgramStages[0][0] = ACTION_LEFT_FULL;
+	StageDuration[0][0] = 100.0;
+
+    
+	ProgramStages[1][0] = ACTION_STRAIGHT_FULL;
+	StageDuration[1][0] = 100.0;
+
+	
+	ProgramStages[2][0] = ACTION_RIGHT_FULL;
+	StageDuration[2][0] = 100.0;
+}
+
+void Autonomous::Init() {
+	Stage = 0;
+	CurrentStageDuration = 0;
+	Program = 0;
+	
+	
+	// This sets all of the array elements to ACTION_STOP by default,
+	// and the Stage duration to 1000. This eliminates the potential for
+	// a bad autonomous program, but you also do not need to add the stop
+	// part to the end of your programs because they are added by this loop.
+	
+	for(int i = 0; i < 3; i++){
+		for(int j = 0; j < 30; j++){
+			ProgramStages[i][j] = ACTION_STOP;
+			StageDuration[i][j] = 1000;
+		}
+	}
+	
+	// AutonomousStages();
+	AutonomousTestStages();
 
 #if !EXCLUDE_AUTO
 	/* image data for tracking - override default parameters if needed */
