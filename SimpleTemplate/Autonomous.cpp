@@ -37,6 +37,8 @@ void Autonomous::SetControls(RobotDrive *myRobot){
 
 void Autonomous::AutonomousStages()
 {
+	
+	// Far corner of field
 	ProgramStages[0][0] = ACTION_ARC_RIGHT;
 	StageDuration[0][0] = 4.0;
 	ProgramStages[0][1] = ACTION_STRAIGHT_HALF;
@@ -52,6 +54,7 @@ void Autonomous::AutonomousStages()
 //	ProgramStages[1][5] = ACTION_REVERSE_HALF;
 //	StageDuration[1][5] = 1.5;
     
+	// Closest corner to driver
 	ProgramStages[1][0] = ACTION_ARC_LEFT;
 	StageDuration[1][0] = 4.0;
 	ProgramStages[1][1] = ACTION_STRAIGHT_HALF;
@@ -67,6 +70,7 @@ void Autonomous::AutonomousStages()
 //	ProgramStages[1][5] = ACTION_REVERSE_HALF;
 //	StageDuration[1][5] = 1.5;
 	
+	// Outpost in middle of field.
 	ProgramStages[2][0] = ACTION_ARC_RIGHT_SHARP;
 	StageDuration[2][0] = 4.0;
 	ProgramStages[2][1] = ACTION_STRAIGHT_HALF;
