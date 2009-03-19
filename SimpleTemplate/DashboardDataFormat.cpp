@@ -165,6 +165,14 @@ void DashboardDataFormat::PackAndSend(void)
 	dashboardPacker.AddU8(m_ElvCyclingFlag);
 	dashboardPacker.AddU8(m_ElvHomeSwitchFlag);
 	
+	// Output all of the joystick data, each one at a time.
+	for (int i = 0; i < 3; i++)
+	{
+		dashboardPacker.AddFloat(this->m_Joystick_X[i]);
+		dashboardPacker.AddFloat(this->m_Joystick_Y[i]);
+		dashboardPacker.AddFloat(this->m_Joystick_Z[i]);
+		dashboardPacker.AddU32(this->m_Joystick_Buttons[i]);
+	}
 //	dashboardPacker.AddI32(m_LeftFollowerWheel);
 //	dashboardPacker.AddI32(m_RightFollowerWheel);
 	// Flush the data to the driver station.

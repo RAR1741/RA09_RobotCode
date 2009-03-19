@@ -231,6 +231,13 @@ void RobotState::PackData(DashboardDataFormat *packet)
 	packet->m_ElvHomeSwitchFlag = ElevatorHomeSwitch;
 	
 	packet->m_ultrasonic = ultra_sensor;
+	
+	for (int i = 0; i < RobotState::kNumJoysticks; i++) {
+		packet->m_Joystick_X[i] = this->j_x[i];
+		packet->m_Joystick_Y[i] = this->j_y[i];
+		packet->m_Joystick_Z[i] = this->j_z[i];
+		packet->m_Joystick_Buttons[i]= this->j_buttons[i];
+	}
 }
 
 
@@ -239,4 +246,23 @@ void RobotState::ReportElevatorFlags(bool CyclingFlag, bool HomingFlag, bool Hom
 	ElevatorCycling = CyclingFlag;
 	ElevatorHoming = HomingFlag;
 	ElevatorHomeSwitch = HomeSwitch;
+}
+
+void RobotState::ReportJoystick(enum RobotJoystick st, Joystick *stick)
+{
+	if (st < 0 || st >= RobotState::kNumJoysticks) return;	// Invalid index.
+	this->j_x[st] = stick->GetX();
+	this->j_y[st] = stick->GetY();
+	this->j_z[st] = stick->GetZ();
+	
+	UINT32 state = 0;
+	UINT32 mask = 1;
+	for (int i = 0; i <= 12; i++)
+	{
+		if (stick->GetRawButton(i)) {
+			state |= mask;
+		}
+		mask <<= 1;
+	}
+	this->j_buttons[st] = state;
 }

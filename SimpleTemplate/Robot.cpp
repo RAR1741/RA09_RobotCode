@@ -783,6 +783,10 @@ public:
 		//dashboardDataFormat->m_gyroTemp = testTemp->GetAngle();
 		
 		r_state->SetGyroData(0.0, testTemp->GetVoltage() , testGyro->GetAngle());
+		
+		r_state->ReportJoystick(RobotState::Left, leftStick);
+		r_state->ReportJoystick(RobotState::Right, rightStick);
+		r_state->ReportJoystick(RobotState::Turret, turretStick);
 //		if (testGyro == NULL) {
 //			dashboardDataFormat->m_gyroAngle = -42.0001;
 //		} else {
@@ -805,6 +809,7 @@ public:
 				LMQuadEncoder.GetDistance(), testGyro->GetAngle(),
 				dashboardDataFormat.m_LeftMotorVoltage);
 		*/
+		
 		GetTheDashboard().Printf("*");
 		num += 0.01;
 		if (num > 5.0)

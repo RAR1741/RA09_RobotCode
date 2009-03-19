@@ -17,6 +17,12 @@
 #define ACTION_REVERSE_HALF 12
 #define ACTION_REVERSE_FULL 13
 #define ACTION_ARC_RIGHT_SHARP 14
+#define ACTION_ARC_RIGHT_SHARP_QUARTER 15
+#define ACTION_ARC_RIGHT_SHARP_HALF 16
+#define ACTION_ARC_RIGHT_QUARTER 17
+#define ACTION_ARC_RIGHT_HALF 18
+#define ACTION_ARC_LEFT_QUARTER 19
+#define ACTION_ARC_LEFT_HALF 20
 
 #if !EXCLUDE_AUTO
 #include "Target.h"
@@ -39,14 +45,18 @@ void Autonomous::AutonomousStages()
 {
 	
 	// Far corner of field
-	ProgramStages[0][0] = ACTION_ARC_RIGHT;
-	StageDuration[0][0] = 4.0;
-	ProgramStages[0][1] = ACTION_STRAIGHT_HALF;
-	StageDuration[0][1] = 6.0;
-	ProgramStages[0][2] = ACTION_REVERSE_HALF;
-	StageDuration[0][2] = 4;
+	ProgramStages[0][0] = ACTION_ARC_RIGHT_QUARTER;
+	StageDuration[0][0] = 0.5;
+	ProgramStages[0][1] = ACTION_ARC_RIGHT_HALF;
+	StageDuration[0][1] = 0.5;
+	ProgramStages[0][2] = ACTION_ARC_RIGHT;
+	StageDuration[0][2] = 3.0;
 	ProgramStages[0][3] = ACTION_STRAIGHT_HALF;
-	StageDuration[0][3] = 1;
+	StageDuration[0][3] = 6.0;
+	ProgramStages[0][4] = ACTION_REVERSE_HALF;
+	StageDuration[0][4] = 4;
+	ProgramStages[0][5] = ACTION_STRAIGHT_HALF;
+	StageDuration[0][5] = 1;
 //	ProgramStages[1][3] = ACTION_REVERSE_HALF;
 //	StageDuration[1][3] = 2;
 //	ProgramStages[1][4] = ACTION_STRAIGHT_HALF;
@@ -55,14 +65,18 @@ void Autonomous::AutonomousStages()
 //	StageDuration[1][5] = 1.5;
     
 	// Closest corner to driver
-	ProgramStages[1][0] = ACTION_ARC_LEFT;
-	StageDuration[1][0] = 4.0;
-	ProgramStages[1][1] = ACTION_STRAIGHT_HALF;
-	StageDuration[1][1] = 6.0;
-	ProgramStages[1][2] = ACTION_REVERSE_HALF;
-	StageDuration[1][2] = 4;
+	ProgramStages[1][0] = ACTION_ARC_LEFT_QUARTER;
+	StageDuration[1][0] = 0.5;
+	ProgramStages[1][1] = ACTION_ARC_LEFT_HALF;
+	StageDuration[1][1] = 0.5;
+	ProgramStages[1][2] = ACTION_ARC_LEFT;
+	StageDuration[1][2] = 3.0;
 	ProgramStages[1][3] = ACTION_STRAIGHT_HALF;
-	StageDuration[1][3] = 1;
+	StageDuration[1][3] = 6.0;
+	ProgramStages[1][4] = ACTION_REVERSE_HALF;
+	StageDuration[1][4] = 4;
+	ProgramStages[1][5] = ACTION_STRAIGHT_HALF;
+	StageDuration[1][5] = 1;
 //	ProgramStages[1][3] = ACTION_REVERSE_HALF;
 //	StageDuration[1][3] = 2;
 //	ProgramStages[1][4] = ACTION_STRAIGHT_HALF;
@@ -71,14 +85,18 @@ void Autonomous::AutonomousStages()
 //	StageDuration[1][5] = 1.5;
 	
 	// Outpost in middle of field.
-	ProgramStages[2][0] = ACTION_ARC_RIGHT_SHARP;
-	StageDuration[2][0] = 4.0;
-	ProgramStages[2][1] = ACTION_STRAIGHT_HALF;
-	StageDuration[2][1] = 6.0;
-	ProgramStages[2][2] = ACTION_REVERSE_HALF;
-	StageDuration[2][2] = 4;
+	ProgramStages[2][0] = ACTION_ARC_RIGHT_SHARP_QUARTER;
+	StageDuration[2][0] = 0.5;
+	ProgramStages[2][1] = ACTION_ARC_RIGHT_SHARP_HALF;
+	StageDuration[2][1] = 0.5;
+	ProgramStages[2][2] = ACTION_ARC_RIGHT_SHARP;
+	StageDuration[2][2] = 3.0;
 	ProgramStages[2][3] = ACTION_STRAIGHT_HALF;
-	StageDuration[2][3] = 1;
+	StageDuration[2][3] = 6.0;
+	ProgramStages[2][4] = ACTION_REVERSE_HALF;
+	StageDuration[2][4] = 4;
+	ProgramStages[2][5] = ACTION_STRAIGHT_HALF;
+	StageDuration[2][5] = 1;
 //	ProgramStages[1][3] = ACTION_REVERSE_HALF;
 //	StageDuration[1][3] = 2;
 //	ProgramStages[1][4] = ACTION_STRAIGHT_HALF;
@@ -285,6 +303,14 @@ void Autonomous::Periodic() {
 			TheRobot->Drive(0.9, -.1);
 			break;
 			
+		case ACTION_ARC_LEFT_QUARTER:
+			TheRobot->Drive(0.25, -.1);
+			break;
+			
+		case ACTION_ARC_LEFT_HALF:
+			TheRobot->Drive(0.5, -.1);
+			break;
+			
 		case ACTION_REVERSE_HALF:
 			TheRobot->Drive(-0.5, 0.0);
 			break;
@@ -296,6 +322,23 @@ void Autonomous::Periodic() {
 		case ACTION_ARC_RIGHT_SHARP:
 			TheRobot->Drive(0.9, .2);
 			break;
+
+		case ACTION_ARC_RIGHT_SHARP_QUARTER:
+			TheRobot->Drive(0.25, .2);
+			break;
+
+		case ACTION_ARC_RIGHT_SHARP_HALF:
+			TheRobot->Drive(0.5, .2);
+			break;
+
+		case ACTION_ARC_RIGHT_QUARTER:
+			TheRobot->Drive(0.25, .1);
+			break;
+
+		case ACTION_ARC_RIGHT_HALF:
+			TheRobot->Drive(0.5, .1);
+			break;
+
 		default:
 			TheRobot->Drive(0.0, 0.0);
 			break;

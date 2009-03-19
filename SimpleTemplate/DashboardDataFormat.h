@@ -117,6 +117,11 @@ public:
 	bool m_ElvHomeSwitchFlag;	// Inicates that elevator has homed
 	//bool m_elevator_home_switch;
 	
+	float m_Joystick_X[3];
+	float m_Joystick_Y[3];
+	float m_Joystick_Z[3];
+	
+	UINT32 m_Joystick_Buttons[3];
 	
 	
 	void PackAndSend(void);

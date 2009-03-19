@@ -27,6 +27,9 @@ public:
 		LeftSideDriveOutput, RightSideDriveOutput, HarvesterOutput };
 	static const int kNumOutputs = 6;
 
+	enum RobotJoystick { Left = 0, Right, Turret };
+	
+	static const int kNumJoysticks = 3;
 	//enum RobotJoystick
 	
 	
@@ -53,11 +56,17 @@ public:
 	void ReportElevatorFlags(bool CyclingFlag, bool HomingFlag, bool HomeSwitch);
 	//void SetJoystickState(Joystick *stick);
 	
+	void ReportJoystick(enum RobotJoystick st, Joystick *stick);
+	
 	void PackData(DashboardDataFormat *packet);
 	/////////////////////////////////////////////////////////////////////
 private:
 	INT32 quad_encoder_counts[kNumEncoders];
 	float quad_encoder_vels[kNumEncoders];
+	float j_x[kNumJoysticks];
+	float j_y[kNumJoysticks];
+	float j_z[kNumJoysticks];
+	UINT32 j_buttons[kNumJoysticks];
 	float accel_inputs[3];
 	float gyro_rate;
 	float gyro_temp;
