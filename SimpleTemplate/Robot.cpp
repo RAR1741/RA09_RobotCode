@@ -594,30 +594,31 @@ public:
 		//DriverStationLCD *dsLCD = DriverStationLCD::GetInstance();
 
 		ProgramNumber = m_ds->GetDigitalIn(AUTONOMOUS_PROGRAM_SWITCH_1) * 2 + m_ds->GetDigitalIn(AUTONOMOUS_PROGRAM_SWITCH_2);
+		ProgramNumber--; // Decrement program number to cooperate with arrays in autonomous.
 		ProgramChanged = (ProgramNumber == MasterProgramNumber);
 		
 		switch (ProgramNumber) {
-		case 3: //Manual mode
-			MasterProgramNumber = ProgramNumber - 1;
+		case 2: //Manual mode
+			MasterProgramNumber = ProgramNumber;
 			break;
-		case 1: //Semi automatic
-			MasterProgramNumber = ProgramNumber - 1;
+		case 0: //Semi automatic
+			MasterProgramNumber = ProgramNumber;
 			break;
-		case 2: //Full automatic
-			MasterProgramNumber = ProgramNumber - 1;
+		case 1: //Full automatic
+			MasterProgramNumber = ProgramNumber;
 			break;
 		default:
 			MasterProgramNumber = 1;
 		}
 
 		switch (ProgramNumber) {
-		case 3:
+		case 2:
 			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 2");
 			break;
-		case 1:
+		case 0:
 			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 0");
 			break;
-		case 2:
+		case 1:
 			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm: 1");
 			break;
 		default:
