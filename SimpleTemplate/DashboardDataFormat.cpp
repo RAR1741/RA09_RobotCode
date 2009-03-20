@@ -90,10 +90,11 @@ void DashboardDataFormat::PackAndSend(void)
 	dashboardPacker.AddI16(m_LeftMotorVoltage);
 	dashboardPacker.AddI16(m_RightMotorVoltage);
 	
+	dashboardPacker.AddFloat(m_ultrasonic);
+	
 	dashboardPacker.AddFloat(m_gyroAngle);
 	dashboardPacker.AddFloat(m_gyroTemp);    // Added by HAM 2/6/9
 	
-	dashboardPacker.AddFloat(m_ultrasonic);
 	
 	dashboardPacker.AddFloat(m_accelX);
 	dashboardPacker.AddFloat(m_accelY);

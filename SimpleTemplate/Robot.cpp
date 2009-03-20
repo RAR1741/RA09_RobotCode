@@ -282,6 +282,11 @@ public:
 				RMQuadEncoder = new Encoder(4, 3, 4, 4,false); //		RMQuadEncoder(4, 3, 4, 4,false),
 				LMWheelEncoder = new Encoder(4, 5, 4, 6, true);  //		LMWheelEncoder(4, 5, 4, 6, false),
 				RMWheelEncoder = new Encoder(4, 7, 4, 8, true); //		RMWheelEncoder(4, 7, 4, 8, false),
+				
+
+				LMWheelEncoder->Start();
+				RMWheelEncoder->Start();
+				
 						//ElevatorEncoder(4,11,4,12,false),
 				//TurretEncoder = new Encoder(4, 13, 4, 14, false);		// TurretEncoder(4, 13, 4, 14, false),
 		dprintf(LOG_INFO,"RedAlert: Drive Encoders Initialized.");
@@ -325,6 +330,14 @@ public:
 				//		testAccel_X(1, 3), 
 				testAccel_Y = new Accelerometer(1,4);	//		testAccel_Y(1, 4),
 				testAccel_Z = new Accelerometer(1,5);	//		testAccel_Z(1, 5),
+				
+				testAccel_Y->SetZero(1.5);
+				testAccel_X->SetZero(1.5);
+				testAccel_Z->SetZero(1.5);
+				
+				testAccel_X->SetSensitivity(0.3);
+				testAccel_Y->SetSensitivity(0.3);
+				testAccel_Z->SetSensitivity(0.3);
 						//				Gate(8,1),
 				dprintf(LOG_INFO,"RedAlert: Accelerometers Initialized");
 				dprintf(LOG_INFO,"RedAlert: Initializing Ultrasonic Sensor");

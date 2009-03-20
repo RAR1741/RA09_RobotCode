@@ -191,9 +191,9 @@ void RobotState::PackData(DashboardDataFormat *packet)
 	packet->m_gyroAngle = gyro_integrated_angle;
 	packet->m_gyroTemp = gyro_temp;
 	
-	packet->m_accelX = accel_inputs[RobotState::XAxis];
-	packet->m_accelY = accel_inputs[RobotState::YAxis];
-	packet->m_accelZ = accel_inputs[RobotState::ZAxis];
+	packet->m_accelX = accel_inputs[0];
+	packet->m_accelY = accel_inputs[1];
+	packet->m_accelZ = accel_inputs[2];
 	
 	packet->m_TurretPotentEncoderVoltage = turret_potentiometer;
 	
