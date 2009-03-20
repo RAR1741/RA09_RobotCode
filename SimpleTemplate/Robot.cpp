@@ -396,8 +396,10 @@ public:
 		dprintf(LOG_INFO, "RedAlert: Launcher module started.");
 		AutoModeRunStop = false;
 		dprintf(LOG_INFO, "RedAlert: Starting Gyros... DO NOT MOVE THE ROBOT");
-		if (testGyro==NULL)
+		if (testGyro==NULL){
 			testGyro = new Gyro(1,1);
+			testGyro->SetSensitivity(.007);
+		}
 		if (testTemp==NULL)
 			testTemp = new AnalogChannel(1,2);
 		dprintf(LOG_INFO, "RedAlert: Gyros started.");
