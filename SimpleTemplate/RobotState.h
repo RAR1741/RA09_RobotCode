@@ -58,6 +58,7 @@ public:
 	
 	void ReportJoystick(enum RobotJoystick st, Joystick *stick);
 	void ReportOperatingMode(UINT32 OperatingMode);
+	void ReportServiceMode(UINT32 ServiceMode);
 	void ReportAutonomousProgram(UINT32 AutonomousProgram);
 	
 	void PackData(DashboardDataFormat *packet);
@@ -87,6 +88,7 @@ private:
 	float pwm_outputs[6];
 	
 	UINT32 OperatingMode;
+	UINT32 ServiceMode;
 	UINT32 AutonomousProgram;
 	
 	bool sol_A_Gate;

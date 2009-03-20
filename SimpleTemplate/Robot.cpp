@@ -118,6 +118,7 @@ class PurpleMonkeys : public IterativeRobot {
 	UINT32 MasterProgramNumber;
 	bool AutoModeRunStop;
 	DriverStationLCD *dsLCD;
+	UINT32 MasterOperatingMode; // This var is used to report where the robot code is executing to the logger.
 public:
 	PurpleMonkeys(void)
 #if 0
@@ -447,10 +448,12 @@ public:
 
 		dprintf(LOG_INFO,"RedAlert: ////// DONE //////");
 		dprintf(LOG_INFO,"Robot initialized.");
+		MasterOperatingMode = 0;
 	}
 
 	// Disabled state methods
 	void DisabledInit(void) {
+		MasterOperatingMode = 1;
 		MasterControlMode = MODE_MANUAL;
 		MasterProgramNumber = 0;
 		dsLCD = DriverStationLCD::GetInstance();
@@ -464,6 +467,7 @@ public:
 	}
 
 	void DisabledPeriodic(void) {
+		MasterOperatingMode = 2;
 		CheckMode();
 		CheckProgram();
 		//Squeeky->RPTCommandProccessor();
@@ -475,6 +479,7 @@ public:
 
 	// Autonomous state methods
 	void AutonomousInit(void) {
+		MasterOperatingMode = 3;
 		Squeeky->Close();
 		LMQuadEncoder->Stop();
 		GetWatchdog().SetEnabled(false);
@@ -507,6 +512,7 @@ public:
 		// counter++;
 		// if (counter>=400)
 		//	myRobot.Drive(0.0, 0.0);
+		MasterOperatingMode = 4;
 		AutoProgram->Periodic();
 		TheTurret->TurretControl(); // This updates the Target in Sight member variable;
 
@@ -527,7 +533,7 @@ public:
 
 	// Teleop state methods
 	void TeleopInit(void) {
-		
+		MasterOperatingMode = 5;
 		//		testEncoder.SetDistancePerTick(300.0);
 		//		LMQuadEncoder.SetDistancePerPulse(300.0);
 		//LMQuadEncoder->Start();
@@ -622,7 +628,7 @@ public:
 	void TeleopPeriodic(void) {
 
 		GetWatchdog().Feed();
-
+		MasterOperatingMode = 6;
 		bool shouldLimit = rightStick->GetRawButton(2);
 		
 		float left_y =  - leftStick->GetY();
@@ -795,7 +801,8 @@ public:
 //		}
 //		//  dashboardDataFormat.m_accelX = 84.0;
 
-		r_state->ReportOperatingMode((UINT32)(MasterControlMode));
+		r_state->ReportOperatingMode(MasterOperatingMode);
+		r_state->ReportServiceMode((UINT32)(MasterControlMode));
 		r_state->ReportAutonomousProgram(MasterProgramNumber);
 		
 		dashboardDataFormat->m_TurretState = 0;

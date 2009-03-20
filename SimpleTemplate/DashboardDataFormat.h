@@ -123,6 +123,7 @@ public:
 	
 	UINT32 m_Joystick_Buttons[3];
 	UINT32 OperatingMode;
+	UINT32 ServiceMode;
 	UINT32 AutonomousProgram;
 	
 	void PackAndSend(void);

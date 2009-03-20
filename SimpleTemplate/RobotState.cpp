@@ -240,6 +240,7 @@ void RobotState::PackData(DashboardDataFormat *packet)
 	}
 	
 	packet->OperatingMode = this->OperatingMode;
+	packet->ServiceMode = this->ServiceMode;
 	packet->AutonomousProgram = this->AutonomousProgram;
 
 }
@@ -280,5 +281,11 @@ void RobotState::ReportOperatingMode(UINT32 OperatingMode)
 
 void RobotState::ReportAutonomousProgram(UINT32 AutonomousProgram)
 {
-	this->AutonomousProgram = AutonomousProgram;
+	this->AutonomousProgram = AutonomousProgram + 1; // Needs to be 1-3 instead of 0-2 for logger
 }
+
+void RobotState::ReportServiceMode(UINT32 ServiceMode)
+{
+	this->ServiceMode = ServiceMode;
+}
+
