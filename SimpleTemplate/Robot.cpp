@@ -795,6 +795,9 @@ public:
 //		}
 //		//  dashboardDataFormat.m_accelX = 84.0;
 
+		r_state->ReportOperatingMode((UINT32)(MasterControlMode));
+		r_state->ReportAutonomousProgram(MasterProgramNumber);
+		
 		dashboardDataFormat->m_TurretState = 0;
 		dashboardDataFormat->m_LeftState = 0;
 		dashboardDataFormat->m_RightState = 0;

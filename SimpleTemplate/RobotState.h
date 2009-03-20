@@ -57,6 +57,8 @@ public:
 	//void SetJoystickState(Joystick *stick);
 	
 	void ReportJoystick(enum RobotJoystick st, Joystick *stick);
+	void ReportOperatingMode(UINT32 OperatingMode);
+	void ReportAutonomousProgram(UINT32 AutonomousProgram);
 	
 	void PackData(DashboardDataFormat *packet);
 	/////////////////////////////////////////////////////////////////////
@@ -83,6 +85,10 @@ private:
 	float current_sensor_turret;
 	float current_sensor_launch;
 	float pwm_outputs[6];
+	
+	UINT32 OperatingMode;
+	UINT32 AutonomousProgram;
+	
 	bool sol_A_Gate;
 	bool sol_B_Gate;
 	bool sol_A_Grabber;

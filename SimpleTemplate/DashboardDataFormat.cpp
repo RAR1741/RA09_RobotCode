@@ -173,6 +173,9 @@ void DashboardDataFormat::PackAndSend(void)
 		dashboardPacker.AddFloat(this->m_Joystick_Z[i]);
 		dashboardPacker.AddU32(this->m_Joystick_Buttons[i]);
 	}
+	
+	dashboardPacker.AddU32(OperatingMode);
+	dashboardPacker.AddU32(AutonomousProgram);
 //	dashboardPacker.AddI32(m_LeftFollowerWheel);
 //	dashboardPacker.AddI32(m_RightFollowerWheel);
 	// Flush the data to the driver station.

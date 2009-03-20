@@ -238,6 +238,10 @@ void RobotState::PackData(DashboardDataFormat *packet)
 		packet->m_Joystick_Z[i] = this->j_z[i];
 		packet->m_Joystick_Buttons[i]= this->j_buttons[i];
 	}
+	
+	packet->OperatingMode = this->OperatingMode;
+	packet->AutonomousProgram = this->AutonomousProgram;
+
 }
 
 
@@ -265,4 +269,16 @@ void RobotState::ReportJoystick(enum RobotJoystick st, Joystick *stick)
 		mask <<= 1;
 	}
 	this->j_buttons[st] = state;
+}
+
+void RobotState::ReportOperatingMode(UINT32 OperatingMode)
+{	
+	// If the operating mode falls outside the 
+	//if(OperatingMode > 6 || OperatingMode <0)
+	this->OperatingMode = OperatingMode;
+}
+
+void RobotState::ReportAutonomousProgram(UINT32 AutonomousProgram)
+{
+	this->AutonomousProgram = AutonomousProgram;
 }

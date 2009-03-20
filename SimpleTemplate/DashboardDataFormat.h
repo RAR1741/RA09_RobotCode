@@ -122,7 +122,8 @@ public:
 	float m_Joystick_Z[3];
 	
 	UINT32 m_Joystick_Buttons[3];
-	
+	UINT32 OperatingMode;
+	UINT32 AutonomousProgram;
 	
 	void PackAndSend(void);
 private:
