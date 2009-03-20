@@ -328,6 +328,7 @@ public:
 						//				Gate(8,1),
 				dprintf(LOG_INFO,"RedAlert: Accelerometers Initialized");
 				dprintf(LOG_INFO,"RedAlert: Initializing Ultrasonic Sensor");
+				ultrasonic = new AnalogChannel(1,6);
 				dprintf(LOG_INFO,"RedAlert: Ultrasonic Sensor Initialized ... [PONG]");
 				dprintf(LOG_INFO,"RedAlert: Initializing Autonomous Program");
 				AutoProgram = new Autonomous();
@@ -576,7 +577,7 @@ public:
 			MasterControlMode = MODE_AUTO;
 			break;
 		default:
-			MasterControlMode = MODE_MANUAL;
+			MasterControlMode = MODE_SEMI_AUTO;
 		}
 
 		switch (DSMode) {
@@ -617,7 +618,7 @@ public:
 			MasterProgramNumber = ProgramNumber;
 			break;
 		default:
-			MasterProgramNumber = 1;
+			MasterProgramNumber = 0;
 			dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm:(0)");
 		}
 		dsLCD->Printf(DriverStationLCD::kMain_Line6, 15, "Pgm:%1u %1u", MasterProgramNumber, ProgramNumber);
@@ -774,7 +775,7 @@ public:
 		r_state->SetCurrent(RobotState::LeftSideDriverCurrent, leftCurrent->GetCurrent());
 		r_state->SetCurrent(RobotState::RightSideDriverCurrent, rightCurrent->GetCurrent());
 
-		
+		r_state->SetUltrasonicVoltage(ultrasonic->GetVoltage());
 		//dashboardDataFormat->m_TurretEncoder = TurretEncoder->Get();
 
 		r_state->SetAccelerometerAxis(RobotState::XAxis, testAccel_X->GetAcceleration());

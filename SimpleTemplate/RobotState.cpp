@@ -286,6 +286,6 @@ void RobotState::ReportAutonomousProgram(UINT32 AutonomousProgram)
 
 void RobotState::ReportServiceMode(UINT32 ServiceMode)
 {
-	this->ServiceMode = ServiceMode;
+	this->ServiceMode = ServiceMode + 1;
 }
 
