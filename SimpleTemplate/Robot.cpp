@@ -791,6 +791,7 @@ public:
 		r_state->SetCurrent(RobotState::RightSideDriverCurrent, rightCurrent->GetCurrent());
 
 		r_state->SetUltrasonicVoltage(ultrasonic->GetVoltage());
+		
 		//dashboardDataFormat->m_TurretEncoder = TurretEncoder->Get();
 
 		r_state->SetAccelerometerAxis(RobotState::XAxis, testAccel_X->GetAcceleration());
@@ -820,6 +821,7 @@ public:
 		r_state->ReportOperatingMode(MasterOperatingMode);
 		r_state->ReportServiceMode((UINT32)(MasterControlMode));
 		r_state->ReportAutonomousProgram(MasterProgramNumber);
+		dashboardDataFormat->UltraSonic01RawData = (INT32)ultrasonic->GetValue();
 		
 		dashboardDataFormat->m_TurretState = 0;
 		dashboardDataFormat->m_LeftState = 0;

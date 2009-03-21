@@ -126,6 +126,7 @@ public:
 	UINT32 ServiceMode;
 	UINT32 AutonomousProgram;
 	
+	INT32 UltraSonic01RawData;
 	void PackAndSend(void);
 private:
 	DISALLOW_COPY_AND_ASSIGN(DashboardDataFormat);

@@ -178,6 +178,7 @@ void DashboardDataFormat::PackAndSend(void)
 	dashboardPacker.AddU32(OperatingMode);
 	dashboardPacker.AddU32(ServiceMode);
 	dashboardPacker.AddU32(AutonomousProgram);
+	dashboardPacker.AddI32(UltraSonic01RawData);
 //	dashboardPacker.AddI32(m_LeftFollowerWheel);
 //	dashboardPacker.AddI32(m_RightFollowerWheel);
 	// Flush the data to the driver station.
