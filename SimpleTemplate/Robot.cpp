@@ -795,8 +795,8 @@ public:
 		//dashboardDataFormat->m_TurretEncoder = TurretEncoder->Get();
 
 		r_state->SetAccelerometerAxis(RobotState::XAxis, testAccel_X->GetAcceleration());
-		r_state->SetAccelerometerAxis(RobotState::YAxis, testAccel_X->GetAcceleration());
-		r_state->SetAccelerometerAxis(RobotState::ZAxis, testAccel_X->GetAcceleration());
+		r_state->SetAccelerometerAxis(RobotState::YAxis, testAccel_Y->GetAcceleration());
+		r_state->SetAccelerometerAxis(RobotState::ZAxis, testAccel_Z->GetAcceleration());
 		
 		/*
 		dashboardDataFormat->m_accelX = testAccel_X->GetAcceleration();
