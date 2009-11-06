@@ -92,6 +92,7 @@ class PurpleMonkeys : public IterativeRobot {
 	Encoder *RFollowWheelEncoder;
 	Encoder *LFollowWheelEncoder;
 	IFF *IdentFriendFoe;
+	int helloW0rld;
 	RobotState *r_state;
 	
 	AnalogChannel *ultrasonic;
@@ -738,6 +739,16 @@ public:
 		// verticalServo.Set((turretStick.GetY()+ 1.0) / 2.0);
 
 		AirCompressorControl(); // This doesn't really do anything
+		if(turretStick->GetRawButton(5)==1)
+		{
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Hello Mr. Game Robot");
+			helloW0rld =1;
+		}
+		else
+		{
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Hello Mr. Tank Robot");
+			helloW0rld =2;
+		}
 		UpdateDashboard();
 	}
 
@@ -782,7 +793,7 @@ public:
 		dashboardDataFormat->m_RM_QuadEncoder = RMQuadEncoder->Get();
 		dashboardDataFormat->m_LM_QuadEncoder = LMQuadEncoder->Get();
 		
-		r_state->SetQuadEncoder(RobotState::LeftMotor, LMQuadEncoder->Get(), 0);
+		r_state->SetQuadEncoder(RobotState::LeftMotor, helloW0rld, 0);
 		r_state->SetQuadEncoder(RobotState::RightMotor, RMQuadEncoder->Get(), 0);
 		r_state->SetQuadEncoder(RobotState::LeftFollow, LMWheelEncoder->Get(), 0);
 		r_state->SetQuadEncoder(RobotState::RightFollow, RMWheelEncoder->Get(), 0);
