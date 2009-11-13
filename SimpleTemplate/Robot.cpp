@@ -741,12 +741,12 @@ public:
 		AirCompressorControl(); // This doesn't really do anything
 		if(turretStick->GetRawButton(5)==1)
 		{
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Hello Mr. Game Robot");
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Hello Robot");
 			helloW0rld =1;
 		}
 		else
 		{
-			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Hello Mr. Tank Robot");
+			dsLCD->Printf(DriverStationLCD::kMain_Line6, 1, "Robots Are Fun");
 			helloW0rld =2;
 		}
 		UpdateDashboard();
